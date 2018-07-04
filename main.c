@@ -8,7 +8,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
   switch(msg)
   {
     case WM_CREATE:
-      InitDirectX(hWnd);
+      InitGraphics(hWnd);
       InitScene();
       break;
     case WM_KEYDOWN:
@@ -22,7 +22,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 HWND InitWin()
 {
-  char className[2] = {'t'};
+  char className[2] = {'f'};
   WNDCLASS wndClass = {
     .style = CS_OWNDC,
     .lpfnWndProc = WndProc,
@@ -31,23 +31,16 @@ HWND InitWin()
     .hIcon = LoadIcon(0, IDI_INFORMATION)
   };
   RegisterClass(&wndClass);
-  HWND hWnd = CreateWindow(className, "", WS_OVERLAPPED | WS_VISIBLE,
-    0, 0, 800, 600, 0, 0, 0, 0);
-  DEVMODE screen = {
-    .dmSize = sizeof(screen),
-    .dmPelsWidth = 800,
-    .dmPelsHeight = 600,
-    .dmBitsPerPel = 32,
-    .dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT
-  };
-  ChangeDisplaySettings(&screen, CDS_FULLSCREEN);
+  HWND hWnd = CreateWindow(className, "fragment",
+    WS_EX_TOPMOST | WS_POPUP,
+    0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0, 0);
   return hWnd;
 }
 
 int WINAPI WinMainCRTStartup()
 {
   MSG msg;
-  HDC hdc = GetDC(InitWin());
+  InitWin();
   while(msg.message != WM_QUIT)
   {
     if(PeekMessage(&msg, 0, 0, 0, TRUE))
@@ -58,9 +51,9 @@ int WINAPI WinMainCRTStartup()
     else
     {
       RenderScene();
-      SwapBuffers(hdc);
     }
   }
+  CleanGraphics();
   ExitProcess(0);
   return 0;
 }
