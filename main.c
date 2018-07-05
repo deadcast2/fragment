@@ -1,6 +1,7 @@
 #include <windows.h>
 #include "log.h"
 #include "graphics.h"
+#include "audio.h"
 #include "scene.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -9,7 +10,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
   {
     case WM_CREATE:
       InitGraphics(hWnd);
+      InitAudio(hWnd);
       InitScene();
+      LoadTestAudio();
       break;
     case WM_KEYDOWN:
       if(wParam == VK_ESCAPE) PostMessage(hWnd, WM_QUIT, wParam, lParam);
@@ -54,6 +57,7 @@ int WINAPI WinMainCRTStartup()
     }
   }
   CleanGraphics();
+  CleanAudio();
   ExitProcess(0);
   return 0;
 }
