@@ -1,58 +1,37 @@
 #include "audio.h"
+#include <stdio.h>
 
-void InitAudio(HWND hWnd)
+void InitAudio()
 {
-  DirectSoundCreate8(NULL, &dSound, NULL);
-  dSound->lpVtbl->SetCooperativeLevel(dSound, hWnd, DSSCL_PRIORITY);
-  DSBUFFERDESC bufferDesc = {
-    .dwSize = sizeof(DSBUFFERDESC),
-    .dwFlags = DSBCAPS_PRIMARYBUFFER,
-    .dwBufferBytes = 0,
-    .lpwfxFormat = NULL
-  };
-  dSound->lpVtbl->CreateSoundBuffer(dSound, &bufferDesc, &dSoundBuffer, NULL);
+  if(SUCCEEDED(XAudio2Create(&xAudio2)))
+    Log("xaudio2 created\n");
 
-  WAVEFORMATEX wfx = {
-    .wFormatTag = WAVE_FORMAT_PCM,
-    .nChannels = 2,
-    .nSamplesPerSec = 22050,
-    .wBitsPerSample = 16,
-    .nBlockAlign = wfx.wBitsPerSample / 8 * wfx.nChannels,
-    .nAvgBytesPerSec = wfx.nSamplesPerSec * wfx.nBlockAlign
-  };
-  dSoundBuffer->lpVtbl->SetFormat(dSoundBuffer, &wfx);
+  if(SUCCEEDED(xAudio2->lpVtbl->CreateMasteringVoice(xAudio2,
+    &xMasteringVoice, XAUDIO2_DEFAULT_CHANNELS, XAUDIO2_DEFAULT_SAMPLERATE,
+    0, 0, NULL)))
+    Log("mastering voice created\n");
 }
 
 void LoadTestAudio()
 {
   HRSRC hResInfo = FindResource(NULL, "IDR_WAVE1", "WAV");
+  if(hResInfo == NULL) Log("resource not found\n");
   HGLOBAL hResData = LoadResource(NULL, hResInfo);
-  DWORD dwSize = SizeofResource(NULL, hResInfo);
-  VOID *pvRes = LockResource(hResData);
-  HANDLE heap = HeapCreate(0, 0, 0);
-  VOID *heapBlock = HeapAlloc(heap, HEAP_ZERO_MEMORY, dwSize);
-  memcpy(heapBlock, pvRes, dwSize);
-  MMIOINFO mmioInfo = {
-    .fccIOProc = FOURCC_MEM,
-    .cchBuffer = dwSize,
-    .pchBuffer = heapBlock
-  };
-  HMMIO mmio = mmioOpen(NULL, &mmioInfo, MMIO_ALLOCBUF | MMIO_READ);
-
-  MMCKINFO ckRiff;
-  mmioDescend(mmio, &ckRiff, NULL, 0);
-  if(ckRiff.fccType == mmioFOURCC('W', 'A','V', 'E'))
-  {
-    Log("reading valid wav file\n");
-  }
-
-  mmioClose(mmio, 0);
-  HeapFree(heap, 0, heapBlock);
-  Log("cleaned up audio test\n");
+  if(hResData == NULL) Log("resource not loaded\n");
+  DWORD dwChunkSize;
+  DWORD dwChunkPosition;
+  DWORD filetype;
+  if(FindChunk(hResData, FOURCCRIFF, &dwChunkSize, &dwChunkPosition) == S_OK)
+    Log("found chunk\n");
+  if(ReadChunkData(hResData, &filetype, sizeof(DWORD), dwChunkPosition) == S_OK)
+    Log("read chunk data");
+  if(filetype == FOURCCWAVE) Log("wav audio detected\n");
+  char buffer[128];
+  sprintf(buffer, "filetype: %lu\n", filetype);
+  Log(buffer);
 }
 
 void CleanAudio()
 {
-  dSoundBuffer->lpVtbl->Release(dSoundBuffer);
-  dSound->lpVtbl->Release(dSound);
+  // todo
 }

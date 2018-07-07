@@ -1,31 +1,13 @@
 #ifndef _AUDIO_H_
 #define _AUDIO_H_
 
-#include <dsound.h>
-#include <mmreg.h>
 #include "log.h"
+#include "xaudio2.h"
 
-LPDIRECTSOUND8 dSound;
-LPDIRECTSOUNDBUFFER dSoundBuffer;
+IXAudio2 *xAudio2;
+IXAudio2MasteringVoice *xMasteringVoice;
 
-struct WaveHeaderType
-{
-  char chunkId[4];
-	unsigned long chunkSize;
-	char format[4];
-	char subChunkId[4];
-	unsigned long subChunkSize;
-	unsigned short audioFormat;
-	unsigned short numChannels;
-	unsigned long sampleRate;
-	unsigned long bytesPerSecond;
-	unsigned short blockAlign;
-	unsigned short bitsPerSample;
-	char dataChunkId[4];
-	unsigned long dataSize;
-};
-
-void InitAudio(HWND hWnd);
+void InitAudio();
 void CleanAudio();
 void LoadTestAudio();
 

@@ -10,7 +10,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
   {
     case WM_CREATE:
       InitGraphics(hWnd);
-      InitAudio(hWnd);
+      InitAudio();
       InitScene();
       LoadTestAudio();
       break;
