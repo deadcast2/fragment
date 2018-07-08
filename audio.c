@@ -31,12 +31,29 @@ void LoadTestAudio()
   LPVOID resourceData = LockResource(loadedResource);
   DWORD resourceSize = SizeofResource(NULL, resource);
 
-  WAVEFORMATEXTENSIBLE wfx = {0};
+  ADPCMWAVEFORMAT *adpcm = (ADPCMWAVEFORMAT*)HeapAlloc(
+    GetProcessHeap(), 0, sizeof(ADPCMWAVEFORMAT) + sizeof(ADPCMCOEFSET) * 7);
+  adpcm->wSamplesPerBlock = 512;
+  adpcm->wNumCoef = 7;
+  adpcm->aCoef[0].iCoef1 = 256;
+  adpcm->aCoef[0].iCoef1 = 0;
+  adpcm->aCoef[1].iCoef1 = 512;
+  adpcm->aCoef[1].iCoef1 = -256;
+  adpcm->aCoef[2].iCoef1 = 0;
+  adpcm->aCoef[2].iCoef1 = 0;
+  adpcm->aCoef[3].iCoef1 = 192;
+  adpcm->aCoef[3].iCoef1 = 64;
+  adpcm->aCoef[4].iCoef1 = 240;
+  adpcm->aCoef[4].iCoef1 = 0;
+  adpcm->aCoef[5].iCoef1 = 460;
+  adpcm->aCoef[5].iCoef1 = -208;
+  adpcm->aCoef[6].iCoef1 = 392;
+  adpcm->aCoef[6].iCoef1 = -232;
   DWORD wfxSize = 0;
   PVOID fmt = memmem(resourceData, resourceSize, "fmt ", 4);
   if(fmt == NULL) return Log("fmt chunk not found\n");
   CopyMemory(&wfxSize, fmt + sizeof(DWORD), sizeof(DWORD));
-  CopyMemory(&wfx, fmt + sizeof(DWORD) * 2, wfxSize);
+  CopyMemory(&adpcm->wfx, fmt + sizeof(DWORD) * 2, wfxSize);
 
   XAUDIO2_BUFFER buffer = {0};
   DWORD dataSize = 0;
@@ -50,7 +67,7 @@ void LoadTestAudio()
   buffer.Flags = XAUDIO2_END_OF_STREAM;
 
   if(FAILED(xAudio2->lpVtbl->CreateSourceVoice(xAudio2, &xSourceVoice,
-    (WAVEFORMATEX*)&wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
+    (WAVEFORMATEX*)adpcm, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
     return;
 
   if(FAILED(xSourceVoice->lpVtbl->SubmitSourceBuffer(xSourceVoice,
@@ -59,6 +76,8 @@ void LoadTestAudio()
 
   if(FAILED(xSourceVoice->lpVtbl->Start(xSourceVoice, 0, XAUDIO2_COMMIT_NOW)))
     return;
+
+  HeapFree(GetProcessHeap(), 0, adpcm);
 }
 
 void CleanAudio()
