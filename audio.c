@@ -1,5 +1,6 @@
 #include "audio.h"
 #include "Log.h"
+#include "memmem.h"
 #include <stdio.h>
 
 void InitAudio()
@@ -21,115 +22,43 @@ void InitAudio()
   LoadTestAudio();
 }
 
-HRESULT FindChunk(HANDLE hFile, DWORD fourcc, DWORD *dwChunkSize,
-  DWORD *dwChunkDataPosition)
+void LoadTestAudio()
 {
-  HRESULT hr = S_OK;
-  if(INVALID_SET_FILE_POINTER == SetFilePointer(hFile, 0, NULL, FILE_BEGIN))
-    return HRESULT_FROM_WIN32(GetLastError());
+  HANDLE resource = FindResource(NULL, "IDR_WAVE1", "WAV");
+  if(resource == NULL) return Log("Resource not found\n");
+  HGLOBAL loadedResource = LoadResource(NULL, resource);
+  if(loadedResource == NULL) return Log("Could not load resource\n");
+  LPVOID resourceData = LockResource(loadedResource);
+  DWORD resourceSize = SizeofResource(NULL, resource);
 
-  DWORD dwChunkType;
-  DWORD dwChunkDataSize;
-  DWORD dwRIFFDataSize = 0;
-  DWORD dwFileType;
-  DWORD bytesRead = 0;
-  DWORD dwOffset = 0;
-
-  while(hr == S_OK)
-  {
-    DWORD dwRead;
-    if(0 == ReadFile(hFile, &dwChunkType, sizeof(DWORD), &dwRead, NULL))
-      hr = HRESULT_FROM_WIN32(GetLastError());
-
-    if(0 == ReadFile(hFile, &dwChunkDataSize, sizeof(DWORD), &dwRead, NULL))
-      hr = HRESULT_FROM_WIN32(GetLastError());
-
-    switch(dwChunkType)
-    {
-      case fourccRIFF:
-        dwRIFFDataSize = dwChunkDataSize;
-        dwChunkDataSize = 4;
-        if(0 == ReadFile(hFile, &dwFileType, sizeof(DWORD), &dwRead, NULL))
-          hr = HRESULT_FROM_WIN32(GetLastError());
-        break;
-      default:
-        if(INVALID_SET_FILE_POINTER == SetFilePointer(hFile, dwChunkDataSize,
-          NULL, FILE_CURRENT))
-          return HRESULT_FROM_WIN32(GetLastError());
-    }
-
-    dwOffset += sizeof(DWORD) * 2;
-
-    if(dwChunkType == fourcc)
-    {
-      *dwChunkSize = dwChunkDataSize;
-      *dwChunkDataPosition = dwOffset;
-      return S_OK;
-    }
-
-    dwOffset += dwChunkDataSize;
-
-    if (bytesRead >= dwRIFFDataSize) return S_FALSE;
-  }
-  return S_OK;
-}
-
-HRESULT ReadChunkData(HANDLE hFile, void *buffer, DWORD buffersize,
-  DWORD bufferoffset)
-{
-  HRESULT hr = S_OK;
-  if(INVALID_SET_FILE_POINTER == SetFilePointer(hFile, bufferoffset, NULL,
-    FILE_BEGIN))
-        return HRESULT_FROM_WIN32( GetLastError() );
-  DWORD dwRead;
-  if(0 == ReadFile(hFile, buffer, buffersize, &dwRead, NULL))
-    hr = HRESULT_FROM_WIN32(GetLastError());
-  return hr;
-}
-
-HRESULT LoadTestAudio()
-{
   WAVEFORMATEXTENSIBLE wfx = {0};
+  DWORD wfxSize = 0;
+  PVOID fmt = memmem(resourceData, resourceSize, "fmt ", 4);
+  if(fmt == NULL) return Log("fmt chunk not found\n");
+  CopyMemory(&wfxSize, fmt + sizeof(DWORD), sizeof(DWORD));
+  CopyMemory(&wfx, fmt + sizeof(DWORD) * 2, wfxSize);
+
   XAUDIO2_BUFFER buffer = {0};
-  HANDLE hFile = CreateFile(TEXT("wind.wav"), GENERIC_READ, FILE_SHARE_READ,
-    NULL, OPEN_EXISTING, 0, NULL);
-
-  if(INVALID_HANDLE_VALUE == hFile)
-    return HRESULT_FROM_WIN32(GetLastError());
-
-  if(INVALID_SET_FILE_POINTER == SetFilePointer(hFile, 0, NULL, FILE_BEGIN))
-    return HRESULT_FROM_WIN32(GetLastError());
-
-  DWORD dwChunkSize;
-  DWORD dwChunkPosition;
-  DWORD filetype;
-  FindChunk(hFile, fourccRIFF, &dwChunkSize, &dwChunkPosition);
-  ReadChunkData(hFile, &filetype, sizeof(DWORD), dwChunkPosition);
-  if(filetype != fourccWAVE) return S_FALSE;
-
-  FindChunk(hFile, fourccFMT, &dwChunkSize, &dwChunkPosition);
-  ReadChunkData(hFile, &wfx, dwChunkSize, dwChunkPosition);
-
-  FindChunk(hFile, fourccDATA, &dwChunkSize, &dwChunkPosition);
-  BYTE *pDataBuffer = HeapAlloc(GetProcessHeap(), 0, dwChunkSize);
-  ReadChunkData(hFile, pDataBuffer, dwChunkSize, dwChunkPosition);
-
-  buffer.AudioBytes = dwChunkSize;
-  buffer.pAudioData = pDataBuffer;
+  DWORD dataSize = 0;
+  PVOID data = memmem(resourceData, resourceSize, "data", 4);
+  if(data == NULL) return Log("data chunk not found\n");
+  CopyMemory(&dataSize, data + sizeof(DWORD), sizeof(DWORD));
+  BYTE *dataBuffer = HeapAlloc(GetProcessHeap(), 0, dataSize);
+  CopyMemory(dataBuffer, data + sizeof(DWORD) * 2, dataSize);
+  buffer.AudioBytes = dataSize;
+  buffer.pAudioData = dataBuffer;
   buffer.Flags = XAUDIO2_END_OF_STREAM;
 
   if(FAILED(xAudio2->lpVtbl->CreateSourceVoice(xAudio2, &xSourceVoice,
     (WAVEFORMATEX*)&wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
-    return S_FALSE;
+    return;
 
   if(FAILED(xSourceVoice->lpVtbl->SubmitSourceBuffer(xSourceVoice,
     &buffer, NULL)))
-    return S_FALSE;
+    return;
 
   if(FAILED(xSourceVoice->lpVtbl->Start(xSourceVoice, 0, XAUDIO2_COMMIT_NOW)))
-    return S_FALSE;
-
-  return S_OK;
+    return;
 }
 
 void CleanAudio()

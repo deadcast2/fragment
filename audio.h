@@ -19,6 +19,6 @@ HRESULT FindChunk(HANDLE hFile, DWORD fourcc, DWORD *dwChunkSize,
   DWORD *dwChunkDataPosition);
 HRESULT ReadChunkData(HANDLE hFile, void *buffer, DWORD buffersize,
   DWORD bufferoffset);
-HRESULT LoadTestAudio();
+void LoadTestAudio();
 
 #endif

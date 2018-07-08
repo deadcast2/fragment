@@ -9,8 +9,8 @@ LDLIBS = -lkernel32 -luser32 -lgdi32 -ld3d9 -lole32 -lntdll -lxaudio2_8
 RES = windres
 
 main.exe: main.c resources.o
-	$(CC) $(LDFLAGS) $(CFLAGS) log.c graphics.c audio.c scene.c main.c \
-	-o $@ resources.o $(LDLIBS)
+	$(CC) $(LDFLAGS) $(CFLAGS) log.c graphics.c audio.c scene.c \
+	main.c -o $@ resources.o $(LDLIBS)
 
 resources.o:
 	$(RES) resources.rc resources.o
