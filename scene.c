@@ -1,14 +1,5 @@
 #include "scene.h"
 
-void *memcpy(void *dest, const void *src, size_t len)
-{
-  char *d = dest;
-  const char *s = src;
-  while (len--)
-    *d++ = *s++;
-  return dest;
-}
-
 void InitScene()
 {
   struct CUSTOMVERTEX TestVertices[] =
@@ -21,7 +12,7 @@ void InitScene()
     0, CUSTOMFVF, D3DPOOL_MANAGED, &testBuffer, NULL);
   VOID *pVoid;
   testBuffer->lpVtbl->Lock(testBuffer, 0, 0, (void**)&pVoid, 0);
-  memcpy(pVoid, TestVertices, sizeof(TestVertices));
+  CopyMemory(pVoid, TestVertices, sizeof(TestVertices));
   testBuffer->lpVtbl->Unlock(testBuffer);
 }
 
