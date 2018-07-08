@@ -12,7 +12,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
       InitGraphics(hWnd);
       InitAudio();
       InitScene();
-      LoadTestAudio();
       break;
     case WM_KEYDOWN:
       if(wParam == VK_ESCAPE) PostMessage(hWnd, WM_QUIT, wParam, lParam);
