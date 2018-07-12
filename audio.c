@@ -1,6 +1,7 @@
 #include "audio.h"
 #include "Log.h"
 #include "memmem.h"
+#include "fastlz.h"
 #include <stdio.h>
 
 void InitAudio()
@@ -31,6 +32,13 @@ void LoadTestAudio()
   LPVOID resourceData = LockResource(loadedResource);
   DWORD resourceSize = SizeofResource(NULL, resource);
 
+  int uncompressedSize = 0;
+  memmove(&uncompressedSize, resourceData, sizeof(int));
+  memmove(resourceData, resourceData + sizeof(int), resourceSize - sizeof(int));
+  BYTE *decompressedData = HeapAlloc(GetProcessHeap(), 0, uncompressedSize);
+  fastlz_decompress(resourceData, resourceSize - sizeof(int),
+    decompressedData, uncompressedSize);
+
   ADPCMWAVEFORMAT *adpcm = (ADPCMWAVEFORMAT*)HeapAlloc(
     GetProcessHeap(), 0, sizeof(ADPCMWAVEFORMAT) + sizeof(ADPCMCOEFSET) * 7);
   adpcm->wSamplesPerBlock = 512;
@@ -50,14 +58,14 @@ void LoadTestAudio()
   adpcm->aCoef[6].iCoef1 = 392;
   adpcm->aCoef[6].iCoef1 = -232;
   DWORD wfxSize = 0;
-  PVOID fmt = memmem(resourceData, resourceSize, "fmt ", 4);
+  PVOID fmt = memmem(decompressedData, uncompressedSize, "fmt ", 4);
   if(fmt == NULL) return Log("fmt chunk not found\n");
   CopyMemory(&wfxSize, fmt + sizeof(DWORD), sizeof(DWORD));
   CopyMemory(&adpcm->wfx, fmt + sizeof(DWORD) * 2, wfxSize);
 
   XAUDIO2_BUFFER buffer = {0};
   DWORD dataSize = 0;
-  PVOID data = memmem(resourceData, resourceSize, "data", 4);
+  PVOID data = memmem(decompressedData, uncompressedSize, "data", 4);
   if(data == NULL) return Log("data chunk not found\n");
   CopyMemory(&dataSize, data + sizeof(DWORD), sizeof(DWORD));
   BYTE *dataBuffer = HeapAlloc(GetProcessHeap(), 0, dataSize);
@@ -78,6 +86,7 @@ void LoadTestAudio()
     return;
 
   HeapFree(GetProcessHeap(), 0, adpcm);
+  HeapFree(GetProcessHeap(), 0, decompressedData);
 }
 
 void CleanAudio()
