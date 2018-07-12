@@ -5,7 +5,8 @@ CFLAGS = -std=c99 -Os -ffreestanding -Wall -Wextra -Werror \
 	-fno-asynchronous-unwind-tables \
 	-fno-stack-check -fno-stack-protector -mno-stack-arg-probe -Wno-multichar
 LDFLAGS = -s -nostdlib -mwindows
-LDLIBS = -lkernel32 -luser32 -lgdi32 -ld3d9 -lole32 -lntdll -lxaudio2_8
+LDLIBS = -lkernel32 -luser32 -lgdi32 -ld3d9 -lole32 -lntdll -lxaudio2_8 \
+	-ld3dx9
 RES = windres
 
 fragment.exe: main.c resources.o

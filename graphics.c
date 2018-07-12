@@ -15,6 +15,7 @@ void InitGraphics(HWND hWnd)
     D3DDEVTYPE_HAL, hWnd,
     D3DCREATE_SOFTWARE_VERTEXPROCESSING,
     &d3dpp, &d3ddev);
+  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_LIGHTING, FALSE);
 }
 
 void CleanGraphics()

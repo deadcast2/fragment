@@ -3,10 +3,11 @@
 
 #include <windows.h>
 #include <d3d9.h>
+#include <d3dx9.h>
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
-#define CUSTOMFVF (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
+#define CUSTOMFVF (D3DFVF_XYZ | D3DFVF_DIFFUSE)
 
 LPDIRECT3D9 d3d;
 LPDIRECT3DDEVICE9 d3ddev;
@@ -14,7 +15,7 @@ LPDIRECT3DVERTEXBUFFER9 testBuffer;
 
 struct CUSTOMVERTEX
 {
-  FLOAT x, y, z, rhw;
+  FLOAT x, y, z;
   DWORD color;
 };
 
