@@ -3,6 +3,8 @@
 #include "graphics.h"
 #include "audio.h"
 #include "scene.h"
+#include "camera.h"
+#include "input.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -11,6 +13,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_CREATE:
       InitGraphics(hWnd);
       InitAudio();
+      InitCamera();
       InitScene();
       break;
     case WM_KEYDOWN:
@@ -42,7 +45,9 @@ HWND InitWin()
 int WINAPI WinMainCRTStartup()
 {
   MSG msg;
+  float lastTime = (float)timeGetTime();
   InitWin();
+
   while(msg.message != WM_QUIT)
   {
     if(PeekMessage(&msg, 0, 0, 0, TRUE))
@@ -52,11 +57,19 @@ int WINAPI WinMainCRTStartup()
     }
     else
     {
+      float currentTime = (float)timeGetTime();
+      float deltaTime = (currentTime - lastTime) * 0.001f;
+
       RenderScene();
+      HandleInput(deltaTime);
+
+      lastTime = currentTime;
     }
   }
+
   CleanGraphics();
   CleanAudio();
   ExitProcess(0);
+
   return 0;
 }
