@@ -10,8 +10,9 @@ LDLIBS = -lkernel32 -luser32 -lgdi32 -ld3d9 -lole32 -lntdll -lxaudio2_8 \
 RES = windres
 
 fragment.exe: main.c resources.o
-	$(CC) $(LDFLAGS) $(CFLAGS) log.c strtok_r.c fastlz.c graphics.c \
-	audio.c model.c scene.c input.c camera.c \
+	$(CC) $(LDFLAGS) $(CFLAGS) \
+	vendor/memmem.c vendor/strtok_r.c vendor/fastlz.c \
+	log.c graphics.c audio.c model.c scene.c input.c camera.c \
 	main.c -o $@ resources.o $(LDLIBS)
 
 resources.o:

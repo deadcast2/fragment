@@ -3,10 +3,10 @@
 
 #include <windows.h>
 #include <stdio.h>
-#include "fastlz.h"
+#include "vendor/fastlz.h"
+#include "vendor/strtok_r.h"
 #include "graphics.h"
 #include "log.h"
-#include "strtok_r.h"
 
 void LoadModel(const char *name);
 

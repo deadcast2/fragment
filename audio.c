@@ -1,8 +1,4 @@
 #include "audio.h"
-#include "Log.h"
-#include "memmem.h"
-#include "fastlz.h"
-#include <stdio.h>
 
 void InitAudio()
 {
