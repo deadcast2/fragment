@@ -1,13 +1,12 @@
-#include "camera.h"
 #include "scene.h"
 
 void InitScene()
 {
   struct CUSTOMVERTEX TestVertices[] =
   {
-    {2.5f, -3.0f, -5.0f, D3DCOLOR_XRGB(0, 0, 255)},
+    {2.5f, -3.0f, -5.0f, D3DCOLOR_XRGB(255, 0, 0)},
     {0.0f, 3.0f, -5.0f, D3DCOLOR_XRGB(0, 255, 0)},
-    {-2.5f, -3.0f, -5.0f, D3DCOLOR_XRGB(255, 0, 0)}
+    {-2.5f, -3.0f, -5.0f, D3DCOLOR_XRGB(0, 0, 255)}
   };
   d3ddev->lpVtbl->CreateVertexBuffer(d3ddev, 3 * sizeof(struct CUSTOMVERTEX),
     0, CUSTOMFVF, D3DPOOL_MANAGED, &testBuffer, NULL);
@@ -15,6 +14,8 @@ void InitScene()
   testBuffer->lpVtbl->Lock(testBuffer, 0, 0, (void**)&pVoid, 0);
   CopyMemory(pVoid, TestVertices, sizeof(TestVertices));
   testBuffer->lpVtbl->Unlock(testBuffer);
+
+  LoadModel("IDR_MODEL1");
 }
 
 void RenderScene()
