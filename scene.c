@@ -2,20 +2,16 @@
 
 void InitScene()
 {
-  struct CUSTOMVERTEX TestVertices[] =
-  {
-    {2.5f, -3.0f, -5.0f, D3DCOLOR_XRGB(255, 0, 0)},
-    {0.0f, 3.0f, -5.0f, D3DCOLOR_XRGB(0, 255, 0)},
-    {-2.5f, -3.0f, -5.0f, D3DCOLOR_XRGB(0, 0, 255)}
-  };
-  d3ddev->lpVtbl->CreateVertexBuffer(d3ddev, 3 * sizeof(struct CUSTOMVERTEX),
-    0, CUSTOMFVF, D3DPOOL_MANAGED, &testBuffer, NULL);
-  VOID *pVoid;
-  testBuffer->lpVtbl->Lock(testBuffer, 0, 0, (void**)&pVoid, 0);
-  CopyMemory(pVoid, TestVertices, sizeof(TestVertices));
-  testBuffer->lpVtbl->Unlock(testBuffer);
+  testVertices = LoadModel("IDR_MODEL1", &testVertexCount);
+  d3ddev->lpVtbl->CreateVertexBuffer(
+    d3ddev, testVertexCount * sizeof(struct vertex), 0,
+    CUSTOMFVF, D3DPOOL_MANAGED, &testVertexBuffer, 0);
 
-  LoadModel("IDR_MODEL1");
+  VOID *pVoid;
+  testVertexBuffer->lpVtbl->Lock(testVertexBuffer, 0,
+    0, (void**)&pVoid, 0);
+  CopyMemory(pVoid, testVertices, testVertexCount * sizeof(struct vertex));
+  testVertexBuffer->lpVtbl->Unlock(testVertexBuffer);
 }
 
 void RenderScene()
@@ -32,10 +28,17 @@ void RenderScene()
   d3ddev->lpVtbl->BeginScene(d3ddev);
   {
     d3ddev->lpVtbl->SetFVF(d3ddev, CUSTOMFVF);
-    d3ddev->lpVtbl->SetStreamSource(d3ddev, 0, testBuffer, 0,
-      sizeof(struct CUSTOMVERTEX));
-    d3ddev->lpVtbl->DrawPrimitive(d3ddev, D3DPT_TRIANGLELIST, 0, 1);
+    d3ddev->lpVtbl->SetStreamSource(d3ddev, 0, testVertexBuffer,
+      0, sizeof(struct vertex));
+    d3ddev->lpVtbl->DrawPrimitive(d3ddev, D3DPT_TRIANGLELIST, 0,
+      testVertexCount / 3);
   }
   d3ddev->lpVtbl->EndScene(d3ddev);
   d3ddev->lpVtbl->Present(d3ddev, NULL, NULL, NULL, NULL);
+}
+
+void CleanScene()
+{
+  HeapFree(GetProcessHeap(), 0, testVertices);
+  testVertexBuffer->lpVtbl->Release(testVertexBuffer);
 }

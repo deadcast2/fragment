@@ -1,11 +1,11 @@
 #include "model.h"
 
-void LoadModel(const char *name)
+struct vertex *LoadModel(const char *name, int *count)
 {
   HANDLE resource = FindResource(NULL, name, "SOS");
-  if(resource == NULL) return Log("Resource model not found\n");
+  if(resource == NULL) return NULL;
   HGLOBAL loadedResource = LoadResource(NULL, resource);
-  if(loadedResource == NULL) return Log("Could not load model resource\n");
+  if(loadedResource == NULL) return NULL;
   LPVOID resourceData = LockResource(loadedResource);
   DWORD resourceSize = SizeofResource(NULL, resource);
 
@@ -22,7 +22,7 @@ void LoadModel(const char *name)
     uncompressedSize);
   CopyMemory(decompressedDataCopy, decompressedData, uncompressedSize);
 
-  int vertexCount = -1;
+  int vertexCount = 0;
   char *context;
   char *line = strtok_r((char *)decompressedData, "\n", &context);
   while(line != NULL)
@@ -38,18 +38,18 @@ void LoadModel(const char *name)
   int index = 0;
   while(index < vertexCount)
   {
-    unsigned int x, y, z, t, v;
+    int x, y, z, t, v;
     sscanf(line, "%x %x %x %x %x", &x, &y, &z, &t, &v);
-    vertices[index] = (struct vertex){
+    vertices[index] = (struct vertex) {
       .x = x / SCALE_FACTOR,
       .y = y / SCALE_FACTOR,
       .z = z / SCALE_FACTOR,
-      .t = t / SCALE_FACTOR,
-      .v = v / SCALE_FACTOR,
+      .color = D3DCOLOR_XRGB(255, 0, 0),
     };
     line = strtok_r(NULL, "\n", &context);
     index++;
   }
-  HeapFree(GetProcessHeap(), 0, vertices);
   HeapFree(GetProcessHeap(), 0, decompressedDataCopy);
+  *count = vertexCount;
+  return vertices;
 }

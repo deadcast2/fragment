@@ -67,6 +67,7 @@ int WINAPI WinMainCRTStartup()
     }
   }
 
+  CleanScene();
   CleanGraphics();
   CleanAudio();
   ExitProcess(0);

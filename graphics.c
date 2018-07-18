@@ -20,7 +20,6 @@ void InitGraphics(HWND hWnd)
 
 void CleanGraphics()
 {
-  testBuffer->lpVtbl->Release(testBuffer);
   d3ddev->lpVtbl->Release(d3ddev);
   d3d->lpVtbl->Release(d3d);
 }
