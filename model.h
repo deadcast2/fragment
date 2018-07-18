@@ -8,6 +8,8 @@
 #include "graphics.h"
 #include "log.h"
 
+#define SCALE_FACTOR 1000000.0
+
 void LoadModel(const char *name);
 
 #endif

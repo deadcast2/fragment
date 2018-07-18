@@ -13,6 +13,11 @@ LPDIRECT3D9 d3d;
 LPDIRECT3DDEVICE9 d3ddev;
 LPDIRECT3DVERTEXBUFFER9 testBuffer;
 
+struct vertex
+{
+  FLOAT x, y, z, t, v;
+};
+
 struct CUSTOMVERTEX
 {
   FLOAT x, y, z;
