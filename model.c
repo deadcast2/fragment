@@ -44,7 +44,8 @@ struct vertex *LoadModel(const char *name, int *count)
       .x = x / SCALE_FACTOR,
       .y = y / SCALE_FACTOR,
       .z = z / SCALE_FACTOR,
-      .color = D3DCOLOR_XRGB(255, 0, 0),
+      .t = t / SCALE_FACTOR,
+      .v = v / SCALE_FACTOR
     };
     line = strtok_r(NULL, "\n", &context);
     index++;

@@ -4,6 +4,7 @@
 #include "graphics.h"
 #include "camera.h"
 #include "model.h"
+#include "texture.h"
 
 IDirect3DVertexBuffer9 *testVertexBuffer;
 int testVertexCount;

@@ -9,12 +9,12 @@
 #include "log.h"
 
 #define SCALE_FACTOR 1000000.0
-#define CUSTOMFVF (D3DFVF_XYZ | D3DFVF_DIFFUSE)
+#define CUSTOMFVF (D3DFVF_XYZ | D3DFVF_TEX1)
 
 struct vertex
 {
   FLOAT x, y, z;
-  DWORD color;
+  FLOAT t, v;
 };
 
 struct vertex *LoadModel(const char *name, int *count);

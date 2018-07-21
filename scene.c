@@ -12,6 +12,8 @@ void InitScene()
     0, (void**)&pVoid, 0);
   CopyMemory(pVoid, testVertices, testVertexCount * sizeof(struct vertex));
   testVertexBuffer->lpVtbl->Unlock(testVertexBuffer);
+
+  LoadTexture("IDR_TEX1");
 }
 
 void RenderScene()
@@ -27,6 +29,7 @@ void RenderScene()
     D3DCOLOR_XRGB(0, 40, 100), 1.0f, 0);
   d3ddev->lpVtbl->BeginScene(d3ddev);
   {
+    d3ddev->lpVtbl->SetTexture(d3ddev, 0, (IDirect3DBaseTexture9*)testTexture);
     d3ddev->lpVtbl->SetFVF(d3ddev, CUSTOMFVF);
     d3ddev->lpVtbl->SetStreamSource(d3ddev, 0, testVertexBuffer,
       0, sizeof(struct vertex));
@@ -41,4 +44,5 @@ void CleanScene()
 {
   HeapFree(GetProcessHeap(), 0, testVertices);
   testVertexBuffer->lpVtbl->Release(testVertexBuffer);
+  testTexture->lpVtbl->Release(testTexture);
 }

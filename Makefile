@@ -12,8 +12,7 @@ RES = windres
 fragment.exe: main.c resources.o
 	$(CC) $(LDFLAGS) $(CFLAGS) \
 	vendor/memmem.c vendor/strtok_r.c vendor/fastlz.c \
-	log.c graphics.c audio.c model.c scene.c input.c camera.c \
-	main.c -o $@ resources.o $(LDLIBS)
+	*.c -o $@ resources.o $(LDLIBS)
 
 resources.o:
 	$(RES) resources.rc resources.o
