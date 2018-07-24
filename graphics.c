@@ -9,13 +9,16 @@ void InitGraphics(HWND hWnd)
     .hDeviceWindow = hWnd,
     .BackBufferFormat = D3DFMT_X8R8G8B8,
     .BackBufferWidth = SCREEN_WIDTH,
-    .BackBufferHeight = SCREEN_HEIGHT
+    .BackBufferHeight = SCREEN_HEIGHT,
+    .EnableAutoDepthStencil = TRUE,
+    .AutoDepthStencilFormat = D3DFMT_D16
   };
   d3d->lpVtbl->CreateDevice(d3d, D3DADAPTER_DEFAULT,
     D3DDEVTYPE_HAL, hWnd,
     D3DCREATE_SOFTWARE_VERTEXPROCESSING,
     &d3dpp, &d3ddev);
   d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_LIGHTING, FALSE);
+  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_ZENABLE, TRUE);
 }
 
 void CleanGraphics()
