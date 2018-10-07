@@ -2,18 +2,10 @@
 
 void InitScene()
 {
-  testVertices = LoadModel("IDR_MODEL1", &testVertexCount);
-  d3ddev->lpVtbl->CreateVertexBuffer(
-    d3ddev, testVertexCount * sizeof(struct vertex), 0,
-    CUSTOMFVF, D3DPOOL_MANAGED, &testVertexBuffer, 0);
-
-  VOID *pVoid;
-  testVertexBuffer->lpVtbl->Lock(testVertexBuffer, 0,
-    0, (void**)&pVoid, 0);
-  CopyMemory(pVoid, testVertices, testVertexCount * sizeof(struct vertex));
-  testVertexBuffer->lpVtbl->Unlock(testVertexBuffer);
-
-  LoadTexture("IDR_TEX1");
+  testActor = CreateActor((struct actorProps) {
+    .modelName = "IDR_MODEL1",
+    .textureName = "IDR_TEX1"
+  });
 }
 
 void RenderScene()
@@ -26,12 +18,12 @@ void RenderScene()
 
   d3ddev->lpVtbl->BeginScene(d3ddev);
   {
-    d3ddev->lpVtbl->SetTexture(d3ddev, 0, (IDirect3DBaseTexture9*)testTexture);
+    d3ddev->lpVtbl->SetTexture(d3ddev, 0, (IDirect3DBaseTexture9*)testActor->d3dTexture);
     d3ddev->lpVtbl->SetFVF(d3ddev, CUSTOMFVF);
-    d3ddev->lpVtbl->SetStreamSource(d3ddev, 0, testVertexBuffer,
+    d3ddev->lpVtbl->SetStreamSource(d3ddev, 0, testActor->vertexBuffer,
       0, sizeof(struct vertex));
     d3ddev->lpVtbl->DrawPrimitive(d3ddev, D3DPT_TRIANGLELIST, 0,
-      testVertexCount / 3);
+      testActor->vertexCount / 3);
   }
   d3ddev->lpVtbl->EndScene(d3ddev);
   d3ddev->lpVtbl->Present(d3ddev, NULL, NULL, NULL, NULL);
@@ -39,7 +31,5 @@ void RenderScene()
 
 void CleanScene()
 {
-  HeapFree(GetProcessHeap(), 0, testVertices);
-  testVertexBuffer->lpVtbl->Release(testVertexBuffer);
-  testTexture->lpVtbl->Release(testTexture);
+  DeleteActor(testActor);
 }

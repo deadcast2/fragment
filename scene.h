@@ -7,9 +7,7 @@
 #include "texture.h"
 #include "actor.h"
 
-IDirect3DVertexBuffer9 *testVertexBuffer;
-int testVertexCount;
-struct vertex *testVertices;
+struct actor *testActor;
 
 void InitScene();
 void RenderScene();

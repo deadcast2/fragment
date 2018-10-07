@@ -5,8 +5,6 @@
 #include "graphics.h"
 #include "log.h"
 
-IDirect3DTexture9 *testTexture;
-
-void LoadTexture(const char *name);
+void LoadTexture(const char *name, IDirect3DTexture9 **d3dTexture);
 
 #endif
