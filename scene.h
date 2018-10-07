@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "model.h"
 #include "texture.h"
+#include "actor.h"
 
 IDirect3DVertexBuffer9 *testVertexBuffer;
 int testVertexCount;
