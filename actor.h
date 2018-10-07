@@ -14,6 +14,7 @@ struct actor
   int vertexCount;
   struct vertex position;
   struct vertex rotation;
+  struct vertex scale;
 };
 
 struct actorProps
@@ -22,6 +23,7 @@ struct actorProps
   char *textureName;
   struct vertex position;
   struct vertex rotation;
+  struct vertex scale;
 };
 
 struct actor *CreateActor(struct actorProps props);

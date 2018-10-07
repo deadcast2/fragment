@@ -7,6 +7,9 @@ struct actor *CreateActor(struct actorProps props)
 
   newActor->vertexBuffer = 0;
   newActor->d3dTexture = 0;
+  newActor->position = props.position;
+  newActor->rotation = props.rotation;
+  newActor->scale = props.scale;
 
   if (props.modelName)
   {
