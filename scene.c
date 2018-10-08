@@ -3,16 +3,16 @@
 void InitScene()
 {
   testActor = CreateActor((struct actorProps) {
-    .modelName = "IDR_MODEL1",
-    .textureName = "IDR_TEX1",
+    .modelName = "IDR_ISLAND_STATIC",
+    .textureName = "IDR_ISLAND_TEX",
     .position = (struct vertex) {
-      .x = 0, .y = -2, .z = 10
+      .x = 0, .y = -7, .z = 0
     },
     .rotation = (struct vertex) {
-      .x = 10, .y = 0, .z = 0
+      .x = 0, .y = D3DX_PI/2, .z = 0
     },
     .scale = (struct vertex) {
-      .x = 0.2, .y = 0.2, .z = 0.2
+      .x = 1, .y = 1, .z = 1
     }
   });
 }

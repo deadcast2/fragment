@@ -9,9 +9,9 @@ void InitCamera()
   cameraPos = (D3DXVECTOR3){ 0, 0, 0 };
 
   D3DXMATRIX viewMat;
-  float aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+  float aspect = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
   float fov = D3DX_PI / 2.0f;
-  D3DXMatrixPerspectiveFovLH(&viewMat, fov, aspect, 1.0f, 100.0f);
+  D3DXMatrixPerspectiveFovLH(&viewMat, fov, aspect, 0.01f, 100.0f);
   d3ddev->lpVtbl->SetTransform(d3ddev, D3DTS_PROJECTION, &viewMat);
 }
 
@@ -24,7 +24,6 @@ D3DXMATRIX CameraViewMatrix()
   D3DXVec3Normalize(&cameraRight, &cameraRight);
 
   D3DXMATRIX view;
-  view.m[0][0] = cameraRight.x;
   view.m[0][0] = cameraRight.x;
   view.m[0][1] = cameraUp.x;
   view.m[0][2] = cameraForward.x;
