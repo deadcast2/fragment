@@ -1,3 +1,7 @@
 IDR_WAVE1 WAV "resources/wind.wav.lz"
+
 IDR_ISLAND_STATIC SOS "resources/island_static.sos.lz"
 IDR_ISLAND_TEX RCDATA "resources/island.png"
+
+IDR_SKY SOS "resources/sky.sos.lz"
+IDR_SKY_TEX RCDATA "resources/sky.png"

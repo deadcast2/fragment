@@ -7,7 +7,9 @@
 #include "texture.h"
 #include "actor.h"
 
-struct actor *testActor;
+#define ACTOR_COUNT 2
+
+struct actor *actors[ACTOR_COUNT];
 
 void InitScene();
 void RenderScene();

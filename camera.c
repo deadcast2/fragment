@@ -11,7 +11,7 @@ void InitCamera()
   D3DXMATRIX viewMat;
   float aspect = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
   float fov = D3DX_PI / 2.0f;
-  D3DXMatrixPerspectiveFovLH(&viewMat, fov, aspect, 0.01f, 100.0f);
+  D3DXMatrixPerspectiveFovLH(&viewMat, fov, aspect, 0.01f, 1000.0f);
   d3ddev->lpVtbl->SetTransform(d3ddev, D3DTS_PROJECTION, &viewMat);
 }
 

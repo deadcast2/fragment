@@ -27,7 +27,8 @@ struct actorProps
 };
 
 struct actor *CreateActor(struct actorProps props);
-
 void DeleteActor(struct actor *actor);
+void DrawActor(struct actor *actor, ID3DXMatrixStack *stack,
+  LPDIRECT3DDEVICE9 d3ddev);
 
 #endif
