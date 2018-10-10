@@ -3,17 +3,17 @@
 void InitScene()
 {
   actors[0] = CreateActor((struct actorProps) {
-    .modelName = "IDR_ISLAND_STATIC",
+    .modelName = "IDR_ISLAND",
     .textureName = "IDR_ISLAND_TEX",
-    .position = (struct vertex) { .x = 0, .y = -7, .z = 0 },
-    .rotation = (struct vertex) { .x = 0, .y = D3DX_PI/2, .z = 0 },
+    .position = (struct vertex) { .x = 0, .y = -6.8, .z = 0 },
+    .rotation = (struct vertex) { .x = D3DX_PI, .y = 0, .z = 0 },
     .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 }
   });
   actors[1] = CreateActor((struct actorProps) {
     .modelName = "IDR_SKY",
     .textureName = "IDR_SKY_TEX",
     .position = (struct vertex) { .x = 0, .y = 0, .z = 0 },
-    .rotation = (struct vertex) { .x = 0, .y = D3DX_PI/2, .z = 0 },
+    .rotation = (struct vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 }
   });
 }
