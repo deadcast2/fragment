@@ -19,6 +19,11 @@ void InitGraphics(HWND hWnd)
     &d3dpp, &d3ddev);
   d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_LIGHTING, FALSE);
   d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_ZENABLE, TRUE);
+  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_ALPHAREF, 0x0000008f);
+  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_ALPHATESTENABLE, TRUE);
+  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_SRCBLEND, D3DBLEND_ONE);
+  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_DESTBLEND, D3DBLEND_ZERO);
 }
 
 void CleanGraphics()
