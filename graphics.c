@@ -24,6 +24,12 @@ void InitGraphics(HWND hWnd)
   d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
   d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_SRCBLEND, D3DBLEND_ONE);
   d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_DESTBLEND, D3DBLEND_ZERO);
+  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_FOGENABLE, TRUE);
+  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_FOGCOLOR, 0x00FFFFFF);
+  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_FOGVERTEXMODE, D3DFOG_LINEAR);
+
+  const float fogStart = 1.0f;
+  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_FOGSTART, *(DWORD*)(&fogStart));
 }
 
 void CleanGraphics()

@@ -6,13 +6,16 @@
 #include "model.h"
 #include "texture.h"
 #include "actor.h"
+#include "srandom.h"
 
 #define ACTOR_COUNT 2
 
 struct actor *actors[ACTOR_COUNT];
+int randomFogEnd, lastFogEnd;
+float fogTime, fogStep;
 
 void InitScene();
-void RenderScene();
+void RenderScene(float deltaTime);
 void CleanScene();
 
 #endif

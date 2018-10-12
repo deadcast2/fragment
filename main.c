@@ -60,7 +60,7 @@ int WINAPI WinMainCRTStartup()
       float currentTime = (float)timeGetTime();
       float deltaTime = (currentTime - lastTime) * 0.001f;
 
-      RenderScene();
+      RenderScene(deltaTime);
       HandleInput(deltaTime);
 
       lastTime = currentTime;

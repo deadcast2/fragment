@@ -2,6 +2,8 @@
 
 void InitScene()
 {
+  seed_smooth_rand();
+  randomFogEnd = fogStep = 30;
   actors[0] = CreateActor((struct actorProps) {
     .modelName = "IDR_ISLAND",
     .textureName = "IDR_ISLAND_TEX",
@@ -18,7 +20,7 @@ void InitScene()
   });
 }
 
-void RenderScene()
+void RenderScene(float deltaTime)
 {
   ID3DXMatrixStack *stack;
   D3DXCreateMatrixStack(0, &stack);
@@ -34,6 +36,15 @@ void RenderScene()
   }
   d3ddev->lpVtbl->EndScene(d3ddev);
   d3ddev->lpVtbl->Present(d3ddev, NULL, NULL, NULL, NULL);
+
+  if (fogStep == randomFogEnd)
+  {
+    lastFogEnd = randomFogEnd;
+    randomFogEnd = (smooth_rand() % (150 - 8 + 1)) + 8;
+    fogTime = 0;
+  }
+  fogStep = smooth_inter(lastFogEnd, randomFogEnd, fogTime += deltaTime * 0.1f);
+  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_FOGEND, *(DWORD*)(&fogStep));
 }
 
 void CleanScene()
