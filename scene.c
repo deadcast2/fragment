@@ -1,5 +1,10 @@
 #include "scene.h"
 
+void RotateSky(struct actor *self, float deltaTime)
+{
+  self->rotation.x += 0.1f * deltaTime;
+}
+
 void InitScene()
 {
   seed_smooth_rand();
@@ -9,14 +14,16 @@ void InitScene()
     .textureName = "IDR_ISLAND_TEX",
     .position = (struct vertex) { .x = 0, .y = -6.8, .z = 0 },
     .rotation = (struct vertex) { .x = D3DX_PI, .y = 0, .z = 0 },
-    .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 }
+    .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 },
+    .update = NULL
   });
   actors[1] = CreateActor((struct actorProps) {
     .modelName = "IDR_SKY",
     .textureName = "IDR_SKY_TEX",
     .position = (struct vertex) { .x = 0, .y = 0, .z = 0 },
     .rotation = (struct vertex) { .x = 0, .y = 0, .z = 0 },
-    .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 }
+    .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 },
+    .update = RotateSky
   });
 }
 
@@ -32,7 +39,7 @@ void RenderScene(float deltaTime)
   d3ddev->lpVtbl->BeginScene(d3ddev);
   for(int i = 0; i < ACTOR_COUNT; i++)
   {
-    DrawActor(actors[i], stack, d3ddev);
+    DrawActor(actors[i], stack, d3ddev, deltaTime);
   }
   d3ddev->lpVtbl->EndScene(d3ddev);
   d3ddev->lpVtbl->Present(d3ddev, NULL, NULL, NULL, NULL);

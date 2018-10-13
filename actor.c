@@ -10,6 +10,7 @@ struct actor *CreateActor(struct actorProps props)
   newActor->position = props.position;
   newActor->rotation = props.rotation;
   newActor->scale = props.scale;
+  newActor->update = 0;
 
   if (props.modelName)
   {
@@ -26,10 +27,9 @@ struct actor *CreateActor(struct actorProps props)
     HeapFree(GetProcessHeap(), 0, vertices);
   }
 
-  if (props.textureName)
-  {
-    LoadTexture(props.textureName, &newActor->d3dTexture);
-  }
+  if (props.textureName) LoadTexture(props.textureName, &newActor->d3dTexture);
+
+  if (props.update) newActor->update = props.update;
 
   return newActor;
 }
@@ -43,7 +43,7 @@ void DeleteActor(struct actor *actor)
 }
 
 void DrawActor(struct actor *actor, ID3DXMatrixStack *stack,
-  LPDIRECT3DDEVICE9 d3ddev)
+  LPDIRECT3DDEVICE9 d3ddev, float deltaTime)
 {
   D3DXMATRIX translation;
   D3DXMatrixTranslation(&translation, actor->position.x,
@@ -63,7 +63,6 @@ void DrawActor(struct actor *actor, ID3DXMatrixStack *stack,
 
   stack->lpVtbl->Push(stack);
   stack->lpVtbl->MultMatrixLocal(stack, &actorMat);
-
   d3ddev->lpVtbl->SetTransform(d3ddev, D3DTS_VIEW, stack->lpVtbl->GetTop(stack));
   d3ddev->lpVtbl->SetTexture(d3ddev, 0, (IDirect3DBaseTexture9*)actor->d3dTexture);
   d3ddev->lpVtbl->SetFVF(d3ddev, CUSTOMFVF);
@@ -71,6 +70,7 @@ void DrawActor(struct actor *actor, ID3DXMatrixStack *stack,
     0, sizeof(struct vertex));
   d3ddev->lpVtbl->DrawPrimitive(d3ddev, D3DPT_TRIANGLELIST, 0,
     actor->vertexCount / 3);
-
   stack->lpVtbl->Pop(stack);
+
+  if (actor->update) actor->update(actor, deltaTime);
 }
