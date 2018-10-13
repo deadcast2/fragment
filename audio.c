@@ -69,6 +69,7 @@ void LoadTestAudio()
   buffer.AudioBytes = dataSize;
   buffer.pAudioData = dataBuffer;
   buffer.Flags = XAUDIO2_END_OF_STREAM;
+  buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
   if(FAILED(xAudio2->lpVtbl->CreateSourceVoice(xAudio2, &xSourceVoice,
     (WAVEFORMATEX*)adpcm, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
