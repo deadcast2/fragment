@@ -12,7 +12,7 @@ void InitScene()
   actors[0] = CreateActor((struct actorProps) {
     .modelName = "IDR_ISLAND",
     .textureName = "IDR_ISLAND_TEX",
-    .position = (struct vertex) { .x = 0, .y = -6.8, .z = 0 },
+    .position = (struct vertex) { .x = 0, .y = -6.6, .z = 0 },
     .rotation = (struct vertex) { .x = D3DX_PI, .y = 0, .z = 0 },
     .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 },
     .update = NULL
@@ -47,10 +47,10 @@ void RenderScene(float deltaTime)
   if (fogStep == randomFogEnd)
   {
     int fogDistances[12] = {
-		    17, 18, 18, 18, 18, 25, 25, 200, 200, 200, 200, 200
+		    17, 18, 18, 18, 18, 19, 25, 200, 200, 200, 200, 200
 	  };
     float fogSpeeds[5] = {
-		    0.1, 0.1, 0.15, 0.16, 0.08
+		    0.1, 0.1, 0.15, 0.15, 0.08
 	  };
     lastFogEnd = randomFogEnd;
     randomFogEnd = fogDistances[smooth_rand() % 12];
