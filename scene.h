@@ -12,7 +12,7 @@
 
 struct actor *actors[ACTOR_COUNT];
 int randomFogEnd, lastFogEnd;
-float fogTime, fogStep;
+float fogTime, fogStep, fogSpeed;
 
 void InitScene();
 void RenderScene(float deltaTime);

@@ -3,7 +3,7 @@
 void InitScene()
 {
   seed_smooth_rand();
-  randomFogEnd = fogStep = 30;
+  randomFogEnd = fogStep = fogSpeed = 200;
   actors[0] = CreateActor((struct actorProps) {
     .modelName = "IDR_ISLAND",
     .textureName = "IDR_ISLAND_TEX",
@@ -39,11 +39,18 @@ void RenderScene(float deltaTime)
 
   if (fogStep == randomFogEnd)
   {
+    int fogDistances[12] = {
+		    17, 18, 18, 18, 18, 25, 25, 200, 200, 200, 200, 200
+	  };
+    float fogSpeeds[5] = {
+		    0.1, 0.1, 0.15, 0.16, 0.08
+	  };
     lastFogEnd = randomFogEnd;
-    randomFogEnd = (smooth_rand() % (150 - 8 + 1)) + 8;
+    randomFogEnd = fogDistances[smooth_rand() % 12];
+    fogSpeed = fogSpeeds[smooth_rand() % 5];
     fogTime = 0;
   }
-  fogStep = smooth_inter(lastFogEnd, randomFogEnd, fogTime += deltaTime * 0.1f);
+  fogStep = smooth_inter(lastFogEnd, randomFogEnd, fogTime += deltaTime * fogSpeed);
   d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_FOGEND, *(DWORD*)(&fogStep));
 }
 
