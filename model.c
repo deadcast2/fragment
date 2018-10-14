@@ -1,11 +1,11 @@
 #include "model.h"
 
-struct vertex *LoadModel(const char *name, int *count)
+void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vertexBuffer)
 {
   HANDLE resource = FindResource(NULL, name, "SOS");
-  if(resource == NULL) return NULL;
+  if(resource == NULL) return;
   HGLOBAL loadedResource = LoadResource(NULL, resource);
-  if(loadedResource == NULL) return NULL;
+  if(loadedResource == NULL) return;
   LPVOID resourceData = LockResource(loadedResource);
   DWORD resourceSize = SizeofResource(NULL, resource);
 
@@ -22,21 +22,21 @@ struct vertex *LoadModel(const char *name, int *count)
     uncompressedSize);
   CopyMemory(decompressedDataCopy, decompressedData, uncompressedSize);
 
-  int vertexCount = 0;
+  int _vertexCount = 0;
   char *context;
   char *line = strtok_r((char *)decompressedData, "\n", &context);
   while(line != NULL)
   {
-    vertexCount++;
+    _vertexCount++;
     line = strtok_r(NULL, "\n", &context);
   }
   HeapFree(GetProcessHeap(), 0, decompressedData);
 
   line = strtok_r((char *)decompressedDataCopy, "\n", &context);
   struct vertex *vertices = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
-    sizeof(struct vertex) * vertexCount);
+    sizeof(struct vertex) * _vertexCount);
   int index = 0;
-  while(index < vertexCount)
+  while(index < _vertexCount)
   {
     int x, y, z, t, v;
     sscanf(line, "%x %x %x %x %x", &x, &y, &z, &t, &v);
@@ -51,6 +51,14 @@ struct vertex *LoadModel(const char *name, int *count)
     index++;
   }
   HeapFree(GetProcessHeap(), 0, decompressedDataCopy);
-  *count = vertexCount;
-  return vertices;
+
+  d3ddev->lpVtbl->CreateVertexBuffer(d3ddev, _vertexCount * sizeof(struct vertex), 0,
+    CUSTOMFVF, D3DPOOL_MANAGED, vertexBuffer, 0);
+  VOID *pVoid;
+  (*vertexBuffer)->lpVtbl->Lock(*vertexBuffer, 0, 0, (void**)&pVoid, 0);
+  CopyMemory(pVoid, vertices, _vertexCount * sizeof(struct vertex));
+  (*vertexBuffer)->lpVtbl->Unlock(*vertexBuffer);
+  HeapFree(GetProcessHeap(), 0, vertices);
+
+  *vertexCount = _vertexCount;
 }

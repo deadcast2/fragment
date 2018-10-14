@@ -10,10 +10,15 @@
 
 IXAudio2 *xAudio2;
 IXAudio2MasteringVoice *xMasterVoice;
-IXAudio2SourceVoice *xSourceVoice;
+
+struct audioProps
+{
+  BOOL shouldLoop;
+};
 
 void InitAudio();
 void CleanAudio();
-void LoadTestAudio();
+void LoadAudio(const char *name, IXAudio2SourceVoice **source, struct audioProps props);
+void PlayAudio(IXAudio2SourceVoice *source);
 
 #endif

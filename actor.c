@@ -7,29 +7,17 @@ struct actor *CreateActor(struct actorProps props)
 
   newActor->vertexBuffer = 0;
   newActor->d3dTexture = 0;
+  newActor->audioSource = 0;
   newActor->position = props.position;
   newActor->rotation = props.rotation;
   newActor->scale = props.scale;
   newActor->update = 0;
 
-  if (props.modelName)
-  {
-    struct vertex *vertices = LoadModel(props.modelName, &newActor->vertexCount);
-    d3ddev->lpVtbl->CreateVertexBuffer(
-      d3ddev, newActor->vertexCount * sizeof(struct vertex), 0,
-      CUSTOMFVF, D3DPOOL_MANAGED, &newActor->vertexBuffer, 0);
-
-    VOID *pVoid;
-    newActor->vertexBuffer->lpVtbl->Lock(newActor->vertexBuffer, 0,
-      0, (void**)&pVoid, 0);
-    CopyMemory(pVoid, vertices, newActor->vertexCount * sizeof(struct vertex));
-    newActor->vertexBuffer->lpVtbl->Unlock(newActor->vertexBuffer);
-    HeapFree(GetProcessHeap(), 0, vertices);
-  }
-
+  if (props.modelName) LoadModel(props.modelName, &newActor->vertexCount, &newActor->vertexBuffer);
   if (props.textureName) LoadTexture(props.textureName, &newActor->d3dTexture);
-
+  if (props.audioName) LoadAudio(props.audioName, &newActor->audioSource, props.audioProps);
   if (props.update) newActor->update = props.update;
+  if (props.start) props.start(newActor);
 
   return newActor;
 }
@@ -39,6 +27,7 @@ void DeleteActor(struct actor *actor)
   if (!actor) return;
   if (actor->vertexBuffer) actor->vertexBuffer->lpVtbl->Release(actor->vertexBuffer);
   if (actor->d3dTexture) actor->d3dTexture->lpVtbl->Release(actor->d3dTexture);
+  if (actor->audioSource) actor->audioSource->lpVtbl->DestroyVoice(actor->audioSource);
   HeapFree(GetProcessHeap(), 0, actor);
 }
 
@@ -54,8 +43,7 @@ void DrawActor(struct actor *actor, ID3DXMatrixStack *stack,
     actor->rotation.y, actor->rotation.z);
 
   D3DXMATRIX scale;
-  D3DXMatrixScaling(&scale, actor->scale.x,
-    actor->scale.y, actor->scale.z);
+  D3DXMatrixScaling(&scale, actor->scale.x, actor->scale.y, actor->scale.z);
 
   D3DXMATRIX actorMat;
   D3DXMatrixMultiply(&actorMat, &scale, &rotation);

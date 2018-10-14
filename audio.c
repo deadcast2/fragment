@@ -15,13 +15,11 @@ void InitAudio()
     Log("Failed to create XAudio2 mastering voice\n");
     return;
   }
-
-  LoadTestAudio();
 }
 
-void LoadTestAudio()
+void LoadAudio(const char *name, IXAudio2SourceVoice **source, struct audioProps props)
 {
-  HANDLE resource = FindResource(NULL, "IDR_WAVE1", "WAV");
+  HANDLE resource = FindResource(NULL, name, "WAV");
   if(resource == NULL) return Log("Resource not found\n");
   HGLOBAL loadedResource = LoadResource(NULL, resource);
   if(loadedResource == NULL) return Log("Could not load resource\n");
@@ -69,26 +67,27 @@ void LoadTestAudio()
   buffer.AudioBytes = dataSize;
   buffer.pAudioData = dataBuffer;
   buffer.Flags = XAUDIO2_END_OF_STREAM;
-  buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+  if (props.shouldLoop) buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
-  if(FAILED(xAudio2->lpVtbl->CreateSourceVoice(xAudio2, &xSourceVoice,
+  if (FAILED(xAudio2->lpVtbl->CreateSourceVoice(xAudio2, source,
     (WAVEFORMATEX*)adpcm, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
     return;
 
-  if(FAILED(xSourceVoice->lpVtbl->SubmitSourceBuffer(xSourceVoice,
-    &buffer, NULL)))
-    return;
-
-  if(FAILED(xSourceVoice->lpVtbl->Start(xSourceVoice, 0, XAUDIO2_COMMIT_NOW)))
+  if (FAILED((*source)->lpVtbl->SubmitSourceBuffer(*source, &buffer, NULL)))
     return;
 
   HeapFree(GetProcessHeap(), 0, adpcm);
   HeapFree(GetProcessHeap(), 0, decompressedData);
 }
 
+void PlayAudio(IXAudio2SourceVoice *source)
+{
+  if (!source) return;
+  source->lpVtbl->Start(source, 0, XAUDIO2_COMMIT_NOW);
+}
+
 void CleanAudio()
 {
-  xSourceVoice->lpVtbl->DestroyVoice(xSourceVoice);
   xMasterVoice->lpVtbl->DestroyVoice(xMasterVoice);
   xAudio2->lpVtbl->Release(xAudio2);
 }

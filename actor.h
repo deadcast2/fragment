@@ -5,6 +5,7 @@
 #include "vendor/XAudio2_custom.h"
 #include "model.h"
 #include "texture.h"
+#include "audio.h"
 
 struct actor
 {
@@ -22,9 +23,12 @@ struct actorProps
 {
   char *modelName;
   char *textureName;
+  char *audioName;
   struct vertex position;
   struct vertex rotation;
   struct vertex scale;
+  struct audioProps audioProps;
+  void (*start)(struct actor *);
   void *update;
 };
 

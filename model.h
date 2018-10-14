@@ -17,6 +17,6 @@ struct vertex
   FLOAT t, v;
 };
 
-struct vertex *LoadModel(const char *name, int *count);
+void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vertexBuffer);
 
 #endif

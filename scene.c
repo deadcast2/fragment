@@ -1,6 +1,11 @@
 #include "scene.h"
 
-void RotateSky(struct actor *self, float deltaTime)
+void SkyStart(struct actor *self)
+{
+  PlayAudio(self->audioSource);
+}
+
+void SkyUpdate(struct actor *self, float deltaTime)
 {
   self->rotation.x += 0.1f * deltaTime;
 }
@@ -15,15 +20,19 @@ void InitScene()
     .position = (struct vertex) { .x = 0, .y = -6.6, .z = 0 },
     .rotation = (struct vertex) { .x = D3DX_PI, .y = 0, .z = 0 },
     .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 },
+    .start = NULL,
     .update = NULL
   });
   actors[1] = CreateActor((struct actorProps) {
     .modelName = "IDR_SKY",
     .textureName = "IDR_SKY_TEX",
+    .audioName = "IDR_WIND",
     .position = (struct vertex) { .x = 0, .y = 0, .z = 0 },
     .rotation = (struct vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 },
-    .update = RotateSky
+    .start = SkyStart,
+    .update = SkyUpdate,
+    .audioProps = (struct audioProps) { .shouldLoop = TRUE }
   });
 }
 
