@@ -10,6 +10,7 @@
 struct actor
 {
   IXAudio2SourceVoice *audioSource;
+  XAUDIO2_BUFFER *audioBuffer;
   IDirect3DVertexBuffer9 *vertexBuffer;
   IDirect3DTexture9 *d3dTexture;
   int vertexCount;

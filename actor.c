@@ -8,6 +8,7 @@ struct actor *CreateActor(struct actorProps props)
   newActor->vertexBuffer = 0;
   newActor->d3dTexture = 0;
   newActor->audioSource = 0;
+  newActor->audioBuffer = 0;
   newActor->position = props.position;
   newActor->rotation = props.rotation;
   newActor->scale = props.scale;
@@ -15,7 +16,8 @@ struct actor *CreateActor(struct actorProps props)
 
   if (props.modelName) LoadModel(props.modelName, &newActor->vertexCount, &newActor->vertexBuffer);
   if (props.textureName) LoadTexture(props.textureName, &newActor->d3dTexture);
-  if (props.audioName) LoadAudio(props.audioName, &newActor->audioSource, props.audioProps);
+  if (props.audioName) LoadAudio(props.audioName, &newActor->audioSource,
+     &newActor->audioBuffer, props.audioProps);
   if (props.update) newActor->update = props.update;
   if (props.start) props.start(newActor);
 
@@ -28,6 +30,7 @@ void DeleteActor(struct actor *actor)
   if (actor->vertexBuffer) actor->vertexBuffer->lpVtbl->Release(actor->vertexBuffer);
   if (actor->d3dTexture) actor->d3dTexture->lpVtbl->Release(actor->d3dTexture);
   if (actor->audioSource) actor->audioSource->lpVtbl->DestroyVoice(actor->audioSource);
+  if (actor->audioBuffer) HeapFree(GetProcessHeap(), 0, actor->audioBuffer);
   HeapFree(GetProcessHeap(), 0, actor);
 }
 

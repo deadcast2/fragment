@@ -8,11 +8,12 @@
 #include "actor.h"
 #include "srandom.h"
 
-#define ACTOR_COUNT 2
+#define ACTOR_COUNT 3
 
 struct actor *actors[ACTOR_COUNT];
 int randomFogEnd, lastFogEnd;
 float fogTime, fogStep, fogSpeed;
+float nextCaw;
 
 void InitScene();
 void RenderScene(float deltaTime);

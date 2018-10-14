@@ -17,7 +17,8 @@ void InitAudio()
   }
 }
 
-void LoadAudio(const char *name, IXAudio2SourceVoice **source, struct audioProps props)
+void LoadAudio(const char *name, IXAudio2SourceVoice **source,
+  XAUDIO2_BUFFER **audioBuffer, struct audioProps props)
 {
   HANDLE resource = FindResource(NULL, name, "WAV");
   if(resource == NULL) return Log("Resource not found\n");
@@ -57,33 +58,40 @@ void LoadAudio(const char *name, IXAudio2SourceVoice **source, struct audioProps
   CopyMemory(&wfxSize, fmt + sizeof(DWORD), sizeof(DWORD));
   CopyMemory(&adpcm->wfx, fmt + sizeof(DWORD) * 2, wfxSize);
 
-  XAUDIO2_BUFFER buffer = {0};
+  XAUDIO2_BUFFER *buffer = HeapAlloc(GetProcessHeap(), 0, sizeof(XAUDIO2_BUFFER));
   DWORD dataSize = 0;
   PVOID data = memmem(decompressedData, uncompressedSize, "data", 4);
   if(data == NULL) return Log("data chunk not found\n");
   CopyMemory(&dataSize, data + sizeof(DWORD), sizeof(DWORD));
   BYTE *dataBuffer = HeapAlloc(GetProcessHeap(), 0, dataSize);
   CopyMemory(dataBuffer, data + sizeof(DWORD) * 2, dataSize);
-  buffer.AudioBytes = dataSize;
-  buffer.pAudioData = dataBuffer;
-  buffer.Flags = XAUDIO2_END_OF_STREAM;
-  if (props.shouldLoop) buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+  buffer->AudioBytes = dataSize;
+  buffer->pAudioData = dataBuffer;
+  buffer->Flags = XAUDIO2_END_OF_STREAM;
+  if (props.shouldLoop) buffer->LoopCount = XAUDIO2_LOOP_INFINITE;
+  *audioBuffer = buffer;
 
   if (FAILED(xAudio2->lpVtbl->CreateSourceVoice(xAudio2, source,
     (WAVEFORMATEX*)adpcm, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
-    return;
-
-  if (FAILED((*source)->lpVtbl->SubmitSourceBuffer(*source, &buffer, NULL)))
     return;
 
   HeapFree(GetProcessHeap(), 0, adpcm);
   HeapFree(GetProcessHeap(), 0, decompressedData);
 }
 
-void PlayAudio(IXAudio2SourceVoice *source)
+void PlayAudio(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *audioBuffer)
 {
   if (!source) return;
+  StopAudio(source);
+  source->lpVtbl->SubmitSourceBuffer(source, audioBuffer, NULL);
   source->lpVtbl->Start(source, 0, XAUDIO2_COMMIT_NOW);
+}
+
+void StopAudio(IXAudio2SourceVoice *source)
+{
+  if (!source) return;
+  source->lpVtbl->Stop(source, 0, XAUDIO2_COMMIT_NOW);
+  source->lpVtbl->FlushSourceBuffers(source);
 }
 
 void CleanAudio()

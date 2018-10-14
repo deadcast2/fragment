@@ -1,8 +1,24 @@
 #include "scene.h"
 
+void CrowStart(struct actor *self)
+{
+  PlayAudio(self->audioSource, self->audioBuffer);
+  nextCaw = 0;
+}
+
+void CrowUpdate(struct actor *self, float deltaTime)
+{
+  if (nextCaw < 0)
+  {
+    PlayAudio(self->audioSource, self->audioBuffer);
+    nextCaw = smooth_rand() % 20;
+  }
+  nextCaw -= 1.0f * deltaTime;
+}
+
 void SkyStart(struct actor *self)
 {
-  PlayAudio(self->audioSource);
+  PlayAudio(self->audioSource, self->audioBuffer);
 }
 
 void SkyUpdate(struct actor *self, float deltaTime)
@@ -13,7 +29,7 @@ void SkyUpdate(struct actor *self, float deltaTime)
 void InitScene()
 {
   seed_smooth_rand();
-  randomFogEnd = fogStep = fogSpeed = 200;
+  randomFogEnd = fogStep = fogSpeed = 0;
   actors[0] = CreateActor((struct actorProps) {
     .modelName = "IDR_ISLAND",
     .textureName = "IDR_ISLAND_TEX",
@@ -33,6 +49,16 @@ void InitScene()
     .start = SkyStart,
     .update = SkyUpdate,
     .audioProps = (struct audioProps) { .shouldLoop = TRUE }
+  });
+  actors[2] = CreateActor((struct actorProps) {
+    .modelName = "IDR_BIRD_HEAD",
+    .textureName = "IDR_ISLAND_TEX",
+    .audioName = "IDR_CROW",
+    .position = (struct vertex) { .x = 0, .y = 0, .z = 0 },
+    .rotation = (struct vertex) { .x = 0, .y = 0, .z = 0 },
+    .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 },
+    .start = CrowStart,
+    .update = CrowUpdate
   });
 }
 
