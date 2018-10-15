@@ -10,7 +10,7 @@
 
 #define ACTOR_COUNT 3
 
-struct actor *actors[ACTOR_COUNT];
+Actor *actors[ACTOR_COUNT];
 int randomFogEnd, lastFogEnd;
 float fogTime, fogStep, fogSpeed;
 float nextCaw;

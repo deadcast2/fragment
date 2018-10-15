@@ -11,15 +11,15 @@
 IXAudio2 *xAudio2;
 IXAudio2MasteringVoice *xMasterVoice;
 
-struct audioProps
+typedef struct AudioParams
 {
   BOOL shouldLoop;
-};
+} AudioParams;
 
 void InitAudio();
 void CleanAudio();
 void LoadAudio(const char *name, IXAudio2SourceVoice **source,
-  XAUDIO2_BUFFER **audioBuffer, struct audioProps props);
+  XAUDIO2_BUFFER **audioBuffer, AudioParams params);
 void PlayAudio(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *audioBuffer);
 void StopAudio(IXAudio2SourceVoice *source);
 

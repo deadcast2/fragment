@@ -1,30 +1,30 @@
 #include "actor.h"
 
-struct actor *CreateActor(struct actorProps props)
+Actor *CreateActor(ActorParams params)
 {
-  struct actor *newActor = HeapAlloc(GetProcessHeap(), 0, sizeof(struct actor));
+  Actor *newActor = HeapAlloc(GetProcessHeap(), 0, sizeof(Actor));
   if (!newActor) return newActor;
 
   newActor->vertexBuffer = 0;
   newActor->d3dTexture = 0;
   newActor->audioSource = 0;
   newActor->audioBuffer = 0;
-  newActor->position = props.position;
-  newActor->rotation = props.rotation;
-  newActor->scale = props.scale;
-  newActor->update = 0;
+  newActor->position = params.position;
+  newActor->rotation = params.rotation;
+  newActor->scale = params.scale;
+  newActor->Update = 0;
 
-  if (props.modelName) LoadModel(props.modelName, &newActor->vertexCount, &newActor->vertexBuffer);
-  if (props.textureName) LoadTexture(props.textureName, &newActor->d3dTexture);
-  if (props.audioName) LoadAudio(props.audioName, &newActor->audioSource,
-     &newActor->audioBuffer, props.audioProps);
-  if (props.update) newActor->update = props.update;
-  if (props.start) props.start(newActor);
+  if (params.modelName) LoadModel(params.modelName, &newActor->vertexCount, &newActor->vertexBuffer);
+  if (params.textureName) LoadTexture(params.textureName, &newActor->d3dTexture);
+  if (params.audioName) LoadAudio(params.audioName, &newActor->audioSource,
+     &newActor->audioBuffer, params.audioParams);
+  if (params.Update) newActor->Update = params.Update;
+  if (params.Start) params.Start(newActor);
 
   return newActor;
 }
 
-void DeleteActor(struct actor *actor)
+void DeleteActor(Actor *actor)
 {
   if (!actor) return;
   if (actor->vertexBuffer) actor->vertexBuffer->lpVtbl->Release(actor->vertexBuffer);
@@ -34,7 +34,7 @@ void DeleteActor(struct actor *actor)
   HeapFree(GetProcessHeap(), 0, actor);
 }
 
-void DrawActor(struct actor *actor, ID3DXMatrixStack *stack,
+void DrawActor(Actor *actor, ID3DXMatrixStack *stack,
   LPDIRECT3DDEVICE9 d3ddev, float deltaTime)
 {
   D3DXMATRIX translation;
@@ -58,10 +58,10 @@ void DrawActor(struct actor *actor, ID3DXMatrixStack *stack,
   d3ddev->lpVtbl->SetTexture(d3ddev, 0, (IDirect3DBaseTexture9*)actor->d3dTexture);
   d3ddev->lpVtbl->SetFVF(d3ddev, CUSTOMFVF);
   d3ddev->lpVtbl->SetStreamSource(d3ddev, 0, actor->vertexBuffer,
-    0, sizeof(struct vertex));
+    0, sizeof(Vertex));
   d3ddev->lpVtbl->DrawPrimitive(d3ddev, D3DPT_TRIANGLELIST, 0,
     actor->vertexCount / 3);
   stack->lpVtbl->Pop(stack);
 
-  if (actor->update) actor->update(actor, deltaTime);
+  if (actor->Update) actor->Update(actor, deltaTime);
 }

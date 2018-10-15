@@ -1,27 +1,27 @@
 #include "scene.h"
 
-void CrowStart(struct actor *self)
+void CrowStart(Actor *self)
 {
   PlayAudio(self->audioSource, self->audioBuffer);
   nextCaw = 0;
 }
 
-void CrowUpdate(struct actor *self, float deltaTime)
+void CrowUpdate(Actor *self, float deltaTime)
 {
   if (nextCaw < 0)
   {
     PlayAudio(self->audioSource, self->audioBuffer);
     nextCaw = smooth_rand() % 20;
   }
-  nextCaw -= 1.0f * deltaTime;
+  nextCaw -= 0.5f * deltaTime;
 }
 
-void SkyStart(struct actor *self)
+void SkyStart(Actor *self)
 {
   PlayAudio(self->audioSource, self->audioBuffer);
 }
 
-void SkyUpdate(struct actor *self, float deltaTime)
+void SkyUpdate(Actor *self, float deltaTime)
 {
   self->rotation.x += 0.1f * deltaTime;
 }
@@ -30,35 +30,35 @@ void InitScene()
 {
   seed_smooth_rand();
   randomFogEnd = fogStep = fogSpeed = 0;
-  actors[0] = CreateActor((struct actorProps) {
+  actors[0] = CreateActor((ActorParams) {
     .modelName = "IDR_ISLAND",
     .textureName = "IDR_ISLAND_TEX",
-    .position = (struct vertex) { .x = 0, .y = -6.6, .z = 0 },
-    .rotation = (struct vertex) { .x = D3DX_PI, .y = 0, .z = 0 },
-    .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 },
-    .start = NULL,
-    .update = NULL
+    .position = (Vertex) { .x = 0, .y = -6.6, .z = 0 },
+    .rotation = (Vertex) { .x = D3DX_PI, .y = 0, .z = 0 },
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
+    .Start = NULL,
+    .Update = NULL
   });
-  actors[1] = CreateActor((struct actorProps) {
+  actors[1] = CreateActor((ActorParams) {
     .modelName = "IDR_SKY",
     .textureName = "IDR_SKY_TEX",
     .audioName = "IDR_WIND",
-    .position = (struct vertex) { .x = 0, .y = 0, .z = 0 },
-    .rotation = (struct vertex) { .x = 0, .y = 0, .z = 0 },
-    .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 },
-    .start = SkyStart,
-    .update = SkyUpdate,
-    .audioProps = (struct audioProps) { .shouldLoop = TRUE }
+    .position = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
+    .Start = SkyStart,
+    .Update = SkyUpdate,
+    .audioParams = (AudioParams) { .shouldLoop = TRUE }
   });
-  actors[2] = CreateActor((struct actorProps) {
+  actors[2] = CreateActor((ActorParams) {
     .modelName = "IDR_BIRD_HEAD",
     .textureName = "IDR_ISLAND_TEX",
     .audioName = "IDR_CROW",
-    .position = (struct vertex) { .x = 0, .y = 0, .z = 0 },
-    .rotation = (struct vertex) { .x = 0, .y = 0, .z = 0 },
-    .scale = (struct vertex) { .x = 1, .y = 1, .z = 1 },
-    .start = CrowStart,
-    .update = CrowUpdate
+    .position = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
+    .Start = CrowStart,
+    .Update = CrowUpdate
   });
 }
 

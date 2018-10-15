@@ -11,11 +11,11 @@
 #define SCALE_FACTOR 1000000.0
 #define CUSTOMFVF (D3DFVF_XYZ | D3DFVF_TEX1)
 
-struct vertex
+typedef struct Vertex
 {
   FLOAT x, y, z;
   FLOAT t, v;
-};
+} Vertex;
 
 void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vertexBuffer);
 

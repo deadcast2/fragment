@@ -18,7 +18,7 @@ void InitAudio()
 }
 
 void LoadAudio(const char *name, IXAudio2SourceVoice **source,
-  XAUDIO2_BUFFER **audioBuffer, struct audioProps props)
+  XAUDIO2_BUFFER **audioBuffer, AudioParams params)
 {
   HANDLE resource = FindResource(NULL, name, "WAV");
   if(resource == NULL) return Log("Resource not found\n");
@@ -68,7 +68,7 @@ void LoadAudio(const char *name, IXAudio2SourceVoice **source,
   buffer->AudioBytes = dataSize;
   buffer->pAudioData = dataBuffer;
   buffer->Flags = XAUDIO2_END_OF_STREAM;
-  if (props.shouldLoop) buffer->LoopCount = XAUDIO2_LOOP_INFINITE;
+  if (params.shouldLoop) buffer->LoopCount = XAUDIO2_LOOP_INFINITE;
   *audioBuffer = buffer;
 
   if (FAILED(xAudio2->lpVtbl->CreateSourceVoice(xAudio2, source,
