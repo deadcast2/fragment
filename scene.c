@@ -60,6 +60,16 @@ void InitScene()
     .Start = CrowStart,
     .Update = CrowUpdate
   });
+
+  LPD3DXBUFFER errorlog;
+  D3DXCreateEffectFromResource(d3ddev, 0, "IDR_DIFFUSE_FX", 0, 0, 0, 0,
+    &effect, &errorlog);
+  if(errorlog) Log((char*)errorlog->lpVtbl->GetBufferPointer(errorlog));
+  effect->lpVtbl->FindNextValidTechnique(effect, NULL, &technique);
+  textureHandle = effect->lpVtbl->GetParameterByName(effect, NULL, "Texture");
+  fogStartHandle = effect->lpVtbl->GetParameterByName(effect, NULL, "FogStart");
+  fogEndHandle = effect->lpVtbl->GetParameterByName(effect, NULL, "FogEnd");
+  cameraPosHandle = effect->lpVtbl->GetParameterByName(effect, NULL, "CameraPos");
 }
 
 void RenderScene(float deltaTime)
@@ -67,37 +77,45 @@ void RenderScene(float deltaTime)
   ID3DXMatrixStack *stack;
   D3DXCreateMatrixStack(0, &stack);
   D3DXMATRIX camMat = CameraViewMatrix();
+  effect->lpVtbl->SetMatrix(effect, "Projection", &viewMat);
+  effect->lpVtbl->SetMatrix(effect, "View", &camMat);
   stack->lpVtbl->LoadMatrix(stack, &camMat);
-  d3ddev->lpVtbl->SetTransform(d3ddev, D3DTS_VIEW, stack->lpVtbl->GetTop(stack));
+  //d3ddev->lpVtbl->SetTransform(d3ddev, D3DTS_VIEW, stack->lpVtbl->GetTop(stack));
   d3ddev->lpVtbl->Clear(d3ddev, 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
     D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
   d3ddev->lpVtbl->BeginScene(d3ddev);
-  for(int i = 0; i < ACTOR_COUNT; i++)
-  {
-    DrawActor(actors[i], stack, d3ddev, deltaTime);
-  }
-  d3ddev->lpVtbl->EndScene(d3ddev);
-  d3ddev->lpVtbl->Present(d3ddev, NULL, NULL, NULL, NULL);
 
   if (fogStep == randomFogEnd)
   {
     int fogDistances[12] = {
-		    17, 18, 18, 18, 18, 19, 25, 200, 200, 200, 200, 200
-	  };
+        17, 18, 18, 18, 18, 19, 200, 200, 200, 200, 200, 200
+    };
     float fogSpeeds[5] = {
-		    0.1, 0.1, 0.15, 0.15, 0.08
-	  };
+        0.1, 0.1, 0.15, 0.15, 0.08
+    };
     lastFogEnd = randomFogEnd;
     randomFogEnd = fogDistances[smooth_rand() % 12];
     fogSpeed = fogSpeeds[smooth_rand() % 5];
     fogTime = 0;
   }
   fogStep = smooth_inter(lastFogEnd, randomFogEnd, fogTime += deltaTime * fogSpeed);
-  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_FOGEND, *(DWORD*)(&fogStep));
+  effect->lpVtbl->SetFloat(effect, fogStartHandle, 1.0f);
+  effect->lpVtbl->SetFloat(effect, fogEndHandle, fogStep);
+  effect->lpVtbl->SetVector(effect, cameraPosHandle,
+    &(D3DXVECTOR4){ cameraPos.x, cameraPos.y, cameraPos.z, 1 });
+
+  for(int i = 0; i < ACTOR_COUNT; i++)
+  {
+    DrawActor(actors[i], stack, d3ddev, effect, textureHandle, deltaTime);
+  }
+
+  d3ddev->lpVtbl->EndScene(d3ddev);
+  d3ddev->lpVtbl->Present(d3ddev, NULL, NULL, NULL, NULL);
 }
 
 void CleanScene()
 {
+  effect->lpVtbl->Release(effect);
   for(int i = 0; i < ACTOR_COUNT; i++)
   {
     DeleteActor(actors[i]);

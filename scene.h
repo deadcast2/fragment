@@ -14,6 +14,12 @@ Actor *actors[ACTOR_COUNT];
 int randomFogEnd, lastFogEnd;
 float fogTime, fogStep, fogSpeed;
 float nextCaw;
+LPD3DXEFFECT effect;
+D3DXHANDLE technique;
+D3DXHANDLE textureHandle;
+D3DXHANDLE fogStartHandle;
+D3DXHANDLE fogEndHandle;
+D3DXHANDLE cameraPosHandle;
 
 void InitScene();
 void RenderScene(float deltaTime);

@@ -35,7 +35,7 @@ void DeleteActor(Actor *actor)
 }
 
 void DrawActor(Actor *actor, ID3DXMatrixStack *stack,
-  LPDIRECT3DDEVICE9 d3ddev, float deltaTime)
+  LPDIRECT3DDEVICE9 d3ddev, LPD3DXEFFECT effect, D3DXHANDLE texture, float deltaTime)
 {
   D3DXMATRIX translation;
   D3DXMatrixTranslation(&translation, actor->position.x,
@@ -54,13 +54,23 @@ void DrawActor(Actor *actor, ID3DXMatrixStack *stack,
 
   stack->lpVtbl->Push(stack);
   stack->lpVtbl->MultMatrixLocal(stack, &actorMat);
-  d3ddev->lpVtbl->SetTransform(d3ddev, D3DTS_VIEW, stack->lpVtbl->GetTop(stack));
-  d3ddev->lpVtbl->SetTexture(d3ddev, 0, (IDirect3DBaseTexture9*)actor->d3dTexture);
-  d3ddev->lpVtbl->SetFVF(d3ddev, CUSTOMFVF);
+  effect->lpVtbl->SetMatrix(effect, "World", &actorMat);
+  //d3ddev->lpVtbl->SetTransform(d3ddev, D3DTS_VIEW, stack->lpVtbl->GetTop(stack));
+  effect->lpVtbl->SetTexture(effect, texture, (IDirect3DBaseTexture9*)actor->d3dTexture);
+  //d3ddev->lpVtbl->SetFVF(d3ddev, CUSTOMFVF);
   d3ddev->lpVtbl->SetStreamSource(d3ddev, 0, actor->vertexBuffer,
     0, sizeof(Vertex));
+
+  effect->lpVtbl->Begin(effect, 0, 0);
+  effect->lpVtbl->BeginPass(effect, 0);
+
   d3ddev->lpVtbl->DrawPrimitive(d3ddev, D3DPT_TRIANGLELIST, 0,
     actor->vertexCount / 3);
+
+
+  effect->lpVtbl->EndPass(effect);
+  effect->lpVtbl->End(effect);
+
   stack->lpVtbl->Pop(stack);
 
   if (actor->Update) actor->Update(actor, deltaTime);

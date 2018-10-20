@@ -8,3 +8,5 @@ IDR_SKY SOS "resources/sky.sos.lz"
 IDR_SKY_TEX RCDATA "resources/sky.png"
 
 IDR_BIRD_HEAD SOS "resources/bird_head.sos.lz"
+
+IDR_DIFFUSE_FX RCDATA "resources/diffuse.fx"

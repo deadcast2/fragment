@@ -7,6 +7,7 @@ D3DXVECTOR3 cameraRight;
 D3DXVECTOR3 cameraUp;
 D3DXVECTOR3 cameraForward;
 D3DXVECTOR3 cameraPos;
+D3DXMATRIX viewMat;
 
 void InitCamera();
 D3DXMATRIX CameraViewMatrix();

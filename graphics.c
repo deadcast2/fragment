@@ -17,7 +17,7 @@ void InitGraphics(HWND hWnd)
     D3DDEVTYPE_HAL, hWnd,
     D3DCREATE_SOFTWARE_VERTEXPROCESSING,
     &d3dpp, &d3ddev);
-  d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_LIGHTING, FALSE);
+  /*d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_LIGHTING, FALSE);
   d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_ZENABLE, TRUE);
   d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_ALPHAREF, 0x0000008f);
   d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_ALPHATESTENABLE, TRUE);
@@ -30,6 +30,7 @@ void InitGraphics(HWND hWnd)
 
   const float fogStart = 1.0f;
   d3ddev->lpVtbl->SetRenderState(d3ddev, D3DRS_FOGSTART, *(DWORD*)(&fogStart));
+  */
 }
 
 void CleanGraphics()
