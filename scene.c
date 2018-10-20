@@ -74,13 +74,9 @@ void InitScene()
 
 void RenderScene(float deltaTime)
 {
-  ID3DXMatrixStack *stack;
-  D3DXCreateMatrixStack(0, &stack);
   D3DXMATRIX camMat = CameraViewMatrix();
   effect->lpVtbl->SetMatrix(effect, "Projection", &viewMat);
   effect->lpVtbl->SetMatrix(effect, "View", &camMat);
-  stack->lpVtbl->LoadMatrix(stack, &camMat);
-  //d3ddev->lpVtbl->SetTransform(d3ddev, D3DTS_VIEW, stack->lpVtbl->GetTop(stack));
   d3ddev->lpVtbl->Clear(d3ddev, 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
     D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
   d3ddev->lpVtbl->BeginScene(d3ddev);
@@ -106,7 +102,7 @@ void RenderScene(float deltaTime)
 
   for(int i = 0; i < ACTOR_COUNT; i++)
   {
-    DrawActor(actors[i], stack, d3ddev, effect, textureHandle, deltaTime);
+    DrawActor(actors[i], d3ddev, effect, textureHandle, deltaTime);
   }
 
   d3ddev->lpVtbl->EndScene(d3ddev);

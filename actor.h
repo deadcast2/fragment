@@ -35,7 +35,7 @@ typedef struct ActorParams
 
 Actor *CreateActor(ActorParams params);
 void DeleteActor(Actor *actor);
-void DrawActor(Actor *actor, ID3DXMatrixStack *stack,
-  LPDIRECT3DDEVICE9 d3ddev, LPD3DXEFFECT effect, D3DXHANDLE texture, float deltaTime);
+void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, LPD3DXEFFECT effect,
+  D3DXHANDLE texture, float deltaTime);
 
 #endif
