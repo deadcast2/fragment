@@ -9,6 +9,7 @@ Actor *CreateActor(ActorParams params)
   newActor->d3dTexture = 0;
   newActor->audioSource = 0;
   newActor->audioBuffer = 0;
+  newActor->effect = 0;
   newActor->position = params.position;
   newActor->rotation = params.rotation;
   newActor->scale = params.scale;
@@ -18,6 +19,7 @@ Actor *CreateActor(ActorParams params)
   if (params.textureName) LoadTexture(params.textureName, &newActor->d3dTexture);
   if (params.audioName) LoadAudio(params.audioName, &newActor->audioSource,
      &newActor->audioBuffer, params.audioParams);
+  if (params.effectName) LoadEffect(params.effectName, &newActor->effect);
   if (params.Update) newActor->Update = params.Update;
   if (params.Start) params.Start(newActor);
 
@@ -31,11 +33,11 @@ void DeleteActor(Actor *actor)
   if (actor->d3dTexture) actor->d3dTexture->lpVtbl->Release(actor->d3dTexture);
   if (actor->audioSource) actor->audioSource->lpVtbl->DestroyVoice(actor->audioSource);
   if (actor->audioBuffer) HeapFree(GetProcessHeap(), 0, actor->audioBuffer);
+  if (actor->effect) actor->effect->lpVtbl->Release(actor->effect);
   HeapFree(GetProcessHeap(), 0, actor);
 }
 
-void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, LPD3DXEFFECT effect,
-  D3DXHANDLE texture, float deltaTime)
+void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, float deltaTime)
 {
   D3DXMATRIX translation;
   D3DXMatrixTranslation(&translation, actor->position.x,
@@ -52,15 +54,41 @@ void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, LPD3DXEFFECT effect,
   D3DXMatrixMultiply(&actorMat, &scale, &rotation);
   D3DXMatrixMultiply(&actorMat, &actorMat, &translation);
 
-  effect->lpVtbl->SetMatrix(effect, "World", &actorMat);
-  effect->lpVtbl->SetTexture(effect, texture, (IDirect3DBaseTexture9*)actor->d3dTexture);
-  d3ddev->lpVtbl->SetStreamSource(d3ddev, 0, actor->vertexBuffer, 0, sizeof(Vertex));
-
-  effect->lpVtbl->Begin(effect, 0, 0);
-  effect->lpVtbl->BeginPass(effect, 0);
-  d3ddev->lpVtbl->DrawPrimitive(d3ddev, D3DPT_TRIANGLELIST, 0, actor->vertexCount / 3);
-  effect->lpVtbl->EndPass(effect);
-  effect->lpVtbl->End(effect);
-
   if (actor->Update) actor->Update(actor, deltaTime);
+
+  if (actor->effect)
+  {
+    D3DXMATRIX finalMat;
+    D3DXMATRIX camMat = CameraViewMatrix();
+    D3DXMatrixMultiply(&finalMat, &actorMat, &camMat);
+    D3DXMatrixMultiply(&finalMat, &finalMat, &viewMat);
+
+    actor->effect->lpVtbl->SetMatrix(actor->effect, "TransformMat", &finalMat);
+    actor->effect->lpVtbl->SetTexture(actor->effect, "Texture",
+      (IDirect3DBaseTexture9*)actor->d3dTexture);
+    actor->effect->lpVtbl->SetVector(actor->effect, "CameraPos",
+      &(D3DXVECTOR4){ cameraPos.x, cameraPos.y, cameraPos.z, 1 });
+    actor->effect->lpVtbl->SetFloat(actor->effect, "FogStart", RenderSettings.fogStart);
+    actor->effect->lpVtbl->SetFloat(actor->effect, "FogEnd", RenderSettings.fogEnd);
+    actor->effect->lpVtbl->SetVector(actor->effect, "FogColor",
+      &(D3DXVECTOR4){ RenderSettings.fogColor[0], RenderSettings.fogColor[1],
+      RenderSettings.fogColor[2], 1 });
+
+    actor->effect->lpVtbl->Begin(actor->effect, 0, 0);
+    actor->effect->lpVtbl->BeginPass(actor->effect, 0);
+  }
+
+  if (actor->vertexBuffer)
+  {
+    d3ddev->lpVtbl->SetStreamSource(d3ddev, 0, actor->vertexBuffer, 0,
+      sizeof(Vertex));
+    d3ddev->lpVtbl->DrawPrimitive(d3ddev, D3DPT_TRIANGLELIST, 0,
+      actor->vertexCount / 3);
+  }
+
+  if (actor->effect)
+  {
+    actor->effect->lpVtbl->EndPass(actor->effect);
+    actor->effect->lpVtbl->End(actor->effect);
+  }
 }

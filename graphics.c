@@ -13,10 +13,17 @@ void InitGraphics(HWND hWnd)
     .EnableAutoDepthStencil = TRUE,
     .AutoDepthStencilFormat = D3DFMT_D16
   };
+
   d3d->lpVtbl->CreateDevice(d3d, D3DADAPTER_DEFAULT,
     D3DDEVTYPE_HAL, hWnd,
     D3DCREATE_SOFTWARE_VERTEXPROCESSING,
     &d3dpp, &d3ddev);
+
+  RenderSettings = (_RenderSettings) {
+    .fogStart = 1.0f,
+    .fogEnd = 100.0f,
+    .fogColor = { 1.0f, 1.0f, 1.0f }
+  };
 }
 
 void CleanGraphics()

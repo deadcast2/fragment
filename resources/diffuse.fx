@@ -1,8 +1,7 @@
-float4x4 World;
-float4x4 Projection;
-float4x4 View;
+float4x4 TransformMat;
 float FogStart;
 float FogEnd;
+float4 FogColor;
 float4 CameraPos;
 texture Texture;
 
@@ -23,24 +22,18 @@ struct VertexOut
 
 VertexOut VShader(float4 Pos : POSITION, float2 Tex : TEXCOORD0)
 {
-  float4x4 Transform;
   VertexOut Vert = (VertexOut)0;
-  Transform = mul(World, View);
-  Transform = mul(Transform, Projection);
-  Vert.Pos = mul(Pos, Transform);
+  Vert.Pos = mul(Pos, TransformMat);
   Vert.Tex = Tex;
-
   float dist = length(CameraPos - Vert.Pos);
-  Vert.Fog = saturate((dist - FogStart) / (FogEnd - FogStart));
-
+  Vert.Fog = clamp((dist - FogStart) / (FogEnd - FogStart), 0, 0.9f);
   return Vert;
 }
 
 float4 PShader(VertexOut v) : COLOR
 {
-  float4 fogColor = (1.0, 1.0, 1.0, 1.0);
   float4 color = tex2D(Sampler, v.Tex);
-  float4 newColor = lerp(color, fogColor, v.Fog);
+  float4 newColor = lerp(color, FogColor, v.Fog);
   newColor.a = color.a;
   return newColor;
 }

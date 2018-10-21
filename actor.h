@@ -3,9 +3,11 @@
 
 #include <d3dx9.h>
 #include "vendor/XAudio2_custom.h"
+#include "camera.h"
 #include "model.h"
 #include "texture.h"
 #include "audio.h"
+#include "effect.h"
 
 typedef struct Actor
 {
@@ -13,6 +15,7 @@ typedef struct Actor
   XAUDIO2_BUFFER *audioBuffer;
   IDirect3DVertexBuffer9 *vertexBuffer;
   IDirect3DTexture9 *d3dTexture;
+  LPD3DXEFFECT effect;
   int vertexCount;
   Vertex position;
   Vertex rotation;
@@ -25,6 +28,7 @@ typedef struct ActorParams
   char *modelName;
   char *textureName;
   char *audioName;
+  char *effectName;
   Vertex position;
   Vertex rotation;
   Vertex scale;
@@ -35,7 +39,6 @@ typedef struct ActorParams
 
 Actor *CreateActor(ActorParams params);
 void DeleteActor(Actor *actor);
-void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, LPD3DXEFFECT effect,
-  D3DXHANDLE texture, float deltaTime);
+void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, float deltaTime);
 
 #endif

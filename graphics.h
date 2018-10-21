@@ -11,6 +11,15 @@
 LPDIRECT3D9 d3d;
 LPDIRECT3DDEVICE9 d3ddev;
 
+typedef struct _RenderSettings
+{
+  float fogStart;
+  float fogEnd;
+  float fogColor[3];
+} _RenderSettings;
+
+_RenderSettings RenderSettings;
+
 void InitGraphics(HWND hWnd);
 void CleanGraphics();
 
