@@ -1,5 +1,8 @@
 #include "audio.h"
 
+static IXAudio2 *xAudio2;
+static IXAudio2MasteringVoice *xMasterVoice;
+
 void InitAudio()
 {
   if(FAILED(XAudio2Create(&xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR)))

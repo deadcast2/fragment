@@ -51,9 +51,7 @@ void InitScene()
     .effectName = "IDR_DIFFUSE_FX",
     .position = (Vertex) { .x = 0, .y = -6.6, .z = 0 },
     .rotation = (Vertex) { .x = D3DX_PI, .y = 0, .z = 0 },
-    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
-    .Start = NULL,
-    .Update = NULL
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 }
   });
   actors[1] = CreateActor((ActorParams) {
     .modelName = "IDR_SKY",

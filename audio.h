@@ -8,9 +8,6 @@
 #include "vendor/XAudio2_custom.h"
 #include "log.h"
 
-IXAudio2 *xAudio2;
-IXAudio2MasteringVoice *xMasterVoice;
-
 typedef struct AudioParams
 {
   BOOL shouldLoop;

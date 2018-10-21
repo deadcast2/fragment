@@ -32,7 +32,11 @@ void DeleteActor(Actor *actor)
   if (actor->vertexBuffer) actor->vertexBuffer->lpVtbl->Release(actor->vertexBuffer);
   if (actor->d3dTexture) actor->d3dTexture->lpVtbl->Release(actor->d3dTexture);
   if (actor->audioSource) actor->audioSource->lpVtbl->DestroyVoice(actor->audioSource);
-  if (actor->audioBuffer) HeapFree(GetProcessHeap(), 0, actor->audioBuffer);
+  if (actor->audioBuffer)
+  {
+    HeapFree(GetProcessHeap(), 0, (void*)actor->audioBuffer->pAudioData);
+    HeapFree(GetProcessHeap(), 0, actor->audioBuffer);
+  }
   if (actor->effect) actor->effect->lpVtbl->Release(actor->effect);
   HeapFree(GetProcessHeap(), 0, actor);
 }
