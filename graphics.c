@@ -20,7 +20,7 @@ void InitGraphics(HWND hWnd)
     &d3dpp, &d3ddev);
 
   RenderSettings = (_RenderSettings) {
-    .fogStart = 1.0f,
+    .fogStart = 2.0f,
     .fogEnd = 100.0f,
     .fogColor = { 1.0f, 1.0f, 1.0f }
   };

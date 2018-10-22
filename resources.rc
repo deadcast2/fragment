@@ -1,12 +1,9 @@
 IDR_WIND WAV "resources/wind.wav.lz"
 IDR_CROW WAV "resources/crow.wav.lz"
-
 IDR_ISLAND SOS "resources/island.sos.lz"
 IDR_ISLAND_TEX RCDATA "resources/island.png"
-
+IDR_FOLIAGE SOS "resources/foliage.sos.lz"
 IDR_SKY SOS "resources/sky.sos.lz"
 IDR_SKY_TEX RCDATA "resources/sky.png"
-
 IDR_BIRD_HEAD SOS "resources/bird_head.sos.lz"
-
 IDR_DIFFUSE_FX RCDATA "resources/diffuse.fx"
