@@ -61,7 +61,8 @@ void LoadAudio(const char *name, IXAudio2SourceVoice **source,
   CopyMemory(&wfxSize, fmt + sizeof(DWORD), sizeof(DWORD));
   CopyMemory(&adpcm->wfx, fmt + sizeof(DWORD) * 2, wfxSize);
 
-  XAUDIO2_BUFFER *buffer = HeapAlloc(GetProcessHeap(), 0, sizeof(XAUDIO2_BUFFER));
+  XAUDIO2_BUFFER *buffer = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
+    sizeof(XAUDIO2_BUFFER));
   DWORD dataSize = 0;
   PVOID data = memmem(decompressedData, uncompressedSize, "data", 4);
   if(data == NULL) return Log("data chunk not found\n");
