@@ -62,21 +62,22 @@ void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, float deltaTime)
 
   if (actor->effect)
   {
-    D3DXMATRIX finalMat;
+    D3DXMATRIX worldMat;
     D3DXMATRIX camMat = CameraViewMatrix();
-    D3DXMatrixMultiply(&finalMat, &actorMat, &camMat);
-    D3DXMatrixMultiply(&finalMat, &finalMat, &viewMat);
+    D3DXMatrixMultiply(&worldMat, &actorMat, &camMat);
+    D3DXMatrixMultiply(&worldMat, &worldMat, &viewMat);
 
-    actor->effect->lpVtbl->SetMatrix(actor->effect, "TransformMat", &finalMat);
-    actor->effect->lpVtbl->SetTexture(actor->effect, "Texture",
+    actor->effect->lpVtbl->SetMatrix(actor->effect, "_WorldMat", &worldMat);
+    actor->effect->lpVtbl->SetTexture(actor->effect, "_Texture",
       (IDirect3DBaseTexture9*)actor->d3dTexture);
-    actor->effect->lpVtbl->SetVector(actor->effect, "CameraPos",
+    actor->effect->lpVtbl->SetVector(actor->effect, "_CameraPos",
       &(D3DXVECTOR4){ cameraPos.x, cameraPos.y, cameraPos.z, 1 });
-    actor->effect->lpVtbl->SetFloat(actor->effect, "FogStart", RenderSettings.fogStart);
-    actor->effect->lpVtbl->SetFloat(actor->effect, "FogEnd", RenderSettings.fogEnd);
-    actor->effect->lpVtbl->SetVector(actor->effect, "FogColor",
+    actor->effect->lpVtbl->SetFloat(actor->effect, "_FogStart", RenderSettings.fogStart);
+    actor->effect->lpVtbl->SetFloat(actor->effect, "_FogEnd", RenderSettings.fogEnd);
+    actor->effect->lpVtbl->SetVector(actor->effect, "_FogColor",
       &(D3DXVECTOR4){ RenderSettings.fogColor[0], RenderSettings.fogColor[1],
       RenderSettings.fogColor[2], 1 });
+    actor->effect->lpVtbl->SetFloat(actor->effect, "_Time", (float)timeGetTime());
 
     actor->effect->lpVtbl->Begin(actor->effect, 0, 0);
     actor->effect->lpVtbl->BeginPass(actor->effect, 0);
