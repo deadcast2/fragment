@@ -3,6 +3,8 @@ float _FogStart;
 float _FogEnd;
 float4 _FogColor;
 float4 _CameraPos;
+float _Time;
+bool _IsFoliage;
 texture _Texture;
 
 sampler Sampler = sampler_state
@@ -28,6 +30,17 @@ struct VertexOut
 
 VertexOut VShader(VertexIn v)
 {
+  if(_IsFoliage)
+  {
+    const float4 windDir = float4(0.5, 0.5, 0.5, 0);
+    const float windSpeed = 0.005;
+    const float displacement = 0.008;
+    float4 towardWind = normalize(v.Pos - windDir);
+    float4 xz = float4(v.Pos.x, 0, v.Pos.z, 1);
+    v.Pos.x += sin((_Time / dot(towardWind, xz)) * windSpeed) * displacement;
+    v.Pos.z += cos((_Time / dot(towardWind, xz)) * windSpeed) * displacement;
+  }
+
   VertexOut Vert = (VertexOut)0;
   Vert.Pos = mul(v.Pos, _WorldMat);
   Vert.UV = v.UV;

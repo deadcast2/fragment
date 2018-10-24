@@ -43,6 +43,11 @@ void SkyUpdate(Actor *self, float deltaTime)
   RenderSettings.fogEnd = fogStep;
 }
 
+void FoliageStart(Actor *self)
+{
+  self->effect->lpVtbl->SetBool(self->effect, "_IsFoliage", TRUE);
+}
+
 void InitScene()
 {
   actors[0] = CreateActor((ActorParams) {
@@ -82,7 +87,8 @@ void InitScene()
     .effectName = "IDR_DIFFUSE_FX",
     .position = (Vertex) { .x = 0, .y = -6.6, .z = 0 },
     .rotation = (Vertex) { .x = D3DX_PI, .y = 0, .z = 0 },
-    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 }
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
+    .Start = FoliageStart
   });
 }
 
