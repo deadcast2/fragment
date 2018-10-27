@@ -87,6 +87,7 @@ void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, float deltaTime)
   {
     d3ddev->lpVtbl->SetStreamSource(d3ddev, 0, actor->vertexBuffer, 0,
       sizeof(Vertex));
+    d3ddev->lpVtbl->SetVertexDeclaration(d3ddev, vertDeclaration);
     d3ddev->lpVtbl->DrawPrimitive(d3ddev, D3DPT_TRIANGLELIST, 0,
       actor->vertexCount / 3);
   }

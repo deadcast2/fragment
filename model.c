@@ -38,12 +38,18 @@ void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vert
   int index = 0;
   while(index < _vertexCount)
   {
-    int x, y, z, t, v;
-    sscanf(line, "%x %x %x %x %x", &x, &y, &z, &t, &v);
+    int x, y, z, nx, ny, nz, r, g, b, t, v;
+    sscanf(line, "%x %x %x %x %x %x %x %x %x %x %x",
+      &x, &y, &z, &nx, &ny, &nz, &r, &g, &b, &t, &v);
     vertices[index] = (Vertex) {
       .x = x / SCALE_FACTOR,
       .y = y / SCALE_FACTOR,
       .z = z / SCALE_FACTOR,
+      .nx = nx / SCALE_FACTOR,
+      .ny = ny / SCALE_FACTOR,
+      .nz = nz / SCALE_FACTOR,
+      .color = D3DCOLOR_ARGB(255, (int)(r / SCALE_FACTOR) * 255,
+        (int)(g / SCALE_FACTOR) * 255, (int)(b / SCALE_FACTOR) * 255),
       .t = t / SCALE_FACTOR,
       .v = v / SCALE_FACTOR
     };
@@ -53,7 +59,7 @@ void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vert
   HeapFree(GetProcessHeap(), 0, decompressedDataCopy);
 
   d3ddev->lpVtbl->CreateVertexBuffer(d3ddev, _vertexCount * sizeof(Vertex), 0,
-    CUSTOMFVF, D3DPOOL_MANAGED, vertexBuffer, 0);
+    0, D3DPOOL_MANAGED, vertexBuffer, 0);
   VOID *pVoid;
   (*vertexBuffer)->lpVtbl->Lock(*vertexBuffer, 0, 0, (void**)&pVoid, 0);
   CopyMemory(pVoid, vertices, _vertexCount * sizeof(Vertex));

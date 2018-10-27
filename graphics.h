@@ -10,6 +10,7 @@
 
 LPDIRECT3D9 d3d;
 LPDIRECT3DDEVICE9 d3ddev;
+LPDIRECT3DVERTEXDECLARATION9 vertDeclaration;
 
 typedef struct _RenderSettings
 {

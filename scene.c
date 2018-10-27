@@ -43,7 +43,7 @@ void SkyUpdate(Actor *self, float deltaTime)
   RenderSettings.fogEnd = fogStep;
 }
 
-void FoliageStart(Actor *self)
+void BushStart(Actor *self)
 {
   self->effect->lpVtbl->SetBool(self->effect, "_IsFoliage", TRUE);
 }
@@ -82,13 +82,13 @@ void InitScene()
     .Update = CrowUpdate
   });
   actors[3] = CreateActor((ActorParams) {
-    .modelName = "IDR_FOLIAGE",
+    .modelName = "IDR_BUSH",
     .textureName = "IDR_ISLAND_TEX",
     .effectName = "IDR_DIFFUSE_FX",
-    .position = (Vertex) { .x = 0, .y = -6.6, .z = 0 },
-    .rotation = (Vertex) { .x = D3DX_PI, .y = 0, .z = 0 },
+    .position = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
-    .Start = FoliageStart
+    .Start = BushStart
   });
 }
 

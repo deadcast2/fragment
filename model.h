@@ -9,11 +9,12 @@
 #include "log.h"
 
 #define SCALE_FACTOR 1000000.0
-#define CUSTOMFVF (D3DFVF_XYZ | D3DFVF_TEX1)
 
 typedef struct Vertex
 {
   FLOAT x, y, z;
+  FLOAT nx, ny, nz;
+  D3DCOLOR color;
   FLOAT t, v;
 } Vertex;
 

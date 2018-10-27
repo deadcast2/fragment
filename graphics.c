@@ -24,10 +24,20 @@ void InitGraphics(HWND hWnd)
     .fogEnd = 100.0f,
     .fogColor = { 1.0f, 1.0f, 1.0f }
   };
+
+  D3DVERTEXELEMENT9 decl[] = {
+    { 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+    { 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+    { 0, 24, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+    { 0, 28, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+    D3DDECL_END()
+  };
+  d3ddev->lpVtbl->CreateVertexDeclaration(d3ddev, decl, &vertDeclaration);
 }
 
 void CleanGraphics()
 {
+  vertDeclaration->lpVtbl->Release(vertDeclaration);
   d3ddev->lpVtbl->Release(d3ddev);
   d3d->lpVtbl->Release(d3d);
 }

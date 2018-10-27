@@ -18,12 +18,15 @@ sampler Sampler = sampler_state
 struct VertexIn
 {
   float4 Pos : POSITION;
+  float4 Norm : NORMAL0;
+  float4 Color : COLOR0;
   float2 UV : TEXCOORD0;
 };
 
 struct VertexOut
 {
   float4 Pos : POSITION;
+  float4 Color : COLOR0;
   float2 UV : TEXCOORD0;
   float Fog : TEXCOORD1;
 };
@@ -43,9 +46,11 @@ VertexOut VShader(VertexIn v)
 
   VertexOut Vert = (VertexOut)0;
   Vert.Pos = mul(v.Pos, _WorldMat);
+  Vert.Color = v.Color;
   Vert.UV = v.UV;
   float dist = length(_CameraPos - Vert.Pos);
   Vert.Fog = clamp((dist - _FogStart) / (_FogEnd - _FogStart), 0, 0.9f);
+  
   return Vert;
 }
 
