@@ -32,17 +32,26 @@ struct VertexOut
   float Fog : TEXCOORD1;
 };
 
+float4 SmoothCurve(float4 x)
+{
+  return x * x * (3.0 - 2.0 * x);
+}
+
+float4 TriangleWave(float4 x)
+{
+  return abs(frac(x + 0.5) * 2.0 - 1.0);
+}
+
+float4 SmoothTriangleWave(float4 x)
+{
+  return SmoothCurve(TriangleWave(x));
+}
+
 VertexOut VShader(VertexIn v)
 {
   if(_IsFoliage)
   {
-    const float4 windDir = float4(0.5, 0.5, 0.5, 0);
-    const float windSpeed = 0.005;
-    const float displacement = 0.008;
-    float4 towardWind = normalize(v.Pos - windDir);
-    float4 xz = float4(v.Pos.x, 0, v.Pos.z, 1);
-    v.Pos.x += sin((_Time / dot(towardWind, xz)) * windSpeed) * displacement;
-    v.Pos.z += cos((_Time / dot(towardWind, xz)) * windSpeed) * displacement;
+    // todo...
   }
 
   VertexOut Vert = (VertexOut)0;

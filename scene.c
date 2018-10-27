@@ -71,21 +71,10 @@ void InitScene()
     .audioParams = (AudioParams) { .shouldLoop = TRUE }
   });
   actors[2] = CreateActor((ActorParams) {
-    .modelName = "IDR_BIRD_HEAD",
-    .textureName = "IDR_ISLAND_TEX",
-    .audioName = "IDR_CROW",
-    .effectName = "IDR_DIFFUSE_FX",
-    .position = (Vertex) { .x = 0, .y = 0, .z = 0 },
-    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
-    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
-    .Start = CrowStart,
-    .Update = CrowUpdate
-  });
-  actors[3] = CreateActor((ActorParams) {
     .modelName = "IDR_BUSH",
     .textureName = "IDR_ISLAND_TEX",
     .effectName = "IDR_DIFFUSE_FX",
-    .position = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .position = (Vertex) { .x = -1.14, .y = -1.2, .z = -1.24 },
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = BushStart

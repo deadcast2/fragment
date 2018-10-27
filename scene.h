@@ -8,7 +8,7 @@
 #include "actor.h"
 #include "srandom.h"
 
-#define ACTOR_COUNT 4
+#define ACTOR_COUNT 3
 
 Actor *actors[ACTOR_COUNT];
 int randomFogEnd, lastFogEnd;
