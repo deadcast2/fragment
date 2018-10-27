@@ -1,9 +1,10 @@
 float4x4 _WorldMat;
-float _FogStart;
-float _FogEnd;
 float4 _FogColor;
 float4 _CameraPos;
+float4 _WorldPos;
 float _Time;
+float _FogStart;
+float _FogEnd;
 bool _IsFoliage;
 texture _Texture;
 
@@ -50,7 +51,7 @@ VertexOut VShader(VertexIn v)
   Vert.UV = v.UV;
   float dist = length(_CameraPos - Vert.Pos);
   Vert.Fog = clamp((dist - _FogStart) / (_FogEnd - _FogStart), 0, 0.9f);
-  
+
   return Vert;
 }
 

@@ -72,6 +72,8 @@ void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, float deltaTime)
       (IDirect3DBaseTexture9*)actor->d3dTexture);
     actor->effect->lpVtbl->SetVector(actor->effect, "_CameraPos",
       &(D3DXVECTOR4){ cameraPos.x, cameraPos.y, cameraPos.z, 1 });
+    actor->effect->lpVtbl->SetVector(actor->effect, "_WorldPos",
+      &(D3DXVECTOR4){ actor->position.x, actor->position.y, actor->position.z, 1 });
     actor->effect->lpVtbl->SetFloat(actor->effect, "_FogStart", RenderSettings.fogStart);
     actor->effect->lpVtbl->SetFloat(actor->effect, "_FogEnd", RenderSettings.fogEnd);
     actor->effect->lpVtbl->SetVector(actor->effect, "_FogColor",
