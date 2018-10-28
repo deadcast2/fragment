@@ -79,7 +79,8 @@ void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, float deltaTime)
     actor->effect->lpVtbl->SetVector(actor->effect, "_FogColor",
       &(D3DXVECTOR4){ RenderSettings.fogColor[0], RenderSettings.fogColor[1],
       RenderSettings.fogColor[2], 1 });
-    actor->effect->lpVtbl->SetFloat(actor->effect, "_Time", (float)timeGetTime());
+    actor->effect->lpVtbl->SetFloat(actor->effect, "_Time",
+      (float)timeGetTime()/1000);
 
     actor->effect->lpVtbl->Begin(actor->effect, 0, 0);
     actor->effect->lpVtbl->BeginPass(actor->effect, 0);

@@ -51,7 +51,17 @@ VertexOut VShader(VertexIn v)
 {
   if(_IsFoliage)
   {
-    // todo...
+    const float bendScale = 0.05;
+    const float windSpeed = 1.5;
+    float greenComp = clamp(v.Color.g - v.Color.b - v.Color.r, 0.2, 0.9);
+    float objPhase = dot(mul(_ObjectPos.xyz, _ObjectToWorld), 1);
+    float vtxPhase = dot(v.Pos.xyz, objPhase);
+    float2 wavesIn = _Time * windSpeed + float2(vtxPhase, objPhase);
+    float4 wavesOut = (frac(wavesIn.xxyy * float4(1.975, 0.793, 0.375, 0.193))
+      * 2.0 - 1.0) * bendScale * windSpeed;
+    wavesOut = SmoothTriangleWave(wavesOut);
+    float2 wavesSum = wavesOut.xz + wavesOut.yw;
+    v.Pos.xyz += wavesSum.xxy * float3(greenComp * v.Norm.xy, greenComp);
   }
 
   VertexOut Vert = (VertexOut)0;
@@ -69,7 +79,7 @@ float4 PShader(VertexOut v) : COLOR
   float4 color = tex2D(Sampler, v.UV);
   float4 newColor = lerp(color, _FogColor, v.Fog);
   newColor.a = color.a;
-  return v.Color;//newColor;
+  return newColor;
 }
 
 technique FirstTechnique
