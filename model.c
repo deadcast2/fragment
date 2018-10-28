@@ -48,7 +48,7 @@ void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vert
       .nx = nx / SCALE_FACTOR,
       .ny = ny / SCALE_FACTOR,
       .nz = nz / SCALE_FACTOR,
-      .color = D3DCOLOR_ARGB(0, (int)((r / SCALE_FACTOR) * 255),
+      .color = D3DCOLOR_ARGB(255, (int)((r / SCALE_FACTOR) * 255),
         (int)((g / SCALE_FACTOR) * 255), (int)((b / SCALE_FACTOR) * 255)),
       .t = t / SCALE_FACTOR,
       .v = v / SCALE_FACTOR

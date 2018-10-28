@@ -1,7 +1,7 @@
-float4x4 _WorldMat;
+float4x4 _ObjectToWorld;
 float4 _FogColor;
 float4 _CameraPos;
-float4 _WorldPos;
+float4 _ObjectPos;
 float _Time;
 float _FogStart;
 float _FogEnd;
@@ -55,7 +55,7 @@ VertexOut VShader(VertexIn v)
   }
 
   VertexOut Vert = (VertexOut)0;
-  Vert.Pos = mul(v.Pos, _WorldMat);
+  Vert.Pos = mul(v.Pos, _ObjectToWorld);
   Vert.Color = v.Color;
   Vert.UV = v.UV;
   float dist = length(_CameraPos - Vert.Pos);
@@ -69,7 +69,7 @@ float4 PShader(VertexOut v) : COLOR
   float4 color = tex2D(Sampler, v.UV);
   float4 newColor = lerp(color, _FogColor, v.Fog);
   newColor.a = color.a;
-  return newColor;
+  return v.Color;//newColor;
 }
 
 technique FirstTechnique

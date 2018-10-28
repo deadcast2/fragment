@@ -67,12 +67,12 @@ void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, float deltaTime)
     D3DXMatrixMultiply(&worldMat, &actorMat, &camMat);
     D3DXMatrixMultiply(&worldMat, &worldMat, &viewMat);
 
-    actor->effect->lpVtbl->SetMatrix(actor->effect, "_WorldMat", &worldMat);
+    actor->effect->lpVtbl->SetMatrix(actor->effect, "_ObjectToWorld", &worldMat);
     actor->effect->lpVtbl->SetTexture(actor->effect, "_Texture",
       (IDirect3DBaseTexture9*)actor->d3dTexture);
     actor->effect->lpVtbl->SetVector(actor->effect, "_CameraPos",
       &(D3DXVECTOR4){ cameraPos.x, cameraPos.y, cameraPos.z, 1 });
-    actor->effect->lpVtbl->SetVector(actor->effect, "_WorldPos",
+    actor->effect->lpVtbl->SetVector(actor->effect, "_ObjectPos",
       &(D3DXVECTOR4){ actor->position.x, actor->position.y, actor->position.z, 1 });
     actor->effect->lpVtbl->SetFloat(actor->effect, "_FogStart", RenderSettings.fogStart);
     actor->effect->lpVtbl->SetFloat(actor->effect, "_FogEnd", RenderSettings.fogEnd);
