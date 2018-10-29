@@ -46,6 +46,8 @@ void SkyUpdate(Actor *self, float deltaTime)
 void BushStart(Actor *self)
 {
   self->effect->lpVtbl->SetBool(self->effect, "_IsFoliage", TRUE);
+  self->effect->lpVtbl->SetFloat(self->effect, "_WindSpeed", 0.5f);
+  self->effect->lpVtbl->SetFloat(self->effect, "_BendScale", 0.06f);
 }
 
 void InitScene()
@@ -75,7 +77,7 @@ void InitScene()
     .textureName = "IDR_ISLAND_TEX",
     .effectName = "IDR_DIFFUSE_FX",
     .position = (Vertex) { .x = -1.14, .y = -1.2, .z = -1.24 },
-    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .rotation = (Vertex) { .x = -D3DX_PI/4, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = BushStart
   });
