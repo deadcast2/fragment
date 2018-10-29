@@ -3,11 +3,11 @@
 void CrowStart(Actor *self)
 {
   PlayAudio(self->audioSource, self->audioBuffer);
-  nextCaw = 0;
 }
 
 void CrowUpdate(Actor *self, float deltaTime)
 {
+  static float nextCaw = 0;
   if (nextCaw < 0)
   {
     PlayAudio(self->audioSource, self->audioBuffer);
@@ -19,23 +19,22 @@ void CrowUpdate(Actor *self, float deltaTime)
 void SkyStart(Actor *self)
 {
   seed_smooth_rand();
-  randomFogEnd = fogStep = fogSpeed = 0;
   PlayAudio(self->audioSource, self->audioBuffer);
 }
 
 void SkyUpdate(Actor *self, float deltaTime)
 {
+  const int fogStart = 400;
+  static int randomFogEnd = fogStart, lastFogEnd = fogStart;
+  static float fogTime = 0, fogStep = fogStart, fogSpeed = 0;
+
   self->rotation.x += 0.1f * deltaTime;
   if (fogStep == randomFogEnd)
   {
-    int fogDistances[12] = {
-        15, 15, 20, 20, 20, 20, 200, 200, 200, 200, 200, 200
-    };
-    float fogSpeeds[5] = {
-        0.1, 0.1, 0.15, 0.15, 0.08
-    };
+    int fogDistances[11] = { 15, 15, 20, 20, 20, 20, 200, 200, 200, 200, 200 };
+    float fogSpeeds[5] = { 0.1, 0.1, 0.15, 0.15, 0.08 };
     lastFogEnd = randomFogEnd;
-    randomFogEnd = fogDistances[smooth_rand() % 12];
+    randomFogEnd = fogDistances[smooth_rand() % 11];
     fogSpeed = fogSpeeds[smooth_rand() % 5];
     fogTime = 0;
   }

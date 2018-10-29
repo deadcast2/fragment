@@ -11,9 +11,6 @@
 #define ACTOR_COUNT 3
 
 Actor *actors[ACTOR_COUNT];
-int randomFogEnd, lastFogEnd;
-float fogTime, fogStep, fogSpeed;
-float nextCaw;
 
 void InitScene();
 void RenderScene(float deltaTime);
