@@ -1,5 +1,7 @@
 #include "scene.h"
 
+extern __inline HRESULT XAudio2CreateVolumeMeter(_Outptr_ IUnknown** ppApo);
+
 void CrowStart(Actor *self)
 {
   PlayAudio(self->audioSource, self->audioBuffer);
@@ -20,6 +22,12 @@ void SkyStart(Actor *self)
 {
   seed_smooth_rand();
   PlayAudio(self->audioSource, self->audioBuffer);
+  IUnknown *volumeMeter;
+  if(XAudio2CreateVolumeMeter(&volumeMeter) == S_OK)
+  {
+    Log("Yay! Created.\n");
+    volumeMeter->lpVtbl->Release(volumeMeter);
+  }
 }
 
 void SkyUpdate(Actor *self, float deltaTime)
@@ -45,7 +53,7 @@ void SkyUpdate(Actor *self, float deltaTime)
 void BushStart(Actor *self)
 {
   self->effect->lpVtbl->SetBool(self->effect, "_IsFoliage", TRUE);
-  self->effect->lpVtbl->SetFloat(self->effect, "_WindSpeed", 0.5f);
+  self->effect->lpVtbl->SetFloat(self->effect, "_WindSpeed", 1.2f);
   self->effect->lpVtbl->SetFloat(self->effect, "_BendScale", 0.06f);
 }
 

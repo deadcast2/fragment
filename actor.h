@@ -2,7 +2,6 @@
 #define _ACTOR_H_
 
 #include <d3dx9.h>
-#include "vendor/XAudio2_custom.h"
 #include "camera.h"
 #include "model.h"
 #include "texture.h"

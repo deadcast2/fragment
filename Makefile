@@ -1,5 +1,5 @@
 CC = x86_64-w64-mingw32-gcc
-CFLAGS = -std=c99 -Os -ffreestanding -Wall -Wextra -Werror \
+CFLAGS = -std=c99 -ffreestanding -Wall -Wextra -Werror \
 	-Wno-cast-function-type -fomit-frame-pointer \
 	-ffunction-sections -fdata-sections -Wl,--gc-sections \
 	-fno-asynchronous-unwind-tables -fno-strict-aliasing \

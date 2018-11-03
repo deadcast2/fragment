@@ -6,6 +6,7 @@
 #include "vendor/memmem.h"
 #include "vendor/fastlz.h"
 #include "vendor/XAudio2_custom.h"
+#include "vendor/XAudio2fx_custom.h"
 #include "log.h"
 
 typedef struct AudioParams
