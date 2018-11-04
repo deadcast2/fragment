@@ -60,6 +60,9 @@ void SkyUpdate(Actor *self, float deltaTime)
   fogStep = smooth_inter(lastFogEnd, randomFogEnd, fogTime += deltaTime * fogSpeed);
   RenderSettings.fogEnd = fogStep;
 
+  static float windEnd = 0, lastWindEnd = 0;
+  static float windTime = 0;
+
   XAUDIO2FX_VOLUMEMETER_LEVELS effectParams = {
     .pPeakLevels = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(float)),
     .ChannelCount = 1
@@ -68,15 +71,21 @@ void SkyUpdate(Actor *self, float deltaTime)
     &effectParams, sizeof(effectParams));
   if(res == S_OK && effectParams.pPeakLevels)
   {
-      currWindSpeed = (float)(*effectParams.pPeakLevels) * 10;
+      if (currWindSpeed == windEnd)
+      {
+        lastWindEnd = windEnd;
+        windEnd = (float)(*effectParams.pPeakLevels) * 20;
+        windTime = 0;
+      }
   }
+  currWindSpeed = smooth_inter(lastWindEnd, windEnd, windTime += deltaTime * windEnd);
   HeapFree(GetProcessHeap(), 0, effectParams.pPeakLevels);
 }
 
 void BushStart(Actor *self)
 {
   self->effect->lpVtbl->SetBool(self->effect, "_IsFoliage", TRUE);
-  self->effect->lpVtbl->SetFloat(self->effect, "_BendScale", 0.06f);
+  self->effect->lpVtbl->SetFloat(self->effect, "_BendScale", 0.05f);
 }
 
 void BushUpdate(Actor *self)
