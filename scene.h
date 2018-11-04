@@ -1,6 +1,7 @@
 #ifndef _SCENE_H_
 #define _SCENE_H_
 
+#include <float.h>
 #include "audio.h"
 #include "graphics.h"
 #include "camera.h"

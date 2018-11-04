@@ -7,5 +7,6 @@ float lin_inter(float x, float y, float s);
 float smooth_inter(float x, float y, float s);
 void seed_smooth_rand();
 unsigned smooth_rand();
+float _fabs(float value);
 
 #endif

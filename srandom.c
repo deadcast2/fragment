@@ -21,3 +21,8 @@ unsigned smooth_rand()
 	unsigned bit = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5)) & 1;
 	return lfsr = (lfsr >> 1) | (bit << 15);
 }
+
+float _fabs(float value)
+{
+  return value < 0 ? value * -1.0 : value;
+}

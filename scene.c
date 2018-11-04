@@ -44,11 +44,11 @@ void SkyStart(Actor *self)
 void SkyUpdate(Actor *self, float deltaTime)
 {
   const int fogStart = 400;
-  static int randomFogEnd = fogStart, lastFogEnd = fogStart;
+  static float randomFogEnd = fogStart, lastFogEnd = fogStart;
   static float fogTime = 0, fogStep = fogStart, fogSpeed = 0;
 
   self->rotation.x += 0.1f * deltaTime;
-  if (fogStep == randomFogEnd)
+  if (_fabs(fogStep - randomFogEnd) <= FLT_EPSILON)
   {
     int fogDistances[11] = { 15, 15, 20, 20, 20, 20, 200, 200, 200, 200, 200 };
     float fogSpeeds[5] = { 0.1, 0.1, 0.15, 0.15, 0.08 };
@@ -67,16 +67,13 @@ void SkyUpdate(Actor *self, float deltaTime)
     .pPeakLevels = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(float)),
     .ChannelCount = 1
   };
-  HRESULT res = self->audioSource->lpVtbl->GetEffectParameters(self->audioSource, 0,
+  self->audioSource->lpVtbl->GetEffectParameters(self->audioSource, 0,
     &effectParams, sizeof(effectParams));
-  if(res == S_OK && effectParams.pPeakLevels)
+  if (_fabs(currWindSpeed - windEnd) <= FLT_EPSILON)
   {
-      if (currWindSpeed == windEnd)
-      {
-        lastWindEnd = windEnd;
-        windEnd = (float)(*effectParams.pPeakLevels) * 20;
-        windTime = 0;
-      }
+    lastWindEnd = windEnd;
+    windEnd = (float)(*effectParams.pPeakLevels) * 20;
+    windTime = 0;
   }
   currWindSpeed = smooth_inter(lastWindEnd, windEnd, windTime += deltaTime * windEnd);
   HeapFree(GetProcessHeap(), 0, effectParams.pPeakLevels);
