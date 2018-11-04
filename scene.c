@@ -2,6 +2,8 @@
 
 extern __inline HRESULT XAudio2CreateVolumeMeter(_Outptr_ IUnknown** ppApo);
 
+static float currWindSpeed = 0;
+
 void CrowStart(Actor *self)
 {
   PlayAudio(self->audioSource, self->audioBuffer);
@@ -25,7 +27,16 @@ void SkyStart(Actor *self)
   IUnknown *volumeMeter;
   if(XAudio2CreateVolumeMeter(&volumeMeter) == S_OK)
   {
-    Log("Yay! Created.\n");
+    XAUDIO2_EFFECT_DESCRIPTOR effectDesc = {
+      .pEffect = volumeMeter,
+      .InitialState = TRUE,
+      .OutputChannels = 1
+    };
+    XAUDIO2_EFFECT_CHAIN effectChain = {
+      .EffectCount = 1,
+      .pEffectDescriptors = &effectDesc
+    };
+    self->audioSource->lpVtbl->SetEffectChain(self->audioSource, &effectChain);
     volumeMeter->lpVtbl->Release(volumeMeter);
   }
 }
@@ -48,13 +59,29 @@ void SkyUpdate(Actor *self, float deltaTime)
   }
   fogStep = smooth_inter(lastFogEnd, randomFogEnd, fogTime += deltaTime * fogSpeed);
   RenderSettings.fogEnd = fogStep;
+
+  XAUDIO2FX_VOLUMEMETER_LEVELS effectParams = {
+    .pPeakLevels = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(float)),
+    .ChannelCount = 1
+  };
+  HRESULT res = self->audioSource->lpVtbl->GetEffectParameters(self->audioSource, 0,
+    &effectParams, sizeof(effectParams));
+  if(res == S_OK && effectParams.pPeakLevels)
+  {
+      currWindSpeed = (float)(*effectParams.pPeakLevels) * 10;
+  }
+  HeapFree(GetProcessHeap(), 0, effectParams.pPeakLevels);
 }
 
 void BushStart(Actor *self)
 {
   self->effect->lpVtbl->SetBool(self->effect, "_IsFoliage", TRUE);
-  self->effect->lpVtbl->SetFloat(self->effect, "_WindSpeed", 1.2f);
   self->effect->lpVtbl->SetFloat(self->effect, "_BendScale", 0.06f);
+}
+
+void BushUpdate(Actor *self)
+{
+  self->effect->lpVtbl->SetFloat(self->effect, "_WindSpeed", currWindSpeed);
 }
 
 void InitScene()
@@ -86,7 +113,8 @@ void InitScene()
     .position = (Vertex) { .x = -1.14, .y = -1.2, .z = -1.24 },
     .rotation = (Vertex) { .x = -D3DX_PI/4, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
-    .Start = BushStart
+    .Start = BushStart,
+    .Update = BushUpdate
   });
 }
 
