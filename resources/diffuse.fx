@@ -86,6 +86,7 @@ technique FirstTechnique
 {
   pass FirstPass
   {
+    CullMode = 1;
     Lighting = FALSE;
     ZEnable = TRUE;
     AlphaRef = 0x0000008f;

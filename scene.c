@@ -90,6 +90,17 @@ void BushUpdate(Actor *self)
   self->effect->lpVtbl->SetFloat(self->effect, "_WindSpeed", currWindSpeed);
 }
 
+void CrownStart(Actor *self)
+{
+  self->effect->lpVtbl->SetBool(self->effect, "_IsFoliage", TRUE);
+  self->effect->lpVtbl->SetFloat(self->effect, "_BendScale", 0.1f);
+}
+
+void CrownUpdate(Actor *self)
+{
+  self->effect->lpVtbl->SetFloat(self->effect, "_WindSpeed", currWindSpeed * 2.0f);
+}
+
 void InitScene()
 {
   actors[0] = CreateActor((ActorParams) {
@@ -121,6 +132,26 @@ void InitScene()
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = BushStart,
     .Update = BushUpdate
+  });
+  actors[3] = CreateActor((ActorParams) {
+    .modelName = "IDR_CROWN_LEFT",
+    .textureName = "IDR_ISLAND_TEX",
+    .effectName = "IDR_DIFFUSE_FX",
+    .position = (Vertex) { .x = 0, .y = -6.7, .z = 0 },
+    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
+    .Start = CrownStart,
+    .Update = CrownUpdate
+  });
+  actors[4] = CreateActor((ActorParams) {
+    .modelName = "IDR_CROWN_RIGHT",
+    .textureName = "IDR_ISLAND_TEX",
+    .effectName = "IDR_DIFFUSE_FX",
+    .position = (Vertex) { .x = 0, .y = -6.7, .z = 0 },
+    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
+    .Start = CrownStart,
+    .Update = CrownUpdate
   });
 }
 
