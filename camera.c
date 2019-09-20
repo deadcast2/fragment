@@ -6,7 +6,7 @@ void InitCamera()
   cameraRight = (D3DXVECTOR3){ 1, 0, 0 };
   cameraUp = (D3DXVECTOR3){ 0, 1, 0 };
   cameraForward = (D3DXVECTOR3){ 0, 0, 1 };
-  cameraPos = (D3DXVECTOR3){ 0, 0, -5 };
+  cameraPos = (D3DXVECTOR3){ 0, 0.35f, -5 };
 
   float aspect = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
   float fov = D3DX_PI / 2.0f;

@@ -82,7 +82,7 @@ void SkyUpdate(Actor *self, float deltaTime)
 void BushStart(Actor *self)
 {
   self->effect->lpVtbl->SetBool(self->effect, "_IsFoliage", TRUE);
-  self->effect->lpVtbl->SetFloat(self->effect, "_BendScale", 0.05f);
+  self->effect->lpVtbl->SetFloat(self->effect, "_BendScale", 0.08f);
 }
 
 void BushUpdate(Actor *self)
@@ -93,12 +93,12 @@ void BushUpdate(Actor *self)
 void CrownStart(Actor *self)
 {
   self->effect->lpVtbl->SetBool(self->effect, "_IsFoliage", TRUE);
-  self->effect->lpVtbl->SetFloat(self->effect, "_BendScale", 0.1f);
+  self->effect->lpVtbl->SetFloat(self->effect, "_BendScale", 0.08f);
 }
 
 void CrownUpdate(Actor *self)
 {
-  self->effect->lpVtbl->SetFloat(self->effect, "_WindSpeed", currWindSpeed * 2.0f);
+  self->effect->lpVtbl->SetFloat(self->effect, "_WindSpeed", currWindSpeed * 4.0f);
 }
 
 void InitScene()
@@ -127,8 +127,8 @@ void InitScene()
     .modelName = "IDR_BUSH",
     .textureName = "IDR_ISLAND_TEX",
     .effectName = "IDR_DIFFUSE_FX",
-    .position = (Vertex) { .x = -1.14, .y = -1.2, .z = -1.24 },
-    .rotation = (Vertex) { .x = -D3DX_PI/4, .y = 0, .z = 0 },
+    .position = (Vertex) { .x = 0, .y = -6.5, .z = 0 },
+    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = BushStart,
     .Update = BushUpdate
@@ -137,7 +137,7 @@ void InitScene()
     .modelName = "IDR_CROWN_LEFT",
     .textureName = "IDR_ISLAND_TEX",
     .effectName = "IDR_DIFFUSE_FX",
-    .position = (Vertex) { .x = 0, .y = -6.7, .z = 0 },
+    .position = (Vertex) { .x = 0, .y = -7.2, .z = 0 },
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = CrownStart,
@@ -147,11 +147,22 @@ void InitScene()
     .modelName = "IDR_CROWN_RIGHT",
     .textureName = "IDR_ISLAND_TEX",
     .effectName = "IDR_DIFFUSE_FX",
-    .position = (Vertex) { .x = 0, .y = -6.7, .z = 0 },
+    .position = (Vertex) { .x = 0, .y = -6.6, .z = 0 },
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = CrownStart,
     .Update = CrownUpdate
+  });
+  actors[5] = CreateActor((ActorParams) {
+    .modelName = "IDR_HEAD",
+    .textureName = "IDR_ISLAND_TEX",
+    .audioName = "IDR_CROW",
+    .effectName = "IDR_DIFFUSE_FX",
+    .position = (Vertex) { .x = 0, .y = -6.5, .z = 0 },
+    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
+    .Start = CrowStart,
+    .Update = CrowUpdate
   });
 }
 

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <asset>
+    <contributor>
+      <author>Blender User</author>
+      <authoring_tool>Blender 2.80.75 commit date:2019-07-29, commit time:14:47, hash:f6cb5f54494e</authoring_tool>
+    </contributor>
+    <created>2019-09-20T15:19:42</created>
+    <modified>2019-09-20T15:19:42</modified>
+    <unit name="meter" meter="1"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_effects>
+    <effect id="initialShadingGroup-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <color sid="diffuse">0.8 0.8 0.8 1</color>
+            </diffuse>
+            <index_of_refraction>
+              <float sid="ior">1.45</float>
+            </index_of_refraction>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="lambert2SG-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <color sid="diffuse">0.8 0.8 0.8 1</color>
+            </diffuse>
+            <index_of_refraction>
+              <float sid="ior">1.45</float>
+            </index_of_refraction>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_images/>
+  <library_materials>
+    <material id="initialShadingGroup-material" name="initialShadingGroup">
+      <instance_effect url="#initialShadingGroup-effect"/>
+    </material>
+    <material id="lambert2SG-material" name="lambert2SG">
+      <instance_effect url="#lambert2SG-effect"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="caleb_island_noSkybox-mesh" name="caleb_island_noSkybox">
+      <mesh>
+        <source id="caleb_island_noSkybox-mesh-positions">
+          <float_array id="caleb_island_noSkybox-mesh-positions-array" count="69">0.2355021 0.03862643 -0.2225316 -0.07177489 0.03862643 -0.3198687 -0.1281949 0.2048652 -0.3628187 0.3063611 0.2048652 -0.2251636 -0.3062989 -0.006552934 -0.1131966 -0.3353649 0.1896331 -0.1113427 -0.2424628 -0.04025387 0.3040923 -0.2400568 0.1241729 0.3998373 -0.2410498 -0.04419445 0.6772943 -0.2002319 -0.04419445 0.6902244 -0.2064259 -0.02804017 0.6934474 -0.2378408 -0.02804017 0.6834964 0.01580214 -0.04025387 0.3859034 0.3082571 -0.006552934 0.08147728 0.3309541 0.1896331 0.09972828 -0.04129189 0.1241729 0.4628003 -0.05845791 0.3926513 -0.2373816 0.1771211 0.3926513 -0.1627566 -0.2366448 0.4206092 -0.08403062 -0.1457079 0.4297502 0.1789843 0.008727073 0.4297502 0.2279053 0.2345141 0.4206092 0.06521928 0.02952504 0.5442436 -0.1059767</float_array>
+          <technique_common>
+            <accessor source="#caleb_island_noSkybox-mesh-positions-array" count="23" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="caleb_island_noSkybox-mesh-normals">
+          <float_array id="caleb_island_noSkybox-mesh-normals-array" count="69">0.01123541 -0.5935954 -0.8046852 0.7892141 0.1625375 -0.5922185 0.5608861 -0.545302 -0.6229386 -0.9703509 0.1936001 -0.144701 -0.3074432 0.1107935 -0.9450945 -0.7607235 -0.6490535 -0.005426049 -0.543776 -0.7625053 -0.3505615 0.7076992 -0.5095393 0.4894196 -0.6572232 0.6727341 0.3398333 -0.5418968 -0.8388403 0.05191195 0.388143 -0.7752078 0.4983953 0.8766818 0.1936982 0.4403523 0.4188103 0.4159255 0.8072199 0.8378306 -0.5301129 0.1304622 -0.1465547 0.5623 -0.813843 0.5883491 0.5628931 -0.5805143 -0.6653367 0.6160591 0.4216613 -0.6404305 0.7581951 -0.1224305 -0.8120056 0.4450595 0.3775831 0.3016613 0.6155993 0.7280371 0.8161759 0.5693287 0.09859919 0.0543856 0.9836554 -0.1716518 0.3070788 -0.1121237 0.9450561</float_array>
+          <technique_common>
+            <accessor source="#caleb_island_noSkybox-mesh-normals-array" count="23" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="caleb_island_noSkybox-mesh-map-0">
+          <float_array id="caleb_island_noSkybox-mesh-map-0-array" count="252">0.258348 0.05381494 0.237368 0.033665 0.251304 0.03252398 0.258348 0.05381494 0.243395 0.08039999 0.245631 0.06050699 0.255812 0.103762 0.243395 0.08039999 0.255127 0.07741397 0.321523 0.239204 0.303042 0.235905 0.30576 0.228739 0.261497 0.11917 0.266142 0.145139 0.251258 0.119648 0.295185 0.154418 0.266142 0.145139 0.278041 0.139454 0.237368 0.033665 0.229929 0.06501799 0.224123 0.04834997 0.243395 0.08039999 0.229929 0.06501799 0.245631 0.06050699 0.243395 0.08039999 0.229968 0.112395 0.229767 0.08591097 0.248149 0.109392 0.235876 0.127216 0.229968 0.112395 0.266142 0.145139 0.235876 0.127216 0.251258 0.119648 0.266142 0.145139 0.259487 0.1639969 0.250215 0.1481209 0.224123 0.04834997 0.229929 0.06501799 0.216267 0.062267 0.229929 0.06501799 0.229767 0.08591097 0.215613 0.07053595 0.229767 0.08591097 0.229968 0.112395 0.210686 0.09342497 0.229968 0.112395 0.235876 0.127216 0.211773 0.129004 0.235876 0.127216 0.250215 0.1481209 0.230512 0.1532379 0.250215 0.1481209 0.259487 0.1639969 0.244912 0.167603 0.382721 0.265617 0.321523 0.239204 0.335969 0.227706 0.314156 0.292531 0.321523 0.239204 0.346685 0.293788 0.278167 0.283097 0.314505 0.242008 0.314156 0.292531 0.278167 0.283097 0.296927 0.23155 0.303042 0.235905 0.255127 0.07741397 0.258348 0.05381494 0.278041 0.139454 0.258348 0.05381494 0.245631 0.06050699 0.237368 0.033665 0.258348 0.05381494 0.255127 0.07741397 0.243395 0.08039999 0.255812 0.103762 0.248149 0.109392 0.243395 0.08039999 0.321523 0.239204 0.314505 0.242008 0.303042 0.235905 0.261497 0.11917 0.278041 0.139454 0.266142 0.145139 0.295185 0.154418 0.279755 0.161504 0.266142 0.145139 0.237368 0.033665 0.245631 0.06050699 0.229929 0.06501799 0.243395 0.08039999 0.229767 0.08591097 0.229929 0.06501799 0.243395 0.08039999 0.248149 0.109392 0.229968 0.112395 0.248149 0.109392 0.251258 0.119648 0.235876 0.127216 0.266142 0.145139 0.250215 0.1481209 0.235876 0.127216 0.266142 0.145139 0.279755 0.161504 0.259487 0.1639969 0.382721 0.265617 0.346685 0.293788 0.321523 0.239204 0.314156 0.292531 0.314505 0.242008 0.321523 0.239204 0.278167 0.283097 0.303042 0.235905 0.314505 0.242008 0.278167 0.283097 0.249285 0.269139 0.296927 0.23155 0.258348 0.05381494 0.295185 0.154418 0.278041 0.139454 0.278041 0.139454 0.261497 0.11917 0.382721 0.265617 0.382721 0.265617 0.255127 0.07741397 0.278041 0.139454</float_array>
+          <technique_common>
+            <accessor source="#caleb_island_noSkybox-mesh-map-0-array" count="126" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="caleb_island_noSkybox-mesh-vertices">
+          <input semantic="POSITION" source="#caleb_island_noSkybox-mesh-positions"/>
+        </vertices>
+        <triangles material="initialShadingGroup-material" count="42">
+          <input semantic="VERTEX" source="#caleb_island_noSkybox-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#caleb_island_noSkybox-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#caleb_island_noSkybox-mesh-map-0" offset="2" set="0"/>
+          <p>1 0 0 3 1 1 0 2 2 1 0 3 5 3 4 2 4 5 6 5 6 5 3 7 4 6 8 9 7 9 11 8 10 8 9 11 12 10 12 14 11 13 15 12 14 0 2 15 14 11 16 13 13 17 3 1 18 16 14 19 17 15 20 5 3 21 16 14 22 2 4 23 5 3 24 19 16 25 18 17 26 7 18 27 20 19 28 19 16 29 14 11 30 20 19 31 15 12 32 14 11 33 17 15 34 21 20 35 17 15 36 16 14 37 22 21 38 16 14 39 18 17 40 22 21 41 18 17 42 19 16 43 22 21 44 19 16 45 20 19 46 22 21 47 20 19 48 21 20 49 22 21 50 21 20 51 17 15 52 22 21 53 6 5 54 9 7 55 8 9 56 15 12 57 9 7 58 12 10 59 7 18 60 10 22 61 15 12 62 7 18 63 8 9 64 11 8 65 4 6 66 1 0 67 13 13 68 1 0 69 2 4 70 3 1 71 1 0 72 4 6 73 5 3 74 6 5 75 7 18 76 5 3 77 9 7 78 10 22 79 11 8 80 12 10 81 13 13 82 14 11 83 0 2 84 3 1 85 14 11 86 3 1 87 2 4 88 16 14 89 5 3 90 18 17 91 16 14 92 5 3 93 7 18 94 19 16 95 7 18 96 15 12 97 20 19 98 14 11 99 21 20 100 20 19 101 14 11 102 3 1 103 17 15 104 6 5 105 12 10 106 9 7 107 15 12 108 10 22 109 9 7 110 7 18 111 11 8 112 10 22 113 7 18 114 6 5 115 8 9 116 1 0 117 0 2 118 13 13 119 13 13 120 12 10 121 6 5 122 6 5 123 4 6 124 13 13 125</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="caleb_island_noSkybox" name="caleb_island_noSkybox" type="NODE">
+        <matrix sid="transform">1 0 0 -1.078944 0 1 -1.62921e-7 13.66022 0 1.62921e-7 1 0.7400368 0 0 0 1</matrix>
+        <instance_geometry url="#caleb_island_noSkybox-mesh" name="caleb_island_noSkybox">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="initialShadingGroup-material" target="#initialShadingGroup-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+              <instance_material symbol="lambert2SG-material" target="#lambert2SG-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene"/>
+  </scene>
+</COLLADA>
