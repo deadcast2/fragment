@@ -54,7 +54,7 @@ VertexOut VShader(VertexIn v)
   if(_IsFoliage)
   {
     float greenComp = clamp(v.Color.g - v.Color.b - v.Color.r, 0.2, 1);
-    float objPhase = dot(mul(_ObjectPos, _ObjectToWorld), 1);
+    float objPhase = dot(_ObjectPos, 1);
     float vtxPhase = dot(v.Pos, objPhase);
     float2 wavesIn = _Time + float2(vtxPhase, objPhase);
     float4 wavesOut = (frac(wavesIn.xxyy * float4(1.975, 0.793, 0.375, 0.193))
