@@ -11,8 +11,9 @@ D3DXMATRIX viewMat;
 
 void InitCamera();
 D3DXMATRIX CameraViewMatrix();
-void CameraStrafe(float units);
 void CameraWalk(float units);
 void CameraYaw(float angle);
+void CameraPitch(float angle);
+void CameraFly(float units);
 
 #endif

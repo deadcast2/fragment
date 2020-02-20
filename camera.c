@@ -6,10 +6,10 @@ void InitCamera()
   cameraRight = (D3DXVECTOR3){ 1, 0, 0 };
   cameraUp = (D3DXVECTOR3){ 0, 1, 0 };
   cameraForward = (D3DXVECTOR3){ 0, 0, 1 };
-  cameraPos = (D3DXVECTOR3){ 0, 0.35f, -5 };
+  cameraPos = (D3DXVECTOR3){ 0, 50, -3.5f };
 
-  float aspect = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
-  float fov = D3DX_PI / 2.0f;
+  const float aspect = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
+  const float fov = D3DX_PI / 2;
   D3DXMatrixPerspectiveFovLH(&viewMat, fov, aspect, 0.01f, 1000.0f);
 }
 
@@ -41,13 +41,6 @@ D3DXMATRIX CameraViewMatrix()
   return view;
 }
 
-void CameraStrafe(float units)
-{
-  cameraPos.x += cameraRight.x * units;
-  cameraPos.y += cameraRight.y * units;
-  cameraPos.z += cameraRight.z * units;
-}
-
 void CameraWalk(float units)
 {
   cameraPos.x += cameraForward.x * units;
@@ -61,4 +54,17 @@ void CameraYaw(float angle)
   D3DXMatrixRotationY(&T, angle);
   D3DXVec3TransformCoord(&cameraRight, &cameraRight, &T);
   D3DXVec3TransformCoord(&cameraForward, &cameraForward, &T);
+}
+
+void CameraPitch(float angle)
+{
+  D3DXMATRIX T;
+  D3DXMatrixRotationAxis(&T, &cameraRight, angle);
+  D3DXVec3TransformCoord(&cameraUp, &cameraUp, &T);
+  D3DXVec3TransformCoord(&cameraForward, &cameraForward, &T);
+}
+
+void CameraFly(float units)
+{
+  cameraPos.y += units;
 }

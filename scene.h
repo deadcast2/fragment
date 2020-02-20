@@ -10,7 +10,7 @@
 #include "actor.h"
 #include "srandom.h"
 
-#define ACTOR_COUNT 6
+#define ACTOR_COUNT 7
 
 Actor *actors[ACTOR_COUNT];
 

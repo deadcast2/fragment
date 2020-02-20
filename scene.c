@@ -101,6 +101,40 @@ void CrownUpdate(Actor *self)
   self->effect->lpVtbl->SetFloat(self->effect, "_WindSpeed", currWindSpeed * 4.0f);
 }
 
+void ArrivalStart(Actor *self)
+{
+  CameraYaw(D3DX_PI);
+  CameraPitch(D3DX_PI / 2.0f);
+}
+
+void ArrivalUpdate(Actor *self, float deltaTime)
+{
+  static float pitch = 0.0f;
+  static float yaw = 0.0f;
+  static float yAxis = 0.0f;
+
+  if (pitch < D3DX_PI / 2.0f)
+  {
+    const float angle = (D3DX_PI / 20.0f) * deltaTime;
+    pitch += angle;
+    CameraPitch(-angle);
+  }
+
+  if (yaw < D3DX_PI)
+  {
+    const float angle = (D3DX_PI / 10.0f) * deltaTime;
+    yaw += angle;
+    CameraYaw(angle);
+  }
+
+  if (yAxis > -50.0f)
+  {
+    const float units = 5.0f * deltaTime;
+    yAxis -= units;
+    CameraFly(-units);
+  }
+}
+
 void InitScene()
 {
   actors[0] = CreateActor((ActorParams) {
@@ -163,6 +197,10 @@ void InitScene()
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = CrowStart,
     .Update = CrowUpdate
+  });
+  actors[6] = CreateActor((ActorParams) {
+    .Start = ArrivalStart,
+    .Update = ArrivalUpdate
   });
 }
 
