@@ -10,7 +10,7 @@ void InitCamera()
 
   const float aspect = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
   const float fov = D3DX_PI / 2;
-  D3DXMatrixPerspectiveFovLH(&viewMat, fov, aspect, 0.01f, 1000.0f);
+  D3DXMatrixPerspectiveFovLH(&viewMat, fov, aspect, 0.1f, 1000.0f);
 }
 
 D3DXMATRIX CameraViewMatrix()
