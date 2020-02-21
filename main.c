@@ -45,7 +45,7 @@ HWND InitWin()
 int WINAPI WinMainCRTStartup()
 {
   MSG msg;
-  float lastTime = (float)timeGetTime();
+  double lastTime = (double)timeGetTime();
   InitWin();
 
   while(msg.message != WM_QUIT)
@@ -57,8 +57,8 @@ int WINAPI WinMainCRTStartup()
     }
     else
     {
-      float currentTime = (float)timeGetTime();
-      float deltaTime = (currentTime - lastTime) * 0.001f;
+      const double currentTime = (double)timeGetTime();
+      const float deltaTime = (currentTime - lastTime) * 0.001f;
 
       RenderScene(deltaTime);
       HandleInput(deltaTime);
