@@ -145,6 +145,7 @@ void InitScene()
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 }
   });
+
   actors[1] = CreateActor((ActorParams) {
     .modelName = "IDR_SKY",
     .textureName = "IDR_SKY_TEX",
@@ -157,6 +158,7 @@ void InitScene()
     .Update = SkyUpdate,
     .audioParams = (AudioParams) { .shouldLoop = TRUE }
   });
+
   actors[2] = CreateActor((ActorParams) {
     .modelName = "IDR_BUSH",
     .textureName = "IDR_ISLAND_TEX",
@@ -167,26 +169,29 @@ void InitScene()
     .Start = BushStart,
     .Update = BushUpdate
   });
+
   actors[3] = CreateActor((ActorParams) {
     .modelName = "IDR_CROWN_LEFT",
     .textureName = "IDR_ISLAND_TEX",
     .effectName = "IDR_DIFFUSE_FX",
-    .position = (Vertex) { .x = 0, .y = -7.2, .z = 0 },
+    .position = (Vertex) { .x = 0.3, .y = -7.4, .z = 0 },
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = CrownStart,
     .Update = CrownUpdate
   });
+
   actors[4] = CreateActor((ActorParams) {
     .modelName = "IDR_CROWN_RIGHT",
     .textureName = "IDR_ISLAND_TEX",
     .effectName = "IDR_DIFFUSE_FX",
-    .position = (Vertex) { .x = 0, .y = -6.6, .z = 0 },
+    .position = (Vertex) { .x = 0.1, .y = -6.6, .z = -0.1 },
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = CrownStart,
     .Update = CrownUpdate
   });
+
   actors[5] = CreateActor((ActorParams) {
     .modelName = "IDR_HEAD",
     .textureName = "IDR_ISLAND_TEX",
@@ -198,6 +203,7 @@ void InitScene()
     .Start = CrowStart,
     .Update = CrowUpdate
   });
+
   actors[6] = CreateActor((ActorParams) {
     .Start = ArrivalStart,
     .Update = ArrivalUpdate
