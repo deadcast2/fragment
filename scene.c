@@ -4,20 +4,39 @@ extern __inline HRESULT XAudio2CreateVolumeMeter(_Outptr_ IUnknown** ppApo);
 
 static float currWindSpeed = 0;
 
-void CrowStart(Actor *self)
-{
-  PlayAudio(self->audioSource, self->audioBuffer);
-}
-
 void CrowUpdate(Actor *self, float deltaTime)
 {
+  static float target = 0;
   static float nextCaw = 0;
+
   if (nextCaw < 0)
   {
     PlayAudio(self->audioSource, self->audioBuffer);
     nextCaw = smooth_rand() % 20;
+
+    if (nextCaw > 0 && nextCaw <= 5)
+      target = 0.5f;
+    else if (nextCaw > 5 && nextCaw <= 15)
+      target = -0.5f;
+    else
+      target = 0;
   }
-  nextCaw -= 0.5f * deltaTime;
+
+  nextCaw -= 1.0f * deltaTime;
+
+  const int sign = target < 0 ? -1 : 1;
+  if ((sign * self->rotation.x) < (sign * target))
+  {
+    const float origX = self->position.x;
+    const float origY = self->position.y;
+    const float origZ = self->position.z;
+  
+    self->rotation.x += sign * 2.5f * deltaTime;
+  
+    self->position.x = origX;
+    self->position.y = origY;
+    self->position.z = origZ;
+  }
 }
 
 void SkyStart(Actor *self)
@@ -197,10 +216,9 @@ void InitScene()
     .textureName = "IDR_ISLAND_TEX",
     .audioName = "IDR_CROW",
     .effectName = "IDR_DIFFUSE_FX",
-    .position = (Vertex) { .x = 0, .y = -6.5, .z = 0 },
+    .position = (Vertex) { .x = -1.078, .y = 7.13, .z = -0.73 },
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
-    .Start = CrowStart,
     .Update = CrowUpdate
   });
 
