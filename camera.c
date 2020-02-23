@@ -6,7 +6,7 @@ void InitCamera()
   cameraRight = (D3DXVECTOR3){ 1, 0, 0 };
   cameraUp = (D3DXVECTOR3){ 0, 1, 0 };
   cameraForward = (D3DXVECTOR3){ 0, 0, 1 };
-  cameraPos = (D3DXVECTOR3){ 0, 50, -3.5f };
+  cameraPos = (D3DXVECTOR3){ 0, 0, 0 };
 
   const float aspect = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
   const float fov = D3DX_PI / 2;
@@ -39,6 +39,11 @@ D3DXMATRIX CameraViewMatrix()
   view.m[3][2] = -D3DXVec3Dot(&cameraForward, &cameraPos);
   view.m[3][3] = 1.0f;
   return view;
+}
+
+void CameraPosition(D3DXVECTOR3 position)
+{
+  cameraPos = position;
 }
 
 void CameraWalk(float units)

@@ -122,6 +122,7 @@ void CrownUpdate(Actor *self)
 
 void ArrivalStart(Actor *self)
 {
+  CameraPosition((D3DXVECTOR3) { 0, 50, -3.5f });
   CameraYaw(D3DX_PI);
   CameraPitch(D3DX_PI / 2.0f);
 }
