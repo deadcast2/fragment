@@ -154,6 +154,12 @@ void ArrivalUpdate(Actor *self, float deltaTime)
   }
 }
 
+void RingStart(Actor *self)
+{
+  self->effect->lpVtbl->SetBool(self->effect, "_IgnoreTexture", TRUE);
+  self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 1, 0, 0, 1 });
+}
+
 void InitScene()
 {
   actors[0] = CreateActor((ActorParams) {
@@ -240,6 +246,7 @@ void InitScene()
     .position = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
+    .Start = RingStart
   });
 }
 

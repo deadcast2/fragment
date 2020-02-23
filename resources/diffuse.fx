@@ -1,4 +1,5 @@
 float4x4 _ObjectToWorld;
+float4 _Color;
 float4 _FogColor;
 float4 _CameraPos;
 float4 _ObjectPos;
@@ -8,6 +9,7 @@ float _FogEnd;
 float _BendScale;
 float _WindSpeed;
 bool _IsFoliage;
+bool _IgnoreTexture;
 texture _Texture;
 
 sampler Sampler = sampler_state
@@ -76,7 +78,7 @@ VertexOut VShader(VertexIn v)
 
 float4 PShader(VertexOut v) : COLOR
 {
-  float4 color = tex2D(Sampler, v.UV);
+  float4 color = _IgnoreTexture ? _Color : tex2D(Sampler, v.UV);
   float4 newColor = lerp(color, _FogColor, v.Fog);
   newColor.a = color.a;
   return newColor;
