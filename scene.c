@@ -157,6 +157,7 @@ void ArrivalUpdate(Actor *self, float deltaTime)
 void InitScene()
 {
   actors[0] = CreateActor((ActorParams) {
+    .bufferType = Triangle,
     .modelName = "IDR_ISLAND",
     .textureName = "IDR_ISLAND_TEX",
     .effectName = "IDR_DIFFUSE_FX",
@@ -166,6 +167,7 @@ void InitScene()
   });
 
   actors[1] = CreateActor((ActorParams) {
+    .bufferType = Triangle,
     .modelName = "IDR_SKY",
     .textureName = "IDR_SKY_TEX",
     .audioName = "IDR_WIND",
@@ -179,6 +181,7 @@ void InitScene()
   });
 
   actors[2] = CreateActor((ActorParams) {
+    .bufferType = Triangle,
     .modelName = "IDR_BUSH",
     .textureName = "IDR_ISLAND_TEX",
     .effectName = "IDR_DIFFUSE_FX",
@@ -190,6 +193,7 @@ void InitScene()
   });
 
   actors[3] = CreateActor((ActorParams) {
+    .bufferType = Triangle,
     .modelName = "IDR_CROWN_LEFT",
     .textureName = "IDR_ISLAND_TEX",
     .effectName = "IDR_DIFFUSE_FX",
@@ -201,6 +205,7 @@ void InitScene()
   });
 
   actors[4] = CreateActor((ActorParams) {
+    .bufferType = Triangle,
     .modelName = "IDR_CROWN_RIGHT",
     .textureName = "IDR_ISLAND_TEX",
     .effectName = "IDR_DIFFUSE_FX",
@@ -212,6 +217,7 @@ void InitScene()
   });
 
   actors[5] = CreateActor((ActorParams) {
+    .bufferType = Triangle,
     .modelName = "IDR_HEAD",
     .textureName = "IDR_ISLAND_TEX",
     .audioName = "IDR_CROW",
@@ -225,6 +231,15 @@ void InitScene()
   actors[6] = CreateActor((ActorParams) {
     .Start = ArrivalStart,
     .Update = ArrivalUpdate
+  });
+
+  actors[7] = CreateActor((ActorParams) {
+    .bufferType = Line,
+    .modelName = "IDR_RING",
+    .effectName = "IDR_DIFFUSE_FX",
+    .position = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
   });
 }
 

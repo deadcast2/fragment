@@ -5,6 +5,7 @@ Actor *CreateActor(ActorParams params)
   Actor *newActor = HeapAlloc(GetProcessHeap(), 0, sizeof(Actor));
   if (!newActor) return newActor;
 
+  newActor->bufferType = params.bufferType;
   newActor->vertexBuffer = 0;
   newActor->d3dTexture = 0;
   newActor->audioSource = 0;
@@ -91,8 +92,15 @@ void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, float deltaTime)
     d3ddev->lpVtbl->SetStreamSource(d3ddev, 0, actor->vertexBuffer, 0,
       sizeof(Vertex));
     d3ddev->lpVtbl->SetVertexDeclaration(d3ddev, vertDeclaration);
-    d3ddev->lpVtbl->DrawPrimitive(d3ddev, D3DPT_TRIANGLELIST, 0,
-      actor->vertexCount / 3);
+
+    if (actor->bufferType == Triangle)
+    {
+      d3ddev->lpVtbl->DrawPrimitive(d3ddev, D3DPT_TRIANGLELIST, 0, actor->vertexCount / 3);
+    }
+    else
+    {
+      d3ddev->lpVtbl->DrawPrimitive(d3ddev, D3DPT_LINELIST, 0, actor->vertexCount / 2);
+    }
   }
 
   if (actor->effect)

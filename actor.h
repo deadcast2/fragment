@@ -8,8 +8,11 @@
 #include "audio.h"
 #include "effect.h"
 
+enum ActorBufferType { Line, Triangle };
+
 typedef struct Actor
 {
+  enum ActorBufferType bufferType;
   IXAudio2SourceVoice *audioSource;
   XAUDIO2_BUFFER *audioBuffer;
   IDirect3DVertexBuffer9 *vertexBuffer;
@@ -24,6 +27,7 @@ typedef struct Actor
 
 typedef struct ActorParams
 {
+  enum ActorBufferType bufferType;
   char *modelName;
   char *textureName;
   char *audioName;
