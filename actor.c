@@ -14,6 +14,7 @@ Actor *CreateActor(ActorParams params)
   newActor->position = params.position;
   newActor->rotation = params.rotation;
   newActor->scale = params.scale;
+  newActor->enabled = params.enabled;
   newActor->Update = 0;
 
   if (params.modelName) LoadModel(params.modelName, &newActor->vertexCount, &newActor->vertexBuffer);
@@ -22,7 +23,7 @@ Actor *CreateActor(ActorParams params)
      &newActor->audioBuffer, params.audioParams);
   if (params.effectName) LoadEffect(params.effectName, &newActor->effect);
   if (params.Update) newActor->Update = params.Update;
-  if (params.Start) params.Start(newActor);
+  if (params.Start && params.enabled) params.Start(newActor);
 
   return newActor;
 }
@@ -44,6 +45,8 @@ void DeleteActor(Actor *actor)
 
 void DrawActor(Actor *actor, LPDIRECT3DDEVICE9 d3ddev, float deltaTime)
 {
+  if (!actor->enabled) return;
+
   D3DXMATRIX translation;
   D3DXMatrixTranslation(&translation, actor->position.x,
     actor->position.y, actor->position.z);

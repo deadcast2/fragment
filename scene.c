@@ -163,6 +163,7 @@ void RingStart(Actor *self)
 void InitScene()
 {
   actors[0] = CreateActor((ActorParams) {
+    .enabled = 1,
     .bufferType = Triangle,
     .modelName = "IDR_ISLAND",
     .textureName = "IDR_ISLAND_TEX",
@@ -173,6 +174,7 @@ void InitScene()
   });
 
   actors[1] = CreateActor((ActorParams) {
+    .enabled = 1,
     .bufferType = Triangle,
     .modelName = "IDR_SKY",
     .textureName = "IDR_SKY_TEX",
@@ -187,6 +189,7 @@ void InitScene()
   });
 
   actors[2] = CreateActor((ActorParams) {
+    .enabled = 1,
     .bufferType = Triangle,
     .modelName = "IDR_BUSH",
     .textureName = "IDR_ISLAND_TEX",
@@ -199,6 +202,7 @@ void InitScene()
   });
 
   actors[3] = CreateActor((ActorParams) {
+    .enabled = 1,
     .bufferType = Triangle,
     .modelName = "IDR_CROWN_LEFT",
     .textureName = "IDR_ISLAND_TEX",
@@ -211,6 +215,7 @@ void InitScene()
   });
 
   actors[4] = CreateActor((ActorParams) {
+    .enabled = 1,
     .bufferType = Triangle,
     .modelName = "IDR_CROWN_RIGHT",
     .textureName = "IDR_ISLAND_TEX",
@@ -223,6 +228,7 @@ void InitScene()
   });
 
   actors[5] = CreateActor((ActorParams) {
+    .enabled = 1,
     .bufferType = Triangle,
     .modelName = "IDR_HEAD",
     .textureName = "IDR_ISLAND_TEX",
@@ -235,11 +241,13 @@ void InitScene()
   });
 
   actors[6] = CreateActor((ActorParams) {
+    .enabled = 1,
     .Start = ArrivalStart,
     .Update = ArrivalUpdate
   });
 
   actors[7] = CreateActor((ActorParams) {
+    .enabled = 0,
     .bufferType = Line,
     .modelName = "IDR_RING",
     .effectName = "IDR_DIFFUSE_FX",

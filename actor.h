@@ -22,6 +22,7 @@ typedef struct Actor
   Vertex position;
   Vertex rotation;
   Vertex scale;
+  int enabled;
   void (*Update)(struct Actor *, float);
 } Actor;
 
@@ -35,6 +36,7 @@ typedef struct ActorParams
   Vertex position;
   Vertex rotation;
   Vertex scale;
+  int enabled;
   AudioParams audioParams;
   void (*Start)(struct Actor *);
   void *Update;
