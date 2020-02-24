@@ -157,35 +157,71 @@ void ArrivalUpdate(Actor *self, float deltaTime)
 
 void RingStart(Actor *self)
 {
-  self->position.z += 2.5f;
+  self->position.z = 2.5f;
   self->scale.x *= 0.01f;
-  self->scale.y *= 0.008f;
+  self->scale.y *= 0.007f;
   self->scale.z *= 0.01f;
   self->effect->lpVtbl->SetBool(self->effect, "_IgnoreTexture", TRUE);
 
-  if (strcmp(self->name, "ring 1"))
+  if (strcmp(self->name, "ring 1") == 0)
   {
     self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 1, 0, 0, 1 });
   }
-  else if (strcmp(self->name, "ring 2"))
+  else if (strcmp(self->name, "ring 2") == 0)
   {
     self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 0, 1, 0, 1 });
+  }
+  else if (strcmp(self->name, "ring 3") == 0)
+  {
+    self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 0, 0, 1, 1 });
+  }
+  else if (strcmp(self->name, "ring 4") == 0)
+  {
+    self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 1, 1, 0, 1 });
+  }
+  else if (strcmp(self->name, "ring 5") == 0)
+  {
+    self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 1, 0, 1, 1 });
   }
 }
 
 void RingUpdate(Actor *self, float deltaTime)
 {
-  if (strcmp(self->name, "ring 1"))
+  if (strcmp(self->name, "ring 1") == 0)
   {
     self->position.z -= 0.5f * deltaTime;
   }
-  else if (strcmp(self->name, "ring 2"))
+  else if (strcmp(self->name, "ring 2") == 0)
+  {
+    static float delay = 0.5f;
+    if (delay < 0)
+      self->position.z -= 0.5f * deltaTime;
+    delay -= 0.5f * deltaTime;
+  }
+  else if (strcmp(self->name, "ring 3") == 0)
   {
     static float delay = 1.0f;
     if (delay < 0)
       self->position.z -= 0.5f * deltaTime;
     delay -= 0.5f * deltaTime;
   }
+  else if (strcmp(self->name, "ring 4") == 0)
+  {
+    static float delay = 1.5f;
+    if (delay < 0)
+      self->position.z -= 0.5f * deltaTime;
+    delay -= 0.5f * deltaTime;
+  }
+  else if (strcmp(self->name, "ring 5") == 0)
+  {
+    static float delay = 2.0f;
+    if (delay < 0)
+      self->position.z -= 0.5f * deltaTime;
+    delay -= 0.5f * deltaTime;
+  }
+
+  if (self->position.z < 0)
+    self->position.z = 2.5f;
 }
 
 void InitScene()
@@ -296,6 +332,45 @@ void InitScene()
 
   actors[8] = CreateActor((ActorParams) {
     .name = "ring 2",
+    .enabled = 1,
+    .bufferType = Line,
+    .modelName = "IDR_RING",
+    .effectName = "IDR_DIFFUSE_FX",
+    .position = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
+    .Start = RingStart,
+    .Update = RingUpdate
+  });
+
+  actors[9] = CreateActor((ActorParams) {
+    .name = "ring 3",
+    .enabled = 1,
+    .bufferType = Line,
+    .modelName = "IDR_RING",
+    .effectName = "IDR_DIFFUSE_FX",
+    .position = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
+    .Start = RingStart,
+    .Update = RingUpdate
+  });
+
+  actors[10] = CreateActor((ActorParams) {
+    .name = "ring 4",
+    .enabled = 1,
+    .bufferType = Line,
+    .modelName = "IDR_RING",
+    .effectName = "IDR_DIFFUSE_FX",
+    .position = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
+    .Start = RingStart,
+    .Update = RingUpdate
+  });
+
+  actors[11] = CreateActor((ActorParams) {
+    .name = "ring 5",
     .enabled = 1,
     .bufferType = Line,
     .modelName = "IDR_RING",
