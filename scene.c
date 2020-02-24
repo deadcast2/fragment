@@ -189,39 +189,63 @@ void RingUpdate(Actor *self, float deltaTime)
 {
   if (strcmp(self->name, "ring 1") == 0)
   {
+    self->position.x -= self->position.x * 0.5f * deltaTime;
+    self->position.y -= self->position.y * 0.5f * deltaTime;
     self->position.z -= 0.5f * deltaTime;
   }
   else if (strcmp(self->name, "ring 2") == 0)
   {
     static float delay = 0.5f;
     if (delay < 0)
+    {
+      self->position.x -= self->position.x * 0.5f * deltaTime;
+      self->position.y -= self->position.y * 0.5f * deltaTime;
       self->position.z -= 0.5f * deltaTime;
+    }
     delay -= 0.5f * deltaTime;
   }
   else if (strcmp(self->name, "ring 3") == 0)
   {
     static float delay = 1.0f;
     if (delay < 0)
+    {
+      self->position.x -= self->position.x * 0.5f * deltaTime;
+      self->position.y -= self->position.y * 0.5f * deltaTime;
       self->position.z -= 0.5f * deltaTime;
+    }
     delay -= 0.5f * deltaTime;
   }
   else if (strcmp(self->name, "ring 4") == 0)
   {
     static float delay = 1.5f;
     if (delay < 0)
+    {
+      self->position.x -= self->position.x * 0.5f * deltaTime;
+      self->position.y -= self->position.y * 0.5f * deltaTime;
       self->position.z -= 0.5f * deltaTime;
+    }
     delay -= 0.5f * deltaTime;
   }
   else if (strcmp(self->name, "ring 5") == 0)
   {
     static float delay = 2.0f;
     if (delay < 0)
+    {
+      self->position.x -= self->position.x * 0.5f * deltaTime;
+      self->position.y -= self->position.y * 0.5f * deltaTime;
       self->position.z -= 0.5f * deltaTime;
+    }
     delay -= 0.5f * deltaTime;
   }
 
+  static float sinX = 0;
   if (self->position.z < 0)
+  {
     self->position.z = 2.5f;
+    self->position.x = sin((double)sinX);
+    self->position.y = sin((double)sinX);
+    sinX += 1.0f * deltaTime;
+  }
 }
 
 void InitScene()

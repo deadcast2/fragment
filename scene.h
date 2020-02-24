@@ -2,6 +2,7 @@
 #define _SCENE_H_
 
 #include <float.h>
+#include <math.h>
 #include "audio.h"
 #include "graphics.h"
 #include "camera.h"
