@@ -3,19 +3,20 @@
 void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vertexBuffer)
 {
   HANDLE resource = FindResource(NULL, name, "SOS");
-  if(resource == NULL) return;
+  if (resource == NULL) return;
+
   HGLOBAL loadedResource = LoadResource(NULL, resource);
-  if(loadedResource == NULL) return;
+  if (loadedResource == NULL) return;
+
   LPVOID resourceData = LockResource(loadedResource);
   DWORD resourceSize = SizeofResource(NULL, resource);
 
   int uncompressedSize = 0;
   memmove(&uncompressedSize, resourceData, sizeof(int));
-  memmove(resourceData, resourceData + sizeof(int), resourceSize - sizeof(int));
 
   BYTE *decompressedData = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
     uncompressedSize);
-  fastlz_decompress(resourceData, resourceSize - sizeof(int),
+  fastlz_decompress(resourceData + sizeof(int), resourceSize - sizeof(int),
     decompressedData, uncompressedSize);
 
   BYTE *decompressedDataCopy = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
@@ -25,7 +26,7 @@ void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vert
   int _vertexCount = 0;
   char *context;
   char *line = strtok_r((char *)decompressedData, "\n", &context);
-  while(line != NULL)
+  while (line != NULL)
   {
     _vertexCount++;
     line = strtok_r(NULL, "\n", &context);
@@ -36,7 +37,7 @@ void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vert
   Vertex *vertices = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
     sizeof(Vertex) * _vertexCount);
   int index = 0;
-  while(index < _vertexCount)
+  while (index < _vertexCount)
   {
     int x, y, z, nx, ny, nz, r, g, b, t, v;
     sscanf(line, "%x %x %x %x %x %x %x %x %x %x %x",

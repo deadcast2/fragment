@@ -15,6 +15,7 @@ Actor *CreateActor(ActorParams params)
   newActor->rotation = params.rotation;
   newActor->scale = params.scale;
   newActor->enabled = params.enabled;
+  newActor->name = params.name;
   newActor->Update = 0;
 
   if (params.modelName) LoadModel(params.modelName, &newActor->vertexCount, &newActor->vertexBuffer);

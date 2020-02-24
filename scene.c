@@ -157,14 +157,42 @@ void ArrivalUpdate(Actor *self, float deltaTime)
 
 void RingStart(Actor *self)
 {
+  self->position.z += 2.5f;
+  self->scale.x *= 0.01f;
+  self->scale.y *= 0.008f;
+  self->scale.z *= 0.01f;
   self->effect->lpVtbl->SetBool(self->effect, "_IgnoreTexture", TRUE);
-  self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 1, 0, 0, 1 });
+
+  if (strcmp(self->name, "ring 1"))
+  {
+    self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 1, 0, 0, 1 });
+  }
+  else if (strcmp(self->name, "ring 2"))
+  {
+    self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 0, 1, 0, 1 });
+  }
+}
+
+void RingUpdate(Actor *self, float deltaTime)
+{
+  if (strcmp(self->name, "ring 1"))
+  {
+    self->position.z -= 0.5f * deltaTime;
+  }
+  else if (strcmp(self->name, "ring 2"))
+  {
+    static float delay = 1.0f;
+    if (delay < 0)
+      self->position.z -= 0.5f * deltaTime;
+    delay -= 0.5f * deltaTime;
+  }
 }
 
 void InitScene()
 {
   actors[0] = CreateActor((ActorParams) {
-    .enabled = 1,
+    .name = "island",
+    .enabled = 0,
     .bufferType = Triangle,
     .modelName = "IDR_ISLAND",
     .textureName = "IDR_ISLAND_TEX",
@@ -175,7 +203,8 @@ void InitScene()
   });
 
   actors[1] = CreateActor((ActorParams) {
-    .enabled = 1,
+    .name = "sky",
+    .enabled = 0,
     .bufferType = Triangle,
     .modelName = "IDR_SKY",
     .textureName = "IDR_SKY_TEX",
@@ -190,7 +219,8 @@ void InitScene()
   });
 
   actors[2] = CreateActor((ActorParams) {
-    .enabled = 1,
+    .name = "bush",
+    .enabled = 0,
     .bufferType = Triangle,
     .modelName = "IDR_BUSH",
     .textureName = "IDR_ISLAND_TEX",
@@ -203,7 +233,8 @@ void InitScene()
   });
 
   actors[3] = CreateActor((ActorParams) {
-    .enabled = 1,
+    .name = "crown left",
+    .enabled = 0,
     .bufferType = Triangle,
     .modelName = "IDR_CROWN_LEFT",
     .textureName = "IDR_ISLAND_TEX",
@@ -216,7 +247,8 @@ void InitScene()
   });
 
   actors[4] = CreateActor((ActorParams) {
-    .enabled = 1,
+    .name = "crown right",
+    .enabled = 0,
     .bufferType = Triangle,
     .modelName = "IDR_CROWN_RIGHT",
     .textureName = "IDR_ISLAND_TEX",
@@ -229,7 +261,8 @@ void InitScene()
   });
 
   actors[5] = CreateActor((ActorParams) {
-    .enabled = 1,
+    .name = "crow head",
+    .enabled = 0,
     .bufferType = Triangle,
     .modelName = "IDR_HEAD",
     .textureName = "IDR_ISLAND_TEX",
@@ -242,20 +275,36 @@ void InitScene()
   });
 
   actors[6] = CreateActor((ActorParams) {
-    .enabled = 1,
+    .name = "arrival",
+    .enabled = 0,
     .Start = ArrivalStart,
     .Update = ArrivalUpdate
   });
 
   actors[7] = CreateActor((ActorParams) {
-    .enabled = 0,
+    .name = "ring 1",
+    .enabled = 1,
     .bufferType = Line,
     .modelName = "IDR_RING",
     .effectName = "IDR_DIFFUSE_FX",
     .position = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
-    .Start = RingStart
+    .Start = RingStart,
+    .Update = RingUpdate
+  });
+
+  actors[8] = CreateActor((ActorParams) {
+    .name = "ring 2",
+    .enabled = 1,
+    .bufferType = Line,
+    .modelName = "IDR_RING",
+    .effectName = "IDR_DIFFUSE_FX",
+    .position = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
+    .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
+    .Start = RingStart,
+    .Update = RingUpdate
   });
 }
 
