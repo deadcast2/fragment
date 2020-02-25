@@ -18,10 +18,11 @@ Actor *CreateActor(ActorParams params)
   newActor->name = params.name;
   newActor->Update = 0;
 
-  if (params.modelName) LoadModel(params.modelName, &newActor->vertexCount, &newActor->vertexBuffer);
+  if (params.modelName) LoadModel(params.modelName, &newActor->vertexCount, &newActor->vertices, 
+    &newActor->vertexBuffer);
   if (params.textureName) LoadTexture(params.textureName, &newActor->d3dTexture);
   if (params.audioName) LoadAudio(params.audioName, &newActor->audioSource,
-     &newActor->audioBuffer, params.audioParams);
+    &newActor->audioBuffer, params.audioParams);
   if (params.effectName) LoadEffect(params.effectName, &newActor->effect);
   if (params.Update) newActor->Update = params.Update;
   if (params.Start && params.enabled) params.Start(newActor);
@@ -32,6 +33,7 @@ Actor *CreateActor(ActorParams params)
 void DeleteActor(Actor *actor)
 {
   if (!actor) return;
+  if (actor->vertices) HeapFree(GetProcessHeap(), 0, actor->vertices);
   if (actor->vertexBuffer) actor->vertexBuffer->lpVtbl->Release(actor->vertexBuffer);
   if (actor->d3dTexture) actor->d3dTexture->lpVtbl->Release(actor->d3dTexture);
   if (actor->audioSource) actor->audioSource->lpVtbl->DestroyVoice(actor->audioSource);

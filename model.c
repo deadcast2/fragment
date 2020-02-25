@@ -1,6 +1,6 @@
 #include "model.h"
 
-void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vertexBuffer)
+void LoadModel(const char *name, int *vertexCount, Vertex **vertices, IDirect3DVertexBuffer9 **vertexBuffer)
 {
   HANDLE resource = FindResource(NULL, name, "SOS");
   if (resource == NULL) return;
@@ -34,15 +34,14 @@ void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vert
   HeapFree(GetProcessHeap(), 0, decompressedData);
 
   line = strtok_r((char *)decompressedDataCopy, "\n", &context);
-  Vertex *vertices = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
-    sizeof(Vertex) * _vertexCount);
+  (*vertices) = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(Vertex) * _vertexCount);
   int index = 0;
   while (index < _vertexCount)
   {
     int x, y, z, nx, ny, nz, r, g, b, t, v;
     sscanf(line, "%x %x %x %x %x %x %x %x %x %x %x",
       &x, &y, &z, &nx, &ny, &nz, &r, &g, &b, &t, &v);
-    vertices[index] = (Vertex) {
+    (*vertices)[index] = (Vertex) {
       .x = x / SCALE_FACTOR,
       .y = y / SCALE_FACTOR,
       .z = z / SCALE_FACTOR,
@@ -63,9 +62,17 @@ void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vert
     0, D3DPOOL_MANAGED, vertexBuffer, 0);
   VOID *pVoid;
   (*vertexBuffer)->lpVtbl->Lock(*vertexBuffer, 0, 0, (void**)&pVoid, 0);
-  CopyMemory(pVoid, vertices, _vertexCount * sizeof(Vertex));
+  CopyMemory(pVoid, *vertices, _vertexCount * sizeof(Vertex));
   (*vertexBuffer)->lpVtbl->Unlock(*vertexBuffer);
-  HeapFree(GetProcessHeap(), 0, vertices);
 
   *vertexCount = _vertexCount;
+}
+
+Vertex AddVertex(const Vertex a, const Vertex b)
+{
+  Vertex newVertex;
+  newVertex.x = a.x + b.x;
+  newVertex.y = a.y + b.y;
+  newVertex.z = a.z + b.z;
+  return newVertex;
 }

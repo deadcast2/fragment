@@ -19,6 +19,7 @@ typedef struct Actor
   IDirect3DTexture9 *d3dTexture;
   LPD3DXEFFECT effect;
   int vertexCount;
+  Vertex *vertices;
   Vertex position;
   Vertex rotation;
   Vertex scale;

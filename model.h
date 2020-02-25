@@ -18,6 +18,8 @@ typedef struct Vertex
   FLOAT t, v;
 } Vertex;
 
-void LoadModel(const char *name, int *vertexCount, IDirect3DVertexBuffer9 **vertexBuffer);
+void LoadModel(const char *name, int *vertexCount, Vertex **vertices, 
+  IDirect3DVertexBuffer9 **vertexBuffer);
+Vertex AddVertex(const Vertex a, const Vertex b);
 
 #endif

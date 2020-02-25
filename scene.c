@@ -252,7 +252,7 @@ void InitScene()
 {
   actors[0] = CreateActor((ActorParams) {
     .name = "island",
-    .enabled = 0,
+    .enabled = 1,
     .bufferType = Triangle,
     .modelName = "IDR_ISLAND",
     .textureName = "IDR_ISLAND_TEX",
@@ -343,7 +343,7 @@ void InitScene()
 
   actors[7] = CreateActor((ActorParams) {
     .name = "ring 1",
-    .enabled = 1,
+    .enabled = 0,
     .bufferType = Line,
     .modelName = "IDR_RING",
     .effectName = "IDR_DIFFUSE_FX",
@@ -356,7 +356,7 @@ void InitScene()
 
   actors[8] = CreateActor((ActorParams) {
     .name = "ring 2",
-    .enabled = 1,
+    .enabled = 0,
     .bufferType = Line,
     .modelName = "IDR_RING",
     .effectName = "IDR_DIFFUSE_FX",
@@ -369,7 +369,7 @@ void InitScene()
 
   actors[9] = CreateActor((ActorParams) {
     .name = "ring 3",
-    .enabled = 1,
+    .enabled = 0,
     .bufferType = Line,
     .modelName = "IDR_RING",
     .effectName = "IDR_DIFFUSE_FX",
@@ -382,7 +382,7 @@ void InitScene()
 
   actors[10] = CreateActor((ActorParams) {
     .name = "ring 4",
-    .enabled = 1,
+    .enabled = 0,
     .bufferType = Line,
     .modelName = "IDR_RING",
     .effectName = "IDR_DIFFUSE_FX",
@@ -395,7 +395,7 @@ void InitScene()
 
   actors[11] = CreateActor((ActorParams) {
     .name = "ring 5",
-    .enabled = 1,
+    .enabled = 0,
     .bufferType = Line,
     .modelName = "IDR_RING",
     .effectName = "IDR_DIFFUSE_FX",
