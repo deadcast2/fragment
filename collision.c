@@ -85,11 +85,11 @@ D3DXVECTOR3 ClosestPoint(D3DXVECTOR3 p, D3DXVECTOR3 a, D3DXVECTOR3 b, D3DXVECTOR
   return added;
 }
 
-int TestSphereTriangle(D3DXVECTOR3 center, float radius, D3DXVECTOR3 a, D3DXVECTOR3 b, D3DXVECTOR3 c)
+int TestSphereTriangle(D3DXVECTOR3 center, float radius, D3DXVECTOR3 a, D3DXVECTOR3 b, D3DXVECTOR3 c, D3DXVECTOR3 *p)
 {
-  D3DXVECTOR3 p = ClosestPoint(center, a, b, c);
   D3DXVECTOR3 v;
-  D3DXVec3Subtract(&v, &p, &center);
+  *p = ClosestPoint(center, a, b, c);
+  D3DXVec3Subtract(&v, p, &center);
 
   return D3DXVec3Dot(&v, &v) <= radius * radius;
 }

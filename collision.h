@@ -4,6 +4,7 @@
 #include "model.h"
 
 D3DXVECTOR3 ClosestPoint(D3DXVECTOR3 p, D3DXVECTOR3 a, D3DXVECTOR3 b, D3DXVECTOR3 c);
-int TestSphereTriangle(D3DXVECTOR3 center, float radius, D3DXVECTOR3 a, D3DXVECTOR3 b, D3DXVECTOR3 c);
+int TestSphereTriangle(D3DXVECTOR3 center, float radius, D3DXVECTOR3 a, D3DXVECTOR3 b,
+  D3DXVECTOR3 c, D3DXVECTOR3 *p);
 
 #endif
