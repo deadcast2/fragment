@@ -1,5 +1,8 @@
 IDR_WIND WAV "resources/wind.wav.lz"
 IDR_CROW WAV "resources/crow.wav.lz"
+IDR_GONG WAV "resources/gong.wav.lz"
+IDR_FOOTSTEP1 WAV "resources/footstep1.wav.lz"
+IDR_FOOTSTEP2 WAV "resources/footstep2.wav.lz"
 IDR_ISLAND SOS "resources/island.sos.lz"
 IDR_ISLAND_TEX RCDATA "resources/island.png"
 IDR_BUSH SOS "resources/bush.sos.lz"
