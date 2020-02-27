@@ -11,7 +11,7 @@
 #include "actor.h"
 #include "srandom.h"
 
-#define ACTOR_COUNT 12
+#define ACTOR_COUNT 13
 
 Actor *actors[ACTOR_COUNT];
 

@@ -248,6 +248,23 @@ void RingUpdate(Actor *self, float deltaTime)
   }
 }
 
+void PlayerUpdate(Actor *self, float deltaTime)
+{
+  static float lastX = 0;
+  static float lastZ = 0;
+
+  float xDiff = lastX - cameraPos.x;
+  float zDiff = lastZ - cameraPos.z;
+  float dist = sqrt((xDiff * xDiff) + (zDiff * zDiff));
+
+  if (dist > 1.3f)
+  {
+    PlayAudio(self->audioSource, self->audioBuffer);
+    lastX = cameraPos.x;
+    lastZ = cameraPos.z;
+  }
+}
+
 void InitScene()
 {
   actors[0] = CreateActor((ActorParams) {
@@ -404,6 +421,13 @@ void InitScene()
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = RingStart,
     .Update = RingUpdate
+  });
+
+  actors[12] = CreateActor((ActorParams) {
+    .name = "player",
+    .enabled = 1,
+    .audioName = "IDR_FOOTSTEP",
+    .Update = PlayerUpdate
   });
 }
 
