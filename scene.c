@@ -240,12 +240,26 @@ void RingUpdate(Actor *self, float deltaTime)
   }
 
   static float sinX = 0;
+  static int cycles = 8;
   if (self->position.z < 0)
   {
     self->position.z = 2.5f;
     self->position.x = sin((double)sinX);
     self->position.y = sin((double)sinX);
     sinX += 1.0f * deltaTime;
+    cycles -= 1;
+  }
+  else if (cycles < 0 && strcmp(self->name, "ring 5") == 0)
+  {
+    // Intro finished so activate all other actors.
+    for (int i = 0; i < ACTOR_COUNT; i++)
+    {
+      actors[i]->enabled = strstr(actors[i]->name, "ring") == NULL;
+      if (actors[i]->Start && actors[i]->enabled) 
+      {
+        actors[i]->Start(actors[i]);
+      }
+    }
   }
 }
 
@@ -270,7 +284,7 @@ void InitScene()
 {
   actors[0] = CreateActor((ActorParams) {
     .name = "island",
-    .enabled = 1,
+    .enabled = 0,
     .bufferType = Triangle,
     .modelName = "IDR_ISLAND",
     .textureName = "IDR_ISLAND_TEX",
@@ -354,7 +368,7 @@ void InitScene()
 
   actors[6] = CreateActor((ActorParams) {
     .name = "arrival",
-    .enabled = 1,
+    .enabled = 0,
     .audioName = "IDR_GONG",
     .Start = ArrivalStart,
     .Update = ArrivalUpdate
@@ -362,7 +376,7 @@ void InitScene()
 
   actors[7] = CreateActor((ActorParams) {
     .name = "ring 1",
-    .enabled = 0,
+    .enabled = 1,
     .bufferType = Line,
     .modelName = "IDR_RING",
     .effectName = "IDR_DIFFUSE_FX",
@@ -375,7 +389,7 @@ void InitScene()
 
   actors[8] = CreateActor((ActorParams) {
     .name = "ring 2",
-    .enabled = 0,
+    .enabled = 1,
     .bufferType = Line,
     .modelName = "IDR_RING",
     .effectName = "IDR_DIFFUSE_FX",
@@ -388,7 +402,7 @@ void InitScene()
 
   actors[9] = CreateActor((ActorParams) {
     .name = "ring 3",
-    .enabled = 0,
+    .enabled = 1,
     .bufferType = Line,
     .modelName = "IDR_RING",
     .effectName = "IDR_DIFFUSE_FX",
@@ -401,7 +415,7 @@ void InitScene()
 
   actors[10] = CreateActor((ActorParams) {
     .name = "ring 4",
-    .enabled = 0,
+    .enabled = 1,
     .bufferType = Line,
     .modelName = "IDR_RING",
     .effectName = "IDR_DIFFUSE_FX",
@@ -414,7 +428,7 @@ void InitScene()
 
   actors[11] = CreateActor((ActorParams) {
     .name = "ring 5",
-    .enabled = 0,
+    .enabled = 1,
     .bufferType = Line,
     .modelName = "IDR_RING",
     .effectName = "IDR_DIFFUSE_FX",
@@ -427,7 +441,7 @@ void InitScene()
 
   actors[12] = CreateActor((ActorParams) {
     .name = "player",
-    .enabled = 1,
+    .enabled = 0,
     .audioName = "IDR_FOOTSTEP",
     .Update = PlayerUpdate
   });

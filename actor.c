@@ -16,6 +16,7 @@ Actor *CreateActor(ActorParams params)
   newActor->scale = params.scale;
   newActor->enabled = params.enabled;
   newActor->name = params.name;
+  newActor->Start = 0;
   newActor->Update = 0;
 
   if (params.modelName) LoadModel(params.modelName, &newActor->vertexCount, &newActor->vertices, 
@@ -25,7 +26,8 @@ Actor *CreateActor(ActorParams params)
     &newActor->audioBuffer, params.audioParams);
   if (params.effectName) LoadEffect(params.effectName, &newActor->effect);
   if (params.Update) newActor->Update = params.Update;
-  if (params.Start && params.enabled) params.Start(newActor);
+  if (params.Start) newActor->Start = params.Start;
+  if (params.Start && params.enabled) newActor->Start(newActor);
 
   return newActor;
 }
