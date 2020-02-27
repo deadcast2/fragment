@@ -47,6 +47,7 @@ int WINAPI WinMainCRTStartup()
   MSG msg;
   double lastTime = (double)timeGetTime();
   InitWin();
+  ShowCursor(FALSE);
 
   while(msg.message != WM_QUIT)
   {
