@@ -125,6 +125,7 @@ void ArrivalStart(Actor *self)
   CameraPosition((D3DXVECTOR3) { 0, 50, -3.5f });
   CameraYaw(D3DX_PI);
   CameraPitch(D3DX_PI / 2.0f);
+  PlayAudio(self->audioSource, self->audioBuffer);
 }
 
 void ArrivalUpdate(Actor *self, float deltaTime)
@@ -353,7 +354,8 @@ void InitScene()
 
   actors[6] = CreateActor((ActorParams) {
     .name = "arrival",
-    .enabled = 0,
+    .enabled = 1,
+    .audioName = "IDR_GONG",
     .Start = ArrivalStart,
     .Update = ArrivalUpdate
   });
