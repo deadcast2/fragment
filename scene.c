@@ -3,11 +3,13 @@
 extern __inline HRESULT XAudio2CreateVolumeMeter(_Outptr_ IUnknown** ppApo);
 
 static float currWindSpeed = 0;
+static int ringCycles[5][1] = { {0}, {0}, {0}, {0}, {0} };
+static int arriving = 1;
 
 void CrowUpdate(Actor *self, float deltaTime)
 {
   static float target = 0;
-  static float nextCaw = 0;
+  static float nextCaw = 7.5f;
 
   if (nextCaw < 0)
   {
@@ -22,7 +24,7 @@ void CrowUpdate(Actor *self, float deltaTime)
       target = 0;
   }
 
-  nextCaw -= 1.0f * deltaTime;
+  nextCaw -= deltaTime;
 
   const int sign = target < 0 ? -1 : 1;
   if ((sign * self->rotation.x) < (sign * target))
@@ -154,6 +156,23 @@ void ArrivalUpdate(Actor *self, float deltaTime)
     yAxis -= units;
     CameraFly(-units);
   }
+  else
+  {
+    arriving = 0;
+    self->enabled = 0;
+  }
+}
+
+void RingGongUpdate(Actor *self, float deltaTime)
+{
+  static float nextGong = 0;
+
+  if (nextGong < 0)
+  {
+    PlayAudio(self->audioSource, self->audioBuffer);
+    nextGong = 5;
+  }
+  nextGong -= deltaTime;
 }
 
 void RingStart(Actor *self)
@@ -240,33 +259,58 @@ void RingUpdate(Actor *self, float deltaTime)
   }
 
   static float sinX = 0;
-  static int cycles = 8;
   if (self->position.z < 0)
   {
+    if (strcmp(self->name, "ring 1") == 0)
+    {
+      ringCycles[0][0]++;
+      if (ringCycles[0][0] > 2) return;
+    }
+    else if (strcmp(self->name, "ring 2") == 0)
+    {
+      ringCycles[1][0]++;
+      if (ringCycles[0][0] > 2) return;
+    }
+    else if (strcmp(self->name, "ring 3") == 0)
+    {
+      ringCycles[2][0]++;
+      if (ringCycles[0][0] > 2) return;
+    }
+    else if (strcmp(self->name, "ring 4") == 0)
+    {
+      ringCycles[3][0]++;
+      if (ringCycles[0][0] > 2) return;
+    }
+    else if (strcmp(self->name, "ring 5") == 0)
+    {
+      ringCycles[4][0]++;
+      if (ringCycles[0][0] > 2) 
+      {
+        // Intro finished so activate all other actors.
+        for (int i = 0; i < ACTOR_COUNT; i++)
+        {
+          actors[i]->enabled = strstr(actors[i]->name, "ring") == NULL;
+          if (actors[i]->Start && actors[i]->enabled) 
+          {
+            actors[i]->Start(actors[i]);
+          }
+        }
+      }
+    }
+
     self->position.z = 2.5f;
     self->position.x = sin((double)sinX);
     self->position.y = sin((double)sinX);
     sinX += 1.0f * deltaTime;
-    cycles -= 1;
-  }
-  else if (cycles < 0 && strcmp(self->name, "ring 5") == 0)
-  {
-    // Intro finished so activate all other actors.
-    for (int i = 0; i < ACTOR_COUNT; i++)
-    {
-      actors[i]->enabled = strstr(actors[i]->name, "ring") == NULL;
-      if (actors[i]->Start && actors[i]->enabled) 
-      {
-        actors[i]->Start(actors[i]);
-      }
-    }
   }
 }
 
 void PlayerUpdate(Actor *self, float deltaTime)
 {
-  static float lastX = 0;
-  static float lastZ = 0;
+  static float lastX = -100;
+  static float lastZ = -100;
+
+  if (arriving) return;
 
   float xDiff = lastX - cameraPos.x;
   float zDiff = lastZ - cameraPos.z;
@@ -278,6 +322,48 @@ void PlayerUpdate(Actor *self, float deltaTime)
     lastX = cameraPos.x;
     lastZ = cameraPos.z;
   }
+
+  D3DXVECTOR3 prevCameraPos = cameraPos;
+
+  if (GetAsyncKeyState('W')) 
+  {
+    CameraWalk(2.0f * deltaTime);
+    
+    for (int i = 0; i < actors[0]->vertexCount; i += 3)
+    {
+      Vertex a = AddVertex(actors[0]->vertices[i + 0], actors[0]->position);
+      Vertex b = AddVertex(actors[0]->vertices[i + 1], actors[0]->position);
+      Vertex c = AddVertex(actors[0]->vertices[i + 2], actors[0]->position);
+      D3DXVECTOR3 p;
+
+      if (TestSphereTriangle(cameraPos, 0.5f, (D3DXVECTOR3) { a.x, a.y, a.z }, 
+        (D3DXVECTOR3) { b.x, b.y, b.z }, (D3DXVECTOR3) { c.x, c.y, c.z }, &p))
+      {
+        p.y = cameraPos.y;
+
+        D3DXVECTOR3 norm;
+        D3DXVec3Subtract(&norm, &cameraPos, &p);
+        D3DXVec3Normalize(&norm, &norm);
+
+        D3DXVECTOR3 dir;
+        D3DXVec3Subtract(&dir, &cameraForward, &norm);
+        D3DXVec3Normalize(&dir, &dir);
+
+        D3DXVECTOR3 oldNewDir;
+        D3DXVec3Subtract(&oldNewDir, &cameraPos, &prevCameraPos);
+
+        float scalar = sqrt(D3DXVec3Dot(&oldNewDir, &oldNewDir));    
+        cameraPos.x -= dir.x * scalar;
+        cameraPos.y -= dir.y * scalar;
+        cameraPos.z -= dir.z * scalar;
+        break;
+      }
+    } 
+  }
+
+  if (GetAsyncKeyState('S')) CameraWalk(-2.0f * deltaTime);
+  if (GetAsyncKeyState('A')) CameraYaw(-2.0f * deltaTime);
+  if (GetAsyncKeyState('D')) CameraYaw(2.0f * deltaTime);
 }
 
 void InitScene()
@@ -444,6 +530,13 @@ void InitScene()
     .enabled = 0,
     .audioName = "IDR_FOOTSTEP",
     .Update = PlayerUpdate
+  });
+
+  actors[13] = CreateActor((ActorParams) {
+    .name = "ring gong",
+    .enabled = 1,
+    .audioName = "IDR_RING_GONG",
+    .Update = RingGongUpdate
   });
 }
 

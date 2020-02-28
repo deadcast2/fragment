@@ -4,7 +4,6 @@
 #include "audio.h"
 #include "scene.h"
 #include "camera.h"
-#include "input.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -62,7 +61,6 @@ int WINAPI WinMainCRTStartup()
       const float deltaTime = (currentTime - lastTime) * 0.001f;
 
       RenderScene(deltaTime);
-      HandleInput(deltaTime);
 
       lastTime = currentTime;
     }

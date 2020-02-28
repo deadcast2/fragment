@@ -4,6 +4,7 @@
 #include <float.h>
 #include <math.h>
 #include "audio.h"
+#include "collision.h"
 #include "graphics.h"
 #include "camera.h"
 #include "model.h"
@@ -11,7 +12,7 @@
 #include "actor.h"
 #include "srandom.h"
 
-#define ACTOR_COUNT 13
+#define ACTOR_COUNT 14
 
 Actor *actors[ACTOR_COUNT];
 
