@@ -36,7 +36,9 @@ void InitGraphics(HWND hWnd)
   d3ddev->lpVtbl->CreateVertexDeclaration(d3ddev, decl, &vertDeclaration);
 
   D3DXCreateFont(d3ddev, 30, 0, FW_NORMAL, 1, TRUE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,   
-    DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "Arial", &d3dFont);   
+    DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "Arial", &d3dFont);
+
+  startupTime = (double)timeGetTime();
 }
 
 void CleanGraphics()
