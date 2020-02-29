@@ -32,11 +32,16 @@ void InitGraphics(HWND hWnd)
     { 0, 28, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
     D3DDECL_END()
   };
+
   d3ddev->lpVtbl->CreateVertexDeclaration(d3ddev, decl, &vertDeclaration);
+
+  D3DXCreateFont(d3ddev, 30, 0, FW_NORMAL, 1, TRUE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,   
+    DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "Arial", &d3dFont);   
 }
 
 void CleanGraphics()
 {
+  d3dFont->lpVtbl->Release(d3dFont);
   vertDeclaration->lpVtbl->Release(vertDeclaration);
   d3ddev->lpVtbl->Release(d3ddev);
   d3d->lpVtbl->Release(d3d);

@@ -11,6 +11,7 @@
 LPDIRECT3D9 d3d;
 LPDIRECT3DDEVICE9 d3ddev;
 LPDIRECT3DVERTEXDECLARATION9 vertDeclaration;
+LPD3DXFONT d3dFont;
 
 typedef struct _RenderSettings
 {

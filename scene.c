@@ -207,6 +207,17 @@ void RingStart(Actor *self)
 
 void RingUpdate(Actor *self, float deltaTime)
 {
+  // Show the title for a little bit.
+  static float titleDelay = 10.0f;
+  if (titleDelay < 0 && titleDelay > -15.0f)
+  {
+    static RECT textbox;
+    SetRect(&textbox, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    d3dFont->lpVtbl->DrawTextA(d3dFont, NULL, "f r a g m e n t", 15, &textbox, DT_CENTER | DT_VCENTER,
+      D3DCOLOR_ARGB(255, 255, 255, 255));
+  }
+  titleDelay -= 0.5f * deltaTime;
+  
   if (strcmp(self->name, "ring 1") == 0)
   {
     self->position.x -= self->position.x * 0.5f * deltaTime;
