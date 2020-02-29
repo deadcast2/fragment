@@ -13,7 +13,7 @@ RES = windres
 fragment.exe: main.c resources.o
 	$(CC) $(LDFLAGS) $(CFLAGS) \
 	vendor/memmem.c vendor/strtok_r.c vendor/fastlz.c \
-	*.c -o $@ resources.o $(LDLIBS)
+	*.c behaviors/*.c -o $@ resources.o $(LDLIBS)
 
 resources.o:
 	$(RES) resources.rc resources.o

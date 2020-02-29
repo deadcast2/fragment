@@ -1,9 +1,9 @@
 #include "scene.h"
+#include "behaviors\rings.h"
 
 extern __inline HRESULT XAudio2CreateVolumeMeter(_Outptr_ IUnknown** ppApo);
 
 static float currWindSpeed = 0;
-static int ringCycles[5][1] = { {0}, {0}, {0}, {0}, {0} };
 static int arriving = 1;
 
 void CrowUpdate(Actor *self, float deltaTime)
@@ -160,159 +160,6 @@ void ArrivalUpdate(Actor *self, float deltaTime)
   {
     arriving = 0;
     self->enabled = 0;
-  }
-}
-
-void RingGongUpdate(Actor *self, float deltaTime)
-{
-  static float nextGong = 0;
-
-  if (nextGong < 0)
-  {
-    PlayAudio(self->audioSource, self->audioBuffer);
-    nextGong = 5;
-  }
-  nextGong -= deltaTime;
-}
-
-void RingStart(Actor *self)
-{
-  self->position.z = 2.5f;
-  self->scale.x *= 0.01f;
-  self->scale.y *= 0.007f;
-  self->scale.z *= 0.01f;
-  self->effect->lpVtbl->SetBool(self->effect, "_IgnoreTexture", TRUE);
-
-  if (strcmp(self->name, "ring 1") == 0)
-  {
-    self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 1, 0, 0, 1 });
-  }
-  else if (strcmp(self->name, "ring 2") == 0)
-  {
-    self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 0, 1, 0, 1 });
-  }
-  else if (strcmp(self->name, "ring 3") == 0)
-  {
-    self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 0, 0, 1, 1 });
-  }
-  else if (strcmp(self->name, "ring 4") == 0)
-  {
-    self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 1, 1, 0, 1 });
-  }
-  else if (strcmp(self->name, "ring 5") == 0)
-  {
-    self->effect->lpVtbl->SetVector(self->effect, "_Color", &(D3DXVECTOR4) { 1, 0, 1, 1 });
-  }
-}
-
-void RingUpdate(Actor *self, float deltaTime)
-{
-  // Show the title for a little bit.
-  static float titleDelay = 10.0f;
-  if (titleDelay < 0 && titleDelay > -15.0f)
-  {
-    static RECT textbox;
-    SetRect(&textbox, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    d3dFont->lpVtbl->DrawTextA(d3dFont, NULL, "f r a g m e n t", 15, &textbox, DT_CENTER | DT_VCENTER,
-      D3DCOLOR_ARGB(255, 255, 255, 255));
-  }
-  titleDelay -= 0.5f * deltaTime;
-  
-  if (strcmp(self->name, "ring 1") == 0)
-  {
-    self->position.x -= self->position.x * 0.5f * deltaTime;
-    self->position.y -= self->position.y * 0.5f * deltaTime;
-    self->position.z -= 0.5f * deltaTime;
-  }
-  else if (strcmp(self->name, "ring 2") == 0)
-  {
-    static float delay = 0.5f;
-    if (delay < 0)
-    {
-      self->position.x -= self->position.x * 0.5f * deltaTime;
-      self->position.y -= self->position.y * 0.5f * deltaTime;
-      self->position.z -= 0.5f * deltaTime;
-    }
-    delay -= 0.5f * deltaTime;
-  }
-  else if (strcmp(self->name, "ring 3") == 0)
-  {
-    static float delay = 1.0f;
-    if (delay < 0)
-    {
-      self->position.x -= self->position.x * 0.5f * deltaTime;
-      self->position.y -= self->position.y * 0.5f * deltaTime;
-      self->position.z -= 0.5f * deltaTime;
-    }
-    delay -= 0.5f * deltaTime;
-  }
-  else if (strcmp(self->name, "ring 4") == 0)
-  {
-    static float delay = 1.5f;
-    if (delay < 0)
-    {
-      self->position.x -= self->position.x * 0.5f * deltaTime;
-      self->position.y -= self->position.y * 0.5f * deltaTime;
-      self->position.z -= 0.5f * deltaTime;
-    }
-    delay -= 0.5f * deltaTime;
-  }
-  else if (strcmp(self->name, "ring 5") == 0)
-  {
-    static float delay = 2.0f;
-    if (delay < 0)
-    {
-      self->position.x -= self->position.x * 0.5f * deltaTime;
-      self->position.y -= self->position.y * 0.5f * deltaTime;
-      self->position.z -= 0.5f * deltaTime;
-    }
-    delay -= 0.5f * deltaTime;
-  }
-
-  static float sinX = 0;
-  if (self->position.z < 0)
-  {
-    if (strcmp(self->name, "ring 1") == 0)
-    {
-      ringCycles[0][0]++;
-      if (ringCycles[0][0] > 2) return;
-    }
-    else if (strcmp(self->name, "ring 2") == 0)
-    {
-      ringCycles[1][0]++;
-      if (ringCycles[0][0] > 2) return;
-    }
-    else if (strcmp(self->name, "ring 3") == 0)
-    {
-      ringCycles[2][0]++;
-      if (ringCycles[0][0] > 2) return;
-    }
-    else if (strcmp(self->name, "ring 4") == 0)
-    {
-      ringCycles[3][0]++;
-      if (ringCycles[0][0] > 2) return;
-    }
-    else if (strcmp(self->name, "ring 5") == 0)
-    {
-      ringCycles[4][0]++;
-      if (ringCycles[0][0] > 2) 
-      {
-        // Intro finished so activate all other actors.
-        for (int i = 0; i < ACTOR_COUNT; i++)
-        {
-          actors[i]->enabled = strstr(actors[i]->name, "ring") == NULL;
-          if (actors[i]->Start && actors[i]->enabled) 
-          {
-            actors[i]->Start(actors[i]);
-          }
-        }
-      }
-    }
-
-    self->position.z = 2.5f;
-    self->position.x = sin((double)sinX);
-    self->position.y = sin((double)sinX);
-    sinX += 1.0f * deltaTime;
   }
 }
 
@@ -481,7 +328,7 @@ void InitScene()
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = RingStart,
-    .Update = RingUpdate
+    .Update = Ring1Update
   });
 
   actors[8] = CreateActor((ActorParams) {
@@ -494,7 +341,7 @@ void InitScene()
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = RingStart,
-    .Update = RingUpdate
+    .Update = Ring2Update
   });
 
   actors[9] = CreateActor((ActorParams) {
@@ -507,7 +354,7 @@ void InitScene()
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = RingStart,
-    .Update = RingUpdate
+    .Update = Ring3Update
   });
 
   actors[10] = CreateActor((ActorParams) {
@@ -520,7 +367,7 @@ void InitScene()
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = RingStart,
-    .Update = RingUpdate
+    .Update = Ring4Update
   });
 
   actors[11] = CreateActor((ActorParams) {
@@ -533,7 +380,7 @@ void InitScene()
     .rotation = (Vertex) { .x = 0, .y = 0, .z = 0 },
     .scale = (Vertex) { .x = 1, .y = 1, .z = 1 },
     .Start = RingStart,
-    .Update = RingUpdate
+    .Update = Ring5Update
   });
 
   actors[12] = CreateActor((ActorParams) {
