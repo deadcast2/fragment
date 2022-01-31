@@ -7,13 +7,15 @@ float lin_inter(float x, float y, float s)
 
 float smooth_inter(float x, float y, float s)
 {
-  if (s > 1) s = 1;
+	if (s > 1)
+		s = 1;
+		
 	return lin_inter(x, y, s * s * (3 - 2 * s));
 }
 
 void seed_smooth_rand()
 {
-  lfsr = 0xACE1u;
+	lfsr = 0xACE1u;
 }
 
 unsigned smooth_rand()
@@ -24,5 +26,5 @@ unsigned smooth_rand()
 
 float _fabs(float value)
 {
-  return value < 0 ? value * -1.0 : value;
+	return value < 0 ? value * -1.0 : value;
 }

@@ -11,13 +11,13 @@
 
 typedef struct AudioParams
 {
-  BOOL shouldLoop;
+    BOOL shouldLoop;
 } AudioParams;
 
 void InitAudio();
 void CleanAudio();
 void LoadAudio(const char *name, IXAudio2SourceVoice **source,
-  XAUDIO2_BUFFER **audioBuffer, AudioParams params);
+               XAUDIO2_BUFFER **audioBuffer, AudioParams params);
 void PlayAudio(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *audioBuffer);
 void StopAudio(IXAudio2SourceVoice *source);
 

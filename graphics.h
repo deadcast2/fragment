@@ -16,9 +16,9 @@ double startupTime;
 
 typedef struct _RenderSettings
 {
-  float fogStart;
-  float fogEnd;
-  float fogColor[3];
+    float fogStart;
+    float fogEnd;
+    float fogColor[3];
 } _RenderSettings;
 
 _RenderSettings RenderSettings;
