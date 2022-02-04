@@ -181,7 +181,7 @@ void PlayerUpdate(Actor *self, float deltaTime)
         lastZ = cameraPos.z;
     }
 
-    D3DXVECTOR3 prevCameraPos = cameraPos;
+    const D3DXVECTOR3 prevCameraPos = cameraPos;
 
     if (GetAsyncKeyState('W') || GetAsyncKeyState('S'))
     {
@@ -196,13 +196,14 @@ void PlayerUpdate(Actor *self, float deltaTime)
         {
             for (int i = 0; i < actors[actorsIndex[actorIndex]]->vertexCount; i += 3)
             {
-                Vertex a = AddVertex(actors[actorsIndex[actorIndex]]->vertices[i + 0], actors[actorsIndex[actorIndex]]->position);
-                Vertex b = AddVertex(actors[actorsIndex[actorIndex]]->vertices[i + 1], actors[actorsIndex[actorIndex]]->position);
-                Vertex c = AddVertex(actors[actorsIndex[actorIndex]]->vertices[i + 2], actors[actorsIndex[actorIndex]]->position);
+                const Vertex a = AddVertex(actors[actorsIndex[actorIndex]]->vertices[i + 0], actors[actorsIndex[actorIndex]]->position);
+                const Vertex b = AddVertex(actors[actorsIndex[actorIndex]]->vertices[i + 1], actors[actorsIndex[actorIndex]]->position);
+                const Vertex c = AddVertex(actors[actorsIndex[actorIndex]]->vertices[i + 2], actors[actorsIndex[actorIndex]]->position);
                 D3DXVECTOR3 p;
 
                 if (TestSphereTriangle(cameraPos, 0.5f, (D3DXVECTOR3){a.x, a.y, a.z}, (D3DXVECTOR3){b.x, b.y, b.z}, (D3DXVECTOR3){c.x, c.y, c.z}, &p))
                 {
+                    // Have point match camera height so the camera doesn't get reflected vertically.
                     p.y = cameraPos.y;
 
                     D3DXVECTOR3 norm;
@@ -213,13 +214,12 @@ void PlayerUpdate(Actor *self, float deltaTime)
                     D3DXVec3Subtract(&dir, &cameraForward, &norm);
                     D3DXVec3Normalize(&dir, &dir);
 
-                    D3DXVECTOR3 oldNewDir;
-                    D3DXVec3Subtract(&oldNewDir, &cameraPos, &prevCameraPos);
+                    D3DXVECTOR3 dist;
+                    D3DXVec3Subtract(&dist, &cameraPos, &prevCameraPos);
 
-                    float scalar = sqrt(D3DXVec3Dot(&oldNewDir, &oldNewDir));
-                    cameraPos.x -= dir.x * scalar;
-                    cameraPos.y -= dir.y * scalar;
-                    cameraPos.z -= dir.z * scalar;
+                    const float len = sqrt(D3DXVec3Dot(&dist, &dist));
+                    cameraPos.x -= dir.x * len;
+                    cameraPos.z -= dir.z * len;
                     break;
                 }
             }
