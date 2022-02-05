@@ -84,7 +84,7 @@ D3DXVECTOR3 ClosestPoint(D3DXVECTOR3 p, D3DXVECTOR3 a, D3DXVECTOR3 b, D3DXVECTOR
 
     D3DXVECTOR3 added;
     D3DXVec3Add(&added, &a, &scaledAB);
-    D3DXVec3Add(&added, &a, &scaledAC);
+    D3DXVec3Add(&added, &added, &scaledAC);
     return added;
 }
 
