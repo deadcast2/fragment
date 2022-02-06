@@ -34,8 +34,8 @@ void RingStart(Actor *self)
 void Ring1Update(Actor *self, float deltaTime)
 {
     // Show the title for a little bit.
-    static float titleDelay = 4.0f;
-    if (titleDelay < 0 && titleDelay > -6.0f)
+    static float titleDelay = 5.9f;
+    if (titleDelay < 0 && titleDelay > -5.0f)
     {
         static RECT textbox;
         SetRect(&textbox, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
