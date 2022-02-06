@@ -2,7 +2,7 @@
 
 Actor *CreateActor(ActorParams params)
 {
-    Actor *newActor = HeapAlloc(GetProcessHeap(), 0, sizeof(Actor));
+    Actor *newActor = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(Actor));
     if (!newActor)
         return newActor;
 
