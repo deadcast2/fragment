@@ -3,6 +3,8 @@
 
 #include "..\actor.h"
 
+#define CYCLE_COUNT 6
+
 void RingStart(Actor *self);
 void Ring1Update(Actor *self, float deltaTime);
 void Ring2Update(Actor *self, float deltaTime);
