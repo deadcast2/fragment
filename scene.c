@@ -181,11 +181,10 @@ void PlayerUpdate(Actor *self, float deltaTime)
         lastZ = cameraPos.z;
     }
 
-    const D3DXVECTOR3 prevCameraPos = cameraPos;
-
     if (GetAsyncKeyState('W') || GetAsyncKeyState('S'))
     {
         const int movementSign = GetAsyncKeyState('W') ? 1 : -1;
+        const D3DXVECTOR3 prevCameraPos = cameraPos;
 
         CameraWalk(movementSign * 2.0f * deltaTime);
 
@@ -206,21 +205,16 @@ void PlayerUpdate(Actor *self, float deltaTime)
                     // Have point match camera height so the camera doesn't get reflected vertically.
                     p.y = cameraPos.y;
 
+                    D3DXVECTOR3 dir;
+                    D3DXVec3Subtract(&dir, &cameraPos, &prevCameraPos);
+
                     D3DXVECTOR3 norm;
                     D3DXVec3Subtract(&norm, &cameraPos, &p);
                     D3DXVec3Normalize(&norm, &norm);
 
-                    D3DXVECTOR3 dir;
-                    D3DXVec3Subtract(&dir, &cameraForward, &norm);
-                    D3DXVec3Normalize(&dir, &dir);
-
-                    D3DXVECTOR3 dist;
-                    D3DXVec3Subtract(&dist, &cameraPos, &prevCameraPos);
-
-                    const float len = sqrt(D3DXVec3Dot(&dist, &dist));
-                    cameraPos.x -= dir.x * len;
-                    cameraPos.z -= dir.z * len;
-                    break;
+                    const float backoff = D3DXVec3Dot(&dir, &norm);
+                    cameraPos.x -= norm.x * backoff;
+                    cameraPos.z -= norm.z * backoff;
                 }
             }
         }
