@@ -34,7 +34,7 @@ void RingStart(Actor *self)
 void Ring1Update(Actor *self, float deltaTime)
 {
     // Show the title for a little bit.
-    static float titleDelay = 5.9f;
+    static float titleDelay = 5.8f;
 
     if (titleDelay < 0 && titleDelay > -5.0f)
     {
