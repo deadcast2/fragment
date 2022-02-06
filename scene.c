@@ -198,21 +198,21 @@ void PlayerUpdate(Actor *self, float deltaTime)
                 const Vertex a = AddVertex(actors[actorsIndex[actorIndex]]->vertices[i + 0], actors[actorsIndex[actorIndex]]->position);
                 const Vertex b = AddVertex(actors[actorsIndex[actorIndex]]->vertices[i + 1], actors[actorsIndex[actorIndex]]->position);
                 const Vertex c = AddVertex(actors[actorsIndex[actorIndex]]->vertices[i + 2], actors[actorsIndex[actorIndex]]->position);
-                D3DXVECTOR3 p;
+                D3DXVECTOR3 hitPoint;
 
-                if (TestSphereTriangle(cameraPos, 0.5f, (D3DXVECTOR3){a.x, a.y, a.z}, (D3DXVECTOR3){b.x, b.y, b.z}, (D3DXVECTOR3){c.x, c.y, c.z}, &p))
+                if (TestSphereTriangle(cameraPos, 0.5f, (D3DXVECTOR3){a.x, a.y, a.z}, (D3DXVECTOR3){b.x, b.y, b.z}, (D3DXVECTOR3){c.x, c.y, c.z}, &hitPoint))
                 {
                     // Have point match camera height so the camera doesn't get reflected vertically.
-                    p.y = cameraPos.y;
+                    hitPoint.y = cameraPos.y;
 
-                    D3DXVECTOR3 dir;
-                    D3DXVec3Subtract(&dir, &cameraPos, &prevCameraPos);
+                    D3DXVECTOR3 velocity;
+                    D3DXVec3Subtract(&velocity, &cameraPos, &prevCameraPos);
 
                     D3DXVECTOR3 norm;
-                    D3DXVec3Subtract(&norm, &cameraPos, &p);
+                    D3DXVec3Subtract(&norm, &cameraPos, &hitPoint);
                     D3DXVec3Normalize(&norm, &norm);
 
-                    const float backoff = D3DXVec3Dot(&dir, &norm);
+                    const float backoff = D3DXVec3Dot(&velocity, &norm);
                     cameraPos.x -= norm.x * backoff;
                     cameraPos.z -= norm.z * backoff;
                 }
