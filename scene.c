@@ -181,49 +181,43 @@ void PlayerUpdate(Actor *self, float deltaTime)
         lastZ = cameraPos.z;
     }
 
-    if (GetAsyncKeyState('W') || GetAsyncKeyState('S'))
+    if (GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP) || GetAsyncKeyState('S') || GetAsyncKeyState(VK_DOWN))
     {
-        const int movementSign = GetAsyncKeyState('W') ? 1 : -1;
+        const int movementSign = GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP) ? 1 : -1;
         const D3DXVECTOR3 prevCameraPos = cameraPos;
 
         CameraWalk(movementSign * 2.0f * deltaTime);
 
-        // Only check collisions with the island and boundary.
-        int actorsIndex[2] = {0, 14};
-
-        for (int actorIndex = 0; actorIndex < 2; actorIndex++)
+        for (int i = 0; i < actors[14]->vertexCount; i += 3)
         {
-            for (int i = 0; i < actors[actorsIndex[actorIndex]]->vertexCount; i += 3)
+            const Vertex a = AddVertex(actors[14]->vertices[i + 0], actors[14]->position);
+            const Vertex b = AddVertex(actors[14]->vertices[i + 1], actors[14]->position);
+            const Vertex c = AddVertex(actors[14]->vertices[i + 2], actors[14]->position);
+            D3DXVECTOR3 hitPoint;
+
+            if (TestSphereTriangle(cameraPos, 0.5f, (D3DXVECTOR3){a.x, a.y, a.z}, (D3DXVECTOR3){b.x, b.y, b.z}, (D3DXVECTOR3){c.x, c.y, c.z}, &hitPoint))
             {
-                const Vertex a = AddVertex(actors[actorsIndex[actorIndex]]->vertices[i + 0], actors[actorsIndex[actorIndex]]->position);
-                const Vertex b = AddVertex(actors[actorsIndex[actorIndex]]->vertices[i + 1], actors[actorsIndex[actorIndex]]->position);
-                const Vertex c = AddVertex(actors[actorsIndex[actorIndex]]->vertices[i + 2], actors[actorsIndex[actorIndex]]->position);
-                D3DXVECTOR3 hitPoint;
+                // Have point match camera height so the camera doesn't get reflected vertically.
+                hitPoint.y = cameraPos.y;
 
-                if (TestSphereTriangle(cameraPos, 0.5f, (D3DXVECTOR3){a.x, a.y, a.z}, (D3DXVECTOR3){b.x, b.y, b.z}, (D3DXVECTOR3){c.x, c.y, c.z}, &hitPoint))
-                {
-                    // Have point match camera height so the camera doesn't get reflected vertically.
-                    hitPoint.y = cameraPos.y;
+                D3DXVECTOR3 velocity;
+                D3DXVec3Subtract(&velocity, &cameraPos, &prevCameraPos);
 
-                    D3DXVECTOR3 velocity;
-                    D3DXVec3Subtract(&velocity, &cameraPos, &prevCameraPos);
+                D3DXVECTOR3 norm;
+                D3DXVec3Subtract(&norm, &cameraPos, &hitPoint);
+                D3DXVec3Normalize(&norm, &norm);
 
-                    D3DXVECTOR3 norm;
-                    D3DXVec3Subtract(&norm, &cameraPos, &hitPoint);
-                    D3DXVec3Normalize(&norm, &norm);
-
-                    const float backoff = D3DXVec3Dot(&velocity, &norm);
-                    cameraPos.x -= norm.x * backoff;
-                    cameraPos.z -= norm.z * backoff;
-                }
+                const float backoff = D3DXVec3Dot(&velocity, &norm);
+                cameraPos.x -= norm.x * backoff;
+                cameraPos.z -= norm.z * backoff;
             }
         }
     }
 
-    if (GetAsyncKeyState('A'))
+    if (GetAsyncKeyState('A') || GetAsyncKeyState(VK_LEFT))
         CameraYaw(-2.0f * deltaTime);
-        
-    if (GetAsyncKeyState('D'))
+
+    if (GetAsyncKeyState('D') || GetAsyncKeyState(VK_RIGHT))
         CameraYaw(2.0f * deltaTime);
 }
 
