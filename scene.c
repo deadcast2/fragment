@@ -197,9 +197,6 @@ void PlayerUpdate(Actor *self, float deltaTime)
 
             if (TestSphereTriangle(cameraPos, 0.5f, (D3DXVECTOR3){a.x, a.y, a.z}, (D3DXVECTOR3){b.x, b.y, b.z}, (D3DXVECTOR3){c.x, c.y, c.z}, &hitPoint))
             {
-                // Have point match camera height so the camera doesn't get reflected vertically.
-                hitPoint.y = cameraPos.y;
-
                 D3DXVECTOR3 velocity;
                 D3DXVec3Subtract(&velocity, &cameraPos, &prevCameraPos);
 
