@@ -188,6 +188,9 @@ void PlayerUpdate(Actor *self, float deltaTime)
 
         CameraWalk(movementSign * 2.0f * deltaTime);
 
+        D3DXVECTOR3 velocity;
+        D3DXVec3Subtract(&velocity, &cameraPos, &prevCameraPos);
+
         for (int i = 0; i < actors[14]->vertexCount; i += 3)
         {
             const Vertex a = AddVertex(actors[14]->vertices[i + 0], actors[14]->position);
@@ -196,10 +199,7 @@ void PlayerUpdate(Actor *self, float deltaTime)
             D3DXVECTOR3 hitPoint;
 
             if (TestSphereTriangle(cameraPos, 0.5f, (D3DXVECTOR3){a.x, a.y, a.z}, (D3DXVECTOR3){b.x, b.y, b.z}, (D3DXVECTOR3){c.x, c.y, c.z}, &hitPoint))
-            {
-                D3DXVECTOR3 velocity;
-                D3DXVec3Subtract(&velocity, &cameraPos, &prevCameraPos);
-
+            {               
                 D3DXVECTOR3 norm;
                 D3DXVec3Subtract(&norm, &cameraPos, &hitPoint);
                 D3DXVec3Normalize(&norm, &norm);
