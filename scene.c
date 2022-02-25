@@ -186,29 +186,19 @@ void PlayerUpdate(Actor *self, float deltaTime)
         const int movementSign = GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP) ? 1 : -1;
         const D3DXVECTOR3 prevCameraPos = cameraPos;
 
-        CameraWalk(movementSign * 2.0f * deltaTime);
+        const float units = movementSign * 2.0f * deltaTime;
+        D3DXVECTOR3 newPos;
+        newPos.x = cameraPos.x + cameraForward.x * units;
+        newPos.y = cameraPos.y + cameraForward.y * units;
+        newPos.z = cameraPos.z + cameraForward.z * units;
 
         D3DXVECTOR3 velocity;
-        D3DXVec3Subtract(&velocity, &cameraPos, &prevCameraPos);
+        D3DXVec3Subtract(&velocity, &newPos, &prevCameraPos);
 
-        for (int i = 0; i < actors[14]->vertexCount; i += 3)
-        {
-            const Vertex a = AddVertex(actors[14]->vertices[i + 0], actors[14]->position);
-            const Vertex b = AddVertex(actors[14]->vertices[i + 1], actors[14]->position);
-            const Vertex c = AddVertex(actors[14]->vertices[i + 2], actors[14]->position);
-            D3DXVECTOR3 hitPoint;
-
-            if (TestSphereTriangle(cameraPos, 0.5f, (D3DXVECTOR3){a.x, a.y, a.z}, (D3DXVECTOR3){b.x, b.y, b.z}, (D3DXVECTOR3){c.x, c.y, c.z}, &hitPoint))
-            {               
-                D3DXVECTOR3 norm;
-                D3DXVec3Subtract(&norm, &cameraPos, &hitPoint);
-                D3DXVec3Normalize(&norm, &norm);
-
-                const float backoff = D3DXVec3Dot(&velocity, &norm);
-                cameraPos.x -= norm.x * backoff;
-                cameraPos.z -= norm.z * backoff;
-            }
-        }
+        CollisionPacket packet;
+        packet.eRadius = (D3DXVECTOR3){ 0.5f, 0.5f, 0.5f };
+        D3DXVECTOR3 gravity = (D3DXVECTOR3){ 0, 0, 0 };
+        cameraPos = Collision_CollideAndSlide(&packet, &cameraPos, &velocity, &gravity);
     }
 
     if (GetAsyncKeyState('A') || GetAsyncKeyState(VK_LEFT))

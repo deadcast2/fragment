@@ -2,7 +2,8 @@
 
 Plane *Plane_New(const D3DXVECTOR3 *origin, const D3DXVECTOR3 *normal)
 {
-    Plane *newPlane = malloc(sizeof(Plane));
+    Plane *newPlane = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
+                                sizeof(Plane));
     if (newPlane == NULL)
         return NULL;
 
@@ -18,13 +19,14 @@ Plane *Plane_New(const D3DXVECTOR3 *origin, const D3DXVECTOR3 *normal)
 
 Plane *Plane_NewFromTriangle(const D3DXVECTOR3 *p1, const D3DXVECTOR3 *p2, const D3DXVECTOR3 *p3)
 {
-    Plane *newPlane = malloc(sizeof(Plane));
+    Plane *newPlane = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
+                                sizeof(Plane));
     if (newPlane == NULL)
         return NULL;
 
     D3DXVECTOR3 result;
     newPlane->normal = *D3DXVec3Cross(&result,
-                                     D3DXVec3Subtract(&result, p2, p1), D3DXVec3Subtract(&result, p3, p1));
+                                      D3DXVec3Subtract(&result, p2, p1), D3DXVec3Subtract(&result, p3, p1));
     newPlane->normal = *D3DXVec3Normalize(&result, &newPlane->normal);
     newPlane->origin = *p1;
     newPlane->equation[0] = newPlane->normal.x;

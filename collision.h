@@ -3,8 +3,41 @@
 
 #include "model.h"
 
-D3DXVECTOR3 ClosestPoint(D3DXVECTOR3 p, D3DXVECTOR3 a, D3DXVECTOR3 b, D3DXVECTOR3 c);
-int TestSphereTriangle(D3DXVECTOR3 center, float radius, D3DXVECTOR3 a, D3DXVECTOR3 b,
-                       D3DXVECTOR3 c, D3DXVECTOR3 *p);
+typedef unsigned int uint32;
+#define in(a) ((uint32)a)
+
+typedef struct CollisionPacket
+{
+    D3DXVECTOR3 eRadius; // ellipsoid radius
+
+    // Information about the move being requested: (in R3)
+    D3DXVECTOR3 R3Velocity;
+    D3DXVECTOR3 R3Position;
+
+    // Information about the move being requested: (in eSpace)
+    D3DXVECTOR3 velocity;
+    D3DXVECTOR3 normalizedVelocity;
+    D3DXVECTOR3 basePoint;
+
+    // Hit information
+    int foundCollision;
+    double nearestDistance;
+    D3DXVECTOR3 intersectionPoint;
+} CollisionPacket;
+
+int Collision_CheckPointInTriangle(const D3DXVECTOR3 *point,
+                                   const D3DXVECTOR3 *pa, const D3DXVECTOR3 *pb, const D3DXVECTOR3 *pc);
+int Collision_GetLowestRoot(float a, float b, float c, float maxR,
+                            float *root);
+void Collision_CheckTriangle(CollisionPacket *colPackage,
+                             const D3DXVECTOR3 *p1, const D3DXVECTOR3 *p2,
+                             const D3DXVECTOR3 *p3);
+D3DXVECTOR3 Collision_CollideAndSlide(CollisionPacket *colPackage, const D3DXVECTOR3 *pos, const D3DXVECTOR3 *vel,
+                                      const D3DXVECTOR3 *gravity);
+D3DXVECTOR3 Collision_CollideWithWorld(CollisionPacket *colPackage, const D3DXVECTOR3 *pos,
+                                       const D3DXVECTOR3 *vel, int collisionRecursionDepth);
+D3DXVECTOR3 Collision_Divide(const D3DXVECTOR3 *lhs, const D3DXVECTOR3 *rhs);
+D3DXVECTOR3 Collision_Multiply(const D3DXVECTOR3 *lhs, const D3DXVECTOR3 *rhs);
+void Collision_SetLength(D3DVECTOR *v, float l);
 
 #endif
