@@ -5,25 +5,27 @@
 #include "scene.h"
 
 int Collision_CheckPointInTriangle(const D3DXVECTOR3 *point,
-                                   const D3DXVECTOR3 *pa, const D3DXVECTOR3 *pb, const D3DXVECTOR3 *pc)
+                                   const D3DXVECTOR3 *a, const D3DXVECTOR3 *b, const D3DXVECTOR3 *c)
 {
-    D3DXVECTOR3 result;
-    D3DXVECTOR3 e10 = *D3DXVec3Subtract(&result, pb, pa);
-    D3DXVECTOR3 e20 = *D3DXVec3Subtract(&result, pc, pa);
+    D3DXVECTOR3 ap, bp, cp;
+    D3DXVec3Subtract(&ap, point, a);
+    D3DXVec3Subtract(&bp, point, b);
+    D3DXVec3Subtract(&cp, point, c);
 
-    float a = D3DXVec3Dot(&e10, &e10);
-    float b = D3DXVec3Dot(&e10, &e20);
-    float c = D3DXVec3Dot(&e20, &e20);
-    float ac_bb = (a * c) - (b * b);
+    float ab = D3DXVec3Dot(&ap, &bp);
+    float ac = D3DXVec3Dot(&ap, &cp);
+    float bc = D3DXVec3Dot(&bp, &cp);
+    float cc = D3DXVec3Dot(&cp, &cp);
 
-    D3DXVECTOR3 vp = (D3DXVECTOR3){point->x - pa->x, point->y - pa->y, point->z - pa->z};
-    float d = D3DXVec3Dot(&vp, &e10);
-    float e = D3DXVec3Dot(&vp, &e20);
-    float x = (d * c) - (e * b);
-    float y = (e * a) - (d * b);
-    float z = x + y - ac_bb;
+    if (bc * ac - cc * ab < 0.0f)
+        return 0;
 
-    return ((in(z) & ~(in(x) | in(y))) & 0x80000000);
+    float bb = D3DXVec3Dot(&bp, &bp);
+
+    if (ab * bc - ac * bb < 0.0f)
+        return 0;
+
+    return 1;
 }
 
 int Collision_GetLowestRoot(float a, float b, float c, float maxR,
@@ -168,7 +170,7 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
                              D3DXVec3Subtract(&result, &colPackage->basePoint, &trianglePlane->normal),
                              D3DXVec3Scale(&result, &colPackage->velocity, t0));
             if (Collision_CheckPointInTriangle(&planeIntersectionPoint,
-                                               p1, p2, p3))
+                                               p1, p2, p3) == 1)
             {
                 foundCollison = 1;
                 t = t0;
@@ -385,14 +387,14 @@ D3DXVECTOR3 Collision_CollideWithWorld(CollisionPacket *colPackage, const D3DXVE
         const Vertex b = AddVertex(actors[14]->vertices[i + 1], actors[14]->position);
         const Vertex c = AddVertex(actors[14]->vertices[i + 2], actors[14]->position);
 
-        D3DXVECTOR3 aV = (D3DXVECTOR3){ a.x, a.y, a.z };
-        D3DXVECTOR3 bV = (D3DXVECTOR3){ b.x, b.y, b.z };
-        D3DXVECTOR3 cV = (D3DXVECTOR3){ c.x, c.y, c.z };
+        D3DXVECTOR3 aV = (D3DXVECTOR3){a.x, a.y, a.z};
+        D3DXVECTOR3 bV = (D3DXVECTOR3){b.x, b.y, b.z};
+        D3DXVECTOR3 cV = (D3DXVECTOR3){c.x, c.y, c.z};
 
         D3DXVECTOR3 aVd = Collision_Divide(&aV, &colPackage->eRadius);
         D3DXVECTOR3 bVd = Collision_Divide(&bV, &colPackage->eRadius);
         D3DXVECTOR3 cVd = Collision_Divide(&cV, &colPackage->eRadius);
-        
+
         Collision_CheckTriangle(colPackage, &aVd, &bVd, &cVd);
     }
 

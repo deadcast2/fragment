@@ -26,7 +26,7 @@ typedef struct CollisionPacket
 } CollisionPacket;
 
 int Collision_CheckPointInTriangle(const D3DXVECTOR3 *point,
-                                   const D3DXVECTOR3 *pa, const D3DXVECTOR3 *pb, const D3DXVECTOR3 *pc);
+                                   const D3DXVECTOR3 *a, const D3DXVECTOR3 *b, const D3DXVECTOR3 *c);
 int Collision_GetLowestRoot(float a, float b, float c, float maxR,
                             float *root);
 void Collision_CheckTriangle(CollisionPacket *colPackage,
