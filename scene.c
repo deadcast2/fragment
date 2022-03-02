@@ -184,20 +184,19 @@ void PlayerUpdate(Actor *self, float deltaTime)
     if (GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP) || GetAsyncKeyState('S') || GetAsyncKeyState(VK_DOWN))
     {
         const int movementSign = GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP) ? 1 : -1;
-        const D3DXVECTOR3 prevCameraPos = cameraPos;
-
         const float units = movementSign * 2.0f * deltaTime;
+
         D3DXVECTOR3 newPos;
         newPos.x = cameraPos.x + cameraForward.x * units;
         newPos.y = cameraPos.y + cameraForward.y * units;
         newPos.z = cameraPos.z + cameraForward.z * units;
 
         D3DXVECTOR3 velocity;
-        D3DXVec3Subtract(&velocity, &newPos, &prevCameraPos);
+        D3DXVec3Subtract(&velocity, &newPos, &cameraPos);
 
         CollisionPacket packet;
-        packet.eRadius = (D3DXVECTOR3){ 0.5f, 0.5f, 0.5f };
-        D3DXVECTOR3 gravity = (D3DXVECTOR3){ 0, 0, 0 };
+        packet.eRadius = (D3DXVECTOR3){ 0.5f, 1.6f, 0.5f };
+        D3DXVECTOR3 gravity = (D3DXVECTOR3){ 0, -0.1f, 0 };
         cameraPos = Collision_CollideAndSlide(&packet, &cameraPos, &velocity, &gravity);
     }
 
@@ -375,12 +374,20 @@ void InitScene()
         .position = (Vertex){.x = 0, .y = -6.5, .z = 0},
         .rotation = (Vertex){.x = 0, .y = 0, .z = 0},
         .scale = (Vertex){.x = 1, .y = 1, .z = 1}});
+
+    actors[15] = CreateActor((ActorParams){
+        .name = "lid",
+        .enabled = 0,
+        .bufferType = Triangle,
+        .modelName = "IDR_LID",
+        .position = (Vertex){.x = 0, .y = -6.5, .z = 0},
+        .rotation = (Vertex){.x = 0, .y = 0, .z = 0},
+        .scale = (Vertex){.x = 1, .y = 1, .z = 1}});
 }
 
 void RenderScene(float deltaTime)
 {
-    d3ddev->lpVtbl->Clear(d3ddev, 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-                          D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+    d3ddev->lpVtbl->Clear(d3ddev, 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
     d3ddev->lpVtbl->BeginScene(d3ddev);
 
     for (int i = 0; i < ACTOR_COUNT; i++)

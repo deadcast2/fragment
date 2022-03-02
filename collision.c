@@ -393,6 +393,23 @@ D3DXVECTOR3 Collision_CollideWithWorld(CollisionPacket *colPackage, const D3DXVE
         Collision_CheckTriangle(colPackage, &aVd, &bVd, &cVd);
     }
 
+    for (int i = 0; i < actors[15]->vertexCount; i += 3)
+    {
+        const Vertex a = AddVertex(actors[15]->vertices[i + 0], actors[15]->position);
+        const Vertex b = AddVertex(actors[15]->vertices[i + 1], actors[15]->position);
+        const Vertex c = AddVertex(actors[15]->vertices[i + 2], actors[15]->position);
+
+        D3DXVECTOR3 aV = (D3DXVECTOR3){a.x, a.y, a.z};
+        D3DXVECTOR3 bV = (D3DXVECTOR3){b.x, b.y, b.z};
+        D3DXVECTOR3 cV = (D3DXVECTOR3){c.x, c.y, c.z};
+
+        D3DXVECTOR3 aVd = Vec3_Div(&aV, &colPackage->eRadius);
+        D3DXVECTOR3 bVd = Vec3_Div(&bV, &colPackage->eRadius);
+        D3DXVECTOR3 cVd = Vec3_Div(&cV, &colPackage->eRadius);
+
+        Collision_CheckTriangle(colPackage, &aVd, &bVd, &cVd);
+    }
+
     // If no collision we just move along the velocity
     if (colPackage->foundCollision == 0)
     {
