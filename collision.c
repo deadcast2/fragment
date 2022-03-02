@@ -3,24 +3,23 @@
 #include "plane.h"
 #include "srandom.h"
 #include "scene.h"
+#include "vec3.h"
 
-int Collision_CheckPointInTriangle(const D3DXVECTOR3 *point,
-                                   const D3DXVECTOR3 *a, const D3DXVECTOR3 *b, const D3DXVECTOR3 *c)
+int Collision_CheckPointInTriangle(const D3DXVECTOR3 *point, const D3DXVECTOR3 *a, const D3DXVECTOR3 *b, const D3DXVECTOR3 *c)
 {
-    D3DXVECTOR3 ap, bp, cp;
-    D3DXVec3Subtract(&ap, point, a);
-    D3DXVec3Subtract(&bp, point, b);
-    D3DXVec3Subtract(&cp, point, c);
+    D3DXVECTOR3 ap = Vec3_Sub(point, a);
+    D3DXVECTOR3 bp = Vec3_Sub(point, b);
+    D3DXVECTOR3 cp = Vec3_Sub(point, c);
 
-    float ab = D3DXVec3Dot(&ap, &bp);
-    float ac = D3DXVec3Dot(&ap, &cp);
-    float bc = D3DXVec3Dot(&bp, &cp);
-    float cc = D3DXVec3Dot(&cp, &cp);
+    float ab = Vec3_Dot(&ap, &bp);
+    float ac = Vec3_Dot(&ap, &cp);
+    float bc = Vec3_Dot(&bp, &cp);
+    float cc = Vec3_Dot(&cp, &cp);
 
     if (bc * ac - cc * ab < 0.0f)
         return 0;
 
-    float bb = D3DXVec3Dot(&bp, &bp);
+    float bb = Vec3_Dot(&bp, &bp);
 
     if (ab * bc - ac * bb < 0.0f)
         return 0;
@@ -28,8 +27,7 @@ int Collision_CheckPointInTriangle(const D3DXVECTOR3 *point,
     return 1;
 }
 
-int Collision_GetLowestRoot(float a, float b, float c, float maxR,
-                            float *root)
+int Collision_GetLowestRoot(float a, float b, float c, float maxR, float *root)
 {
     // Check if a solution exists
     float determinant = b * b - 4.0f * a * c;
@@ -89,12 +87,10 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
 
         // Calculate the signed distance from sphere
         // position to triangle plane
-        double signedDistToTrianglePlane =
-            Plane_SignedDistanceTo(trianglePlane, &colPackage->basePoint);
+        double signedDistToTrianglePlane = Plane_SignedDistanceTo(trianglePlane, &colPackage->basePoint);
 
         // cache this as we’re going to use it a few times below:
-        float normalDotVelocity =
-            D3DXVec3Dot(&trianglePlane->normal, &colPackage->velocity);
+        float normalDotVelocity = D3DXVec3Dot(&trianglePlane->normal, &colPackage->velocity);
 
         // if sphere is travelling parrallel to the plane:
         if (normalDotVelocity == 0.0f)
@@ -164,13 +160,11 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
         // the sphere is not embedded in the triangle plane.
         if (!embeddedInPlane)
         {
-            D3DXVECTOR3 result;
-            D3DXVECTOR3 planeIntersectionPoint =
-                *D3DXVec3Add(&result,
-                             D3DXVec3Subtract(&result, &colPackage->basePoint, &trianglePlane->normal),
-                             D3DXVec3Scale(&result, &colPackage->velocity, t0));
-            if (Collision_CheckPointInTriangle(&planeIntersectionPoint,
-                                               p1, p2, p3) == 1)
+            D3DXVECTOR3 sub = Vec3_Sub(&colPackage->basePoint, &trianglePlane->normal);
+            D3DXVECTOR3 scale = Vec3_Scale(&colPackage->velocity, t0);
+            D3DXVECTOR3 planeIntersectionPoint = Vec3_Add(&sub, &scale);
+
+            if (Collision_CheckPointInTriangle(&planeIntersectionPoint, p1, p2, p3) == 1)
             {
                 foundCollison = 1;
                 t = t0;
@@ -189,10 +183,9 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
         if (foundCollison == 0)
         {
             // some commonly used terms:
-            D3DXVECTOR3 result;
             D3DXVECTOR3 velocity = colPackage->velocity;
             D3DXVECTOR3 base = colPackage->basePoint;
-            float velocitySquaredLength = D3DXVec3LengthSq(&velocity);
+            float velocitySquaredLength = Vec3_LenSq(&velocity);
             float a, b, c; // Params for equation
             float newT;
 
@@ -204,8 +197,10 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
             a = velocitySquaredLength;
 
             // P1
-            b = 2.0 * D3DXVec3Dot(&velocity, D3DXVec3Subtract(&result, &base, p1));
-            c = D3DXVec3LengthSq(D3DXVec3Subtract(&result, p1, &base)) - 1.0;
+            D3DXVECTOR3 baseP1 = Vec3_Sub(&base, p1);
+            D3DXVECTOR3 p1Base = Vec3_Sub(p1, &base);
+            b = 2.0 * Vec3_Dot(&velocity, &baseP1);
+            c = Vec3_LenSq(&p1Base) - 1.0;
             if (Collision_GetLowestRoot(a, b, c, t, &newT))
             {
                 t = newT;
@@ -214,8 +209,10 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
             }
 
             // P2
-            b = 2.0 * D3DXVec3Dot(&velocity, D3DXVec3Subtract(&result, &base, p2));
-            c = D3DXVec3LengthSq(D3DXVec3Subtract(&result, p2, &base)) - 1.0;
+            D3DXVECTOR3 baseP2 = Vec3_Sub(&base, p2);
+            D3DXVECTOR3 p2Base = Vec3_Sub(p2, &base);
+            b = 2.0 * Vec3_Dot(&velocity, &baseP2);
+            c = Vec3_LenSq(&p2Base) - 1.0;
             if (Collision_GetLowestRoot(a, b, c, t, &newT))
             {
                 t = newT;
@@ -224,8 +221,10 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
             }
 
             // P3
-            b = 2.0 * D3DXVec3Dot(&velocity, D3DXVec3Subtract(&result, &base, p3));
-            c = D3DXVec3LengthSq(D3DXVec3Subtract(&result, p3, &base)) - 1.0;
+            D3DXVECTOR3 baseP3 = Vec3_Sub(&base, p3);
+            D3DXVECTOR3 p3Base = Vec3_Sub(p3, &base);
+            b = 2.0 * Vec3_Dot(&velocity, &baseP3);
+            c = Vec3_LenSq(&p3Base) - 1.0;
             if (Collision_GetLowestRoot(a, b, c, t, &newT))
             {
                 t = newT;
@@ -235,80 +234,78 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
 
             // Check agains edges:
             // p1 -> p2:
-            D3DXVECTOR3 edge = *D3DXVec3Subtract(&result, p2, p1);
-            D3DXVECTOR3 baseToVertex = *D3DXVec3Subtract(&result, p1, &base);
-            float edgeSquaredLength = D3DXVec3LengthSq(&edge);
-            float edgeDotVelocity = D3DXVec3Dot(&edge, &velocity);
-            float edgeDotBaseToVertex = D3DXVec3Dot(&edge, &baseToVertex);
+            D3DXVECTOR3 edge = Vec3_Sub(p2, p1);
+            D3DXVECTOR3 baseToVertex = Vec3_Sub(p1, &base);
+            float edgeSquaredLength = Vec3_LenSq(&edge);
+            float edgeDotVelocity = Vec3_Dot(&edge, &velocity);
+            float edgeDotBaseToVertex = Vec3_Dot(&edge, &baseToVertex);
 
             // Calculate parameters for equation
-            a = edgeSquaredLength * -velocitySquaredLength +
-                edgeDotVelocity * edgeDotVelocity;
-            b = edgeSquaredLength * (2 * D3DXVec3Dot(&velocity, &baseToVertex)) -
-                2.0 * edgeDotVelocity * edgeDotBaseToVertex;
-            c = edgeSquaredLength * (1 - D3DXVec3LengthSq(&baseToVertex)) +
-                edgeDotBaseToVertex * edgeDotBaseToVertex;
+            a = edgeSquaredLength * -velocitySquaredLength + edgeDotVelocity * edgeDotVelocity;
+            b = edgeSquaredLength * (2 * Vec3_Dot(&velocity, &baseToVertex)) - 2.0 * edgeDotVelocity * edgeDotBaseToVertex;
+            c = edgeSquaredLength * (1 - Vec3_LenSq(&baseToVertex)) + edgeDotBaseToVertex * edgeDotBaseToVertex;
 
             // Does the swept sphere collide against infinite edge?
             if (Collision_GetLowestRoot(a, b, c, t, &newT))
             {
                 // Check if intersection is within line segment:
-                float f = (edgeDotVelocity * newT - edgeDotBaseToVertex) /
-                          edgeSquaredLength;
+                float f = (edgeDotVelocity * newT - edgeDotBaseToVertex) / edgeSquaredLength;
                 if (f >= 0.0 && f <= 1.0)
                 {
                     // intersection took place within segment.
                     t = newT;
                     foundCollison = 1;
-                    collisionPoint = *D3DXVec3Add(&result, p1, D3DXVec3Scale(&result, &edge, f));
+
+                    D3DXVECTOR3 scale = Vec3_Scale(&edge, f);
+                    collisionPoint = Vec3_Add(p1, &scale);
                 }
             }
 
             // p2 -> p3:
-            edge = *D3DXVec3Subtract(&result, p3, p2);
-            baseToVertex = *D3DXVec3Subtract(&result, p2, &base);
-            edgeSquaredLength = D3DXVec3LengthSq(&edge);
-            edgeDotVelocity = D3DXVec3Dot(&edge, &velocity);
-            edgeDotBaseToVertex = D3DXVec3Dot(&edge, &baseToVertex);
-            a = edgeSquaredLength * -velocitySquaredLength +
-                edgeDotVelocity * edgeDotVelocity;
-            b = edgeSquaredLength * (2 * D3DXVec3Dot(&velocity, &baseToVertex)) -
-                2.0 * edgeDotVelocity * edgeDotBaseToVertex;
-            c = edgeSquaredLength * (1 - D3DXVec3LengthSq(&baseToVertex)) +
-                edgeDotBaseToVertex * edgeDotBaseToVertex;
+            edge = Vec3_Sub(p3, p2);
+            baseToVertex = Vec3_Sub(p2, &base);
+            edgeSquaredLength = Vec3_LenSq(&edge);
+            edgeDotVelocity = Vec3_Dot(&edge, &velocity);
+            edgeDotBaseToVertex = Vec3_Dot(&edge, &baseToVertex);
+
+            a = edgeSquaredLength * -velocitySquaredLength + edgeDotVelocity * edgeDotVelocity;
+            b = edgeSquaredLength * (2 * Vec3_Dot(&velocity, &baseToVertex)) - 2.0 * edgeDotVelocity * edgeDotBaseToVertex;
+            c = edgeSquaredLength * (1 - Vec3_LenSq(&baseToVertex)) + edgeDotBaseToVertex * edgeDotBaseToVertex;
+
             if (Collision_GetLowestRoot(a, b, c, t, &newT))
             {
-                float f = (edgeDotVelocity * newT - edgeDotBaseToVertex) /
-                          edgeSquaredLength;
+                float f = (edgeDotVelocity * newT - edgeDotBaseToVertex) / edgeSquaredLength;
                 if (f >= 0.0 && f <= 1.0)
                 {
                     t = newT;
                     foundCollison = 1;
-                    collisionPoint = *D3DXVec3Add(&result, p2, D3DXVec3Scale(&result, &edge, f));
+
+                    D3DXVECTOR3 scale = Vec3_Scale(&edge, f);
+                    collisionPoint = Vec3_Add(p2, &scale);
                 }
             }
 
             // p3 -> p1:
-            edge = *D3DXVec3Subtract(&result, p1, p3);
-            baseToVertex = *D3DXVec3Subtract(&result, p3, &base);
-            edgeSquaredLength = D3DXVec3LengthSq(&edge);
-            edgeDotVelocity = D3DXVec3Dot(&edge, &velocity);
-            edgeDotBaseToVertex = D3DXVec3Dot(&edge, &baseToVertex);
-            a = edgeSquaredLength * -velocitySquaredLength +
-                edgeDotVelocity * edgeDotVelocity;
-            b = edgeSquaredLength * (2 * D3DXVec3Dot(&velocity, &baseToVertex)) -
-                2.0 * edgeDotVelocity * edgeDotBaseToVertex;
-            c = edgeSquaredLength * (1 - D3DXVec3LengthSq(&baseToVertex)) +
-                edgeDotBaseToVertex * edgeDotBaseToVertex;
+            edge = Vec3_Sub(p1, p3);
+            baseToVertex = Vec3_Sub(p3, &base);
+            edgeSquaredLength = Vec3_LenSq(&edge);
+            edgeDotVelocity = Vec3_Dot(&edge, &velocity);
+            edgeDotBaseToVertex = Vec3_Dot(&edge, &baseToVertex);
+
+            a = edgeSquaredLength * -velocitySquaredLength + edgeDotVelocity * edgeDotVelocity;
+            b = edgeSquaredLength * (2 * Vec3_Dot(&velocity, &baseToVertex)) - 2.0 * edgeDotVelocity * edgeDotBaseToVertex;
+            c = edgeSquaredLength * (1 - Vec3_LenSq(&baseToVertex)) + edgeDotBaseToVertex * edgeDotBaseToVertex;
+
             if (Collision_GetLowestRoot(a, b, c, t, &newT))
             {
-                float f = (edgeDotVelocity * newT - edgeDotBaseToVertex) /
-                          edgeSquaredLength;
+                float f = (edgeDotVelocity * newT - edgeDotBaseToVertex) / edgeSquaredLength;
                 if (f >= 0.0 && f <= 1.0)
                 {
                     t = newT;
                     foundCollison = 1;
-                    collisionPoint = *D3DXVec3Add(&result, p3, D3DXVec3Scale(&result, &edge, f));
+
+                    D3DXVECTOR3 scale = Vec3_Scale(&edge, f);
+                    collisionPoint = Vec3_Add(p3, &scale);
                 }
             }
         }
@@ -317,12 +314,11 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
         if (foundCollison == 1)
         {
             // distance to collision: ’t’ is time of collision
-            float distToCollision = t * sqrt(D3DXVec3LengthSq(&colPackage->velocity));
+            float distToCollision = t * Vec3_Len(&colPackage->velocity);
 
             // Does this triangle qualify for the closest hit?
             // it does if it’s the first hit or the closest
-            if (colPackage->foundCollision == 0 ||
-                distToCollision < colPackage->nearestDistance)
+            if (colPackage->foundCollision == 0 || distToCollision < colPackage->nearestDistance)
             {
                 // Collision information nessesary for sliding
                 colPackage->nearestDistance = distToCollision;
@@ -340,21 +336,21 @@ D3DXVECTOR3 Collision_CollideAndSlide(CollisionPacket *colPackage, const D3DXVEC
     colPackage->R3Velocity = *vel;
 
     // calculate position and velocity in eSpace
-    D3DXVECTOR3 eSpacePosition = Collision_Divide(&colPackage->R3Position, &colPackage->eRadius);
-    D3DXVECTOR3 eSpaceVelocity = Collision_Divide(&colPackage->R3Velocity, &colPackage->eRadius);
+    D3DXVECTOR3 eSpacePosition = Vec3_Div(&colPackage->R3Position, &colPackage->eRadius);
+    D3DXVECTOR3 eSpaceVelocity = Vec3_Div(&colPackage->R3Velocity, &colPackage->eRadius);
 
     // Iterate until we have our final position.
     D3DXVECTOR3 finalPosition = Collision_CollideWithWorld(colPackage, &eSpacePosition, &eSpaceVelocity, 0);
 
     // Add gravity pull:
     // Set the new R3 position (convert back from eSpace to R3
-    colPackage->R3Position = Collision_Multiply(&finalPosition, &colPackage->eRadius);
+    colPackage->R3Position = Vec3_Mul(&finalPosition, &colPackage->eRadius);
     colPackage->R3Velocity = *gravity;
-    eSpaceVelocity = Collision_Divide(gravity, &colPackage->eRadius);
+    eSpaceVelocity = Vec3_Div(gravity, &colPackage->eRadius);
     finalPosition = Collision_CollideWithWorld(colPackage, &finalPosition, &eSpaceVelocity, 0);
 
     // Convert final result back to R3:
-    finalPosition = Collision_Multiply(&finalPosition, &colPackage->eRadius);
+    finalPosition = Vec3_Mul(&finalPosition, &colPackage->eRadius);
 
     // Move the entity (application specific function)
     return finalPosition;
@@ -364,7 +360,6 @@ D3DXVECTOR3 Collision_CollideWithWorld(CollisionPacket *colPackage, const D3DXVE
 {
     // All hard-coded distances in this function is
     // scaled to fit the setting above..
-    D3DXVECTOR3 result;
     const float unitsPerMeter = 100.0f;
     float unitScale = unitsPerMeter / 100.0f;
     float veryCloseDistance = 0.005f * unitScale;
@@ -375,7 +370,7 @@ D3DXVECTOR3 Collision_CollideWithWorld(CollisionPacket *colPackage, const D3DXVE
 
     // Ok, we need to worry:
     colPackage->velocity = *vel;
-    colPackage->normalizedVelocity = *D3DXVec3Normalize(&result, vel);
+    colPackage->normalizedVelocity = Vec3_Norm(vel);
     colPackage->basePoint = *pos;
     colPackage->foundCollision = 0;
 
@@ -391,9 +386,9 @@ D3DXVECTOR3 Collision_CollideWithWorld(CollisionPacket *colPackage, const D3DXVE
         D3DXVECTOR3 bV = (D3DXVECTOR3){b.x, b.y, b.z};
         D3DXVECTOR3 cV = (D3DXVECTOR3){c.x, c.y, c.z};
 
-        D3DXVECTOR3 aVd = Collision_Divide(&aV, &colPackage->eRadius);
-        D3DXVECTOR3 bVd = Collision_Divide(&bV, &colPackage->eRadius);
-        D3DXVECTOR3 cVd = Collision_Divide(&cV, &colPackage->eRadius);
+        D3DXVECTOR3 aVd = Vec3_Div(&aV, &colPackage->eRadius);
+        D3DXVECTOR3 bVd = Vec3_Div(&bV, &colPackage->eRadius);
+        D3DXVECTOR3 cVd = Vec3_Div(&cV, &colPackage->eRadius);
 
         Collision_CheckTriangle(colPackage, &aVd, &bVd, &cVd);
     }
@@ -401,12 +396,12 @@ D3DXVECTOR3 Collision_CollideWithWorld(CollisionPacket *colPackage, const D3DXVE
     // If no collision we just move along the velocity
     if (colPackage->foundCollision == 0)
     {
-        return *D3DXVec3Add(&result, pos, vel);
+        return Vec3_Add(pos, vel);
     }
 
     // *** Collision occured ***
     // The original destination point
-    D3DXVECTOR3 destinationPoint = *D3DXVec3Add(&result, pos, vel);
+    D3DXVECTOR3 destinationPoint = Vec3_Add(pos, vel);
     D3DXVECTOR3 newBasePoint = *pos;
 
     // only update if we are not already very close
@@ -415,32 +410,35 @@ D3DXVECTOR3 Collision_CollideWithWorld(CollisionPacket *colPackage, const D3DXVE
     if (colPackage->nearestDistance >= veryCloseDistance)
     {
         D3DXVECTOR3 V = *vel;
-        Collision_SetLength(&V, colPackage->nearestDistance - veryCloseDistance);
-        newBasePoint = *D3DXVec3Add(&result, &colPackage->basePoint, &V);
+        Vec3_SetLen(&V, colPackage->nearestDistance - veryCloseDistance);
+        newBasePoint = Vec3_Add(&colPackage->basePoint, &V);
 
         // Adjust polygon intersection point (so sliding
         // plane will be unaffected by the fact that we
         // move slightly less than collision tells us)
-        V = *D3DXVec3Normalize(&result, &V);
-        colPackage->intersectionPoint = *D3DXVec3Subtract(&result, &colPackage->intersectionPoint, D3DXVec3Scale(&result, &V, veryCloseDistance));
+        V = Vec3_Norm(&V);
+
+        D3DXVECTOR3 scale = Vec3_Scale(&V, veryCloseDistance);
+        colPackage->intersectionPoint = Vec3_Sub(&colPackage->intersectionPoint, &scale);
     }
 
     // Determine the sliding plane
     D3DXVECTOR3 slidePlaneOrigin = colPackage->intersectionPoint;
-    D3DXVECTOR3 slidePlaneNormal = *D3DXVec3Subtract(&result, &newBasePoint, &colPackage->intersectionPoint);
-    slidePlaneNormal = *D3DXVec3Normalize(&result, &slidePlaneNormal);
+    D3DXVECTOR3 slidePlaneNormal = Vec3_Sub(&newBasePoint, &colPackage->intersectionPoint);
+    slidePlaneNormal = Vec3_Norm(&slidePlaneNormal);
     Plane *slidingPlane = Plane_New(&slidePlaneOrigin, &slidePlaneNormal);
 
     // Again, sorry about formatting.. but look carefully ;)
-    D3DXVECTOR3 newDestinationPoint = *D3DXVec3Subtract(&result, &destinationPoint, D3DXVec3Scale(&result, &slidePlaneNormal, Plane_SignedDistanceTo(slidingPlane, &destinationPoint)));
+    D3DXVECTOR3 scale = Vec3_Scale(&slidePlaneNormal, Plane_SignedDistanceTo(slidingPlane, &destinationPoint));
+    D3DXVECTOR3 newDestinationPoint = Vec3_Sub(&destinationPoint, &scale);
 
     // Generate the slide vector, which will become our new
     // velocity vector for the next iteration
-    D3DXVECTOR3 newVelocityVector = *D3DXVec3Subtract(&result, &newDestinationPoint, &colPackage->intersectionPoint);
+    D3DXVECTOR3 newVelocityVector = Vec3_Sub(&newDestinationPoint, &colPackage->intersectionPoint);
 
     // Recurse:
     // dont recurse if the new velocity is very small
-    if (sqrt(D3DXVec3LengthSq(&newVelocityVector)) < veryCloseDistance)
+    if (Vec3_Len(&newVelocityVector) < veryCloseDistance)
     {
         HeapFree(GetProcessHeap(), 0, slidingPlane);
         return newBasePoint;
@@ -449,30 +447,4 @@ D3DXVECTOR3 Collision_CollideWithWorld(CollisionPacket *colPackage, const D3DXVE
     HeapFree(GetProcessHeap(), 0, slidingPlane);
 
     return Collision_CollideWithWorld(colPackage, &newBasePoint, &newVelocityVector, ++collisionRecursionDepth);
-}
-
-D3DXVECTOR3 Collision_Divide(const D3DXVECTOR3 *lhs, const D3DXVECTOR3 *rhs)
-{
-    D3DXVECTOR3 result;
-    result.x = lhs->x / rhs->x;
-    result.y = lhs->y / rhs->y;
-    result.z = lhs->z / rhs->z;
-    return result;
-}
-
-D3DXVECTOR3 Collision_Multiply(const D3DXVECTOR3 *lhs, const D3DXVECTOR3 *rhs)
-{
-    D3DXVECTOR3 result;
-    result.x = lhs->x * rhs->x;
-    result.y = lhs->y * rhs->y;
-    result.z = lhs->z * rhs->z;
-    return result;
-}
-
-void Collision_SetLength(D3DVECTOR *v, float l)
-{
-    float len = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
-    v->x *= l / len;
-    v->y *= l / len;
-    v->z *= l / len;
 }

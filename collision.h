@@ -36,8 +36,5 @@ D3DXVECTOR3 Collision_CollideAndSlide(CollisionPacket *colPackage, const D3DXVEC
                                       const D3DXVECTOR3 *gravity);
 D3DXVECTOR3 Collision_CollideWithWorld(CollisionPacket *colPackage, const D3DXVECTOR3 *pos,
                                        const D3DXVECTOR3 *vel, int collisionRecursionDepth);
-D3DXVECTOR3 Collision_Divide(const D3DXVECTOR3 *lhs, const D3DXVECTOR3 *rhs);
-D3DXVECTOR3 Collision_Multiply(const D3DXVECTOR3 *lhs, const D3DXVECTOR3 *rhs);
-void Collision_SetLength(D3DVECTOR *v, float l);
 
 #endif
