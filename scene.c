@@ -167,6 +167,8 @@ void PlayerUpdate(Actor *self, float deltaTime)
     static float lastX = -100;
     static float lastZ = -100;
     static int walkingOnLid = 0;
+    static float timeToFart = 0;
+    static int shouldFart = 1;
 
     if (arriving)
         return;
@@ -184,6 +186,18 @@ void PlayerUpdate(Actor *self, float deltaTime)
 
         lastX = cameraPos.x;
         lastZ = cameraPos.z;
+        timeToFart = 2000 * deltaTime;
+    }
+
+    if (shouldFart && timeToFart < 0)
+    {
+        // Give the player a little gas...
+        PlayAudio(actors[16]->audioSource, actors[16]->audioBuffer);
+        shouldFart = 0;
+    }
+    else if (shouldFart)
+    {
+        timeToFart -= deltaTime;
     }
 
     if (GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP) || GetAsyncKeyState('S') || GetAsyncKeyState(VK_DOWN))
@@ -204,6 +218,7 @@ void PlayerUpdate(Actor *self, float deltaTime)
         D3DXVECTOR3 gravity = (D3DXVECTOR3){0, -0.1f, 0};
         cameraPos = Collision_CollideAndSlide(&packet, &cameraPos, &velocity, &gravity);
 
+        // Activate the walking on lid sfx.
         walkingOnLid = packet.actorIndex == 15 ? 1 : 0;
     }
 
@@ -391,6 +406,11 @@ void InitScene()
         .position = (Vertex){.x = 0, .y = -6.5, .z = 0},
         .rotation = (Vertex){.x = 0, .y = 0, .z = 0},
         .scale = (Vertex){.x = 1, .y = 1, .z = 1}});
+
+    actors[16] = CreateActor((ActorParams){
+        .name = "fart",
+        .enabled = 0,
+        .audioName = "IDR_FART"});
 }
 
 void RenderScene(float deltaTime)
