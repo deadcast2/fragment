@@ -100,12 +100,13 @@ void LoadAudio(const char *name, IXAudio2SourceVoice **source,
     HeapFree(GetProcessHeap(), 0, decompressedData);
 }
 
-void PlayAudio(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *audioBuffer)
+void PlayAudio(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *audioBuffer, float volume)
 {
     if (!source)
         return;
 
     StopAudio(source);
+    source->lpVtbl->SetVolume(source, volume, XAUDIO2_COMMIT_NOW);
     source->lpVtbl->SubmitSourceBuffer(source, audioBuffer, NULL);
     source->lpVtbl->Start(source, 0, XAUDIO2_COMMIT_NOW);
 }

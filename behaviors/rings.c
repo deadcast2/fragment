@@ -102,7 +102,7 @@ void RingGongUpdate(Actor *self, float deltaTime)
 
     if (nextGong < 0)
     {
-        PlayAudio(self->audioSource, self->audioBuffer);
+        PlayAudio(self->audioSource, self->audioBuffer, 1.0f);
 
         nextGong = 5;
     }

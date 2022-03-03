@@ -13,7 +13,7 @@ void CrowUpdate(Actor *self, float deltaTime)
 
     if (nextCaw < 0)
     {
-        PlayAudio(self->audioSource, self->audioBuffer);
+        PlayAudio(self->audioSource, self->audioBuffer, 0.7f);
         nextCaw = smooth_rand() % 20;
 
         if (nextCaw > 0 && nextCaw <= 5)
@@ -44,8 +44,9 @@ void CrowUpdate(Actor *self, float deltaTime)
 void SkyStart(Actor *self)
 {
     seed_smooth_rand();
-    PlayAudio(self->audioSource, self->audioBuffer);
+    PlayAudio(self->audioSource, self->audioBuffer, 1.0f);
     IUnknown *volumeMeter;
+
     if (XAudio2CreateVolumeMeter(&volumeMeter) == S_OK)
     {
         XAUDIO2_EFFECT_DESCRIPTOR effectDesc = {
@@ -126,7 +127,7 @@ void ArrivalStart(Actor *self)
     CameraPosition((D3DXVECTOR3){0, 50, -3.5f});
     CameraYaw(D3DX_PI);
     CameraPitch(D3DX_PI / 2.0f);
-    PlayAudio(self->audioSource, self->audioBuffer);
+    PlayAudio(self->audioSource, self->audioBuffer, 1.0f);
 }
 
 void ArrivalUpdate(Actor *self, float deltaTime)
@@ -177,12 +178,12 @@ void PlayerUpdate(Actor *self, float deltaTime)
     float zDiff = lastZ - cameraPos.z;
     float dist = sqrt((xDiff * xDiff) + (zDiff * zDiff));
 
-    if (dist > 1.3f)
+    if (dist > 1.15f)
     {
         if (walkingOnLid)
-            PlayAudio(actors[15]->audioSource, actors[15]->audioBuffer);
+            PlayAudio(actors[15]->audioSource, actors[15]->audioBuffer, 0.2f);
         else
-            PlayAudio(self->audioSource, self->audioBuffer);
+            PlayAudio(self->audioSource, self->audioBuffer, 0.5f);
 
         lastX = cameraPos.x;
         lastZ = cameraPos.z;
@@ -192,7 +193,7 @@ void PlayerUpdate(Actor *self, float deltaTime)
     if (shouldFart && timeToFart < 0)
     {
         // Give the player a little gas...
-        PlayAudio(actors[16]->audioSource, actors[16]->audioBuffer);
+        PlayAudio(actors[16]->audioSource, actors[16]->audioBuffer, 0.8f);
         shouldFart = 0;
     }
     else if (shouldFart)
