@@ -69,9 +69,9 @@ int Collision_GetLowestRoot(float a, float b, float c, float maxR, float *root)
     return 0;
 }
 
-void Collision_CheckTriangle(CollisionPacket *colPackage,
-                             const D3DXVECTOR3 *p1, const D3DXVECTOR3 *p2,
-                             const D3DXVECTOR3 *p3)
+int Collision_CheckTriangle(CollisionPacket *colPackage,
+                            const D3DXVECTOR3 *p1, const D3DXVECTOR3 *p2,
+                            const D3DXVECTOR3 *p3)
 {
     // Make the plane containing this triangle.
     Plane *trianglePlane = Plane_NewFromTriangle(p1, p2, p3);
@@ -100,7 +100,7 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
                 // Sphere is not embedded in plane.
                 // No collision possible:
                 HeapFree(GetProcessHeap(), 0, trianglePlane);
-                return;
+                return 0;
             }
             else
             {
@@ -131,7 +131,7 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
                 // Both t values are outside values [0,1]
                 // No collision possible:
                 HeapFree(GetProcessHeap(), 0, trianglePlane);
-                return;
+                return 0;
             }
 
             // Clamp to [0,1]
@@ -164,7 +164,7 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
             D3DXVECTOR3 scale = Vec3_Scale(&colPackage->velocity, t0);
             D3DXVECTOR3 planeIntersectionPoint = Vec3_Add(&sub, &scale);
 
-            if (Collision_CheckPointInTriangle(&planeIntersectionPoint, p1, p2, p3) == 1)
+            if (Collision_CheckPointInTriangle(&planeIntersectionPoint, p1, p2, p3))
             {
                 foundCollison = 1;
                 t = t0;
@@ -324,9 +324,12 @@ void Collision_CheckTriangle(CollisionPacket *colPackage,
                 colPackage->nearestDistance = distToCollision;
                 colPackage->intersectionPoint = collisionPoint;
                 colPackage->foundCollision = 1;
+                return 1;
             }
         }
     } // if not backface
+
+    return 0;
 }
 
 D3DXVECTOR3 Collision_CollideAndSlide(CollisionPacket *colPackage, const D3DXVECTOR3 *pos, const D3DXVECTOR3 *vel, const D3DXVECTOR3 *gravity)
@@ -376,38 +379,27 @@ D3DXVECTOR3 Collision_CollideWithWorld(CollisionPacket *colPackage, const D3DXVE
 
     // Check for collision (calls the collision routines)
     // Application specific!!
-    for (int i = 0; i < actors[14]->vertexCount; i += 3)
+    int actorIndexes[2] = {14, 15};
+
+    for (int i = 0; i < 2; i++)
     {
-        const Vertex a = AddVertex(actors[14]->vertices[i + 0], actors[14]->position);
-        const Vertex b = AddVertex(actors[14]->vertices[i + 1], actors[14]->position);
-        const Vertex c = AddVertex(actors[14]->vertices[i + 2], actors[14]->position);
+        for (int j = 0; j < actors[actorIndexes[i]]->vertexCount; j += 3)
+        {
+            const Vertex a = AddVertex(actors[actorIndexes[i]]->vertices[j], actors[actorIndexes[i]]->position);
+            const Vertex b = AddVertex(actors[actorIndexes[i]]->vertices[j + 1], actors[actorIndexes[i]]->position);
+            const Vertex c = AddVertex(actors[actorIndexes[i]]->vertices[j + 2], actors[actorIndexes[i]]->position);
 
-        D3DXVECTOR3 aV = (D3DXVECTOR3){a.x, a.y, a.z};
-        D3DXVECTOR3 bV = (D3DXVECTOR3){b.x, b.y, b.z};
-        D3DXVECTOR3 cV = (D3DXVECTOR3){c.x, c.y, c.z};
+            D3DXVECTOR3 aV = (D3DXVECTOR3){a.x, a.y, a.z};
+            D3DXVECTOR3 bV = (D3DXVECTOR3){b.x, b.y, b.z};
+            D3DXVECTOR3 cV = (D3DXVECTOR3){c.x, c.y, c.z};
 
-        D3DXVECTOR3 aVd = Vec3_Div(&aV, &colPackage->eRadius);
-        D3DXVECTOR3 bVd = Vec3_Div(&bV, &colPackage->eRadius);
-        D3DXVECTOR3 cVd = Vec3_Div(&cV, &colPackage->eRadius);
+            D3DXVECTOR3 aVd = Vec3_Div(&aV, &colPackage->eRadius);
+            D3DXVECTOR3 bVd = Vec3_Div(&bV, &colPackage->eRadius);
+            D3DXVECTOR3 cVd = Vec3_Div(&cV, &colPackage->eRadius);
 
-        Collision_CheckTriangle(colPackage, &aVd, &bVd, &cVd);
-    }
-
-    for (int i = 0; i < actors[15]->vertexCount; i += 3)
-    {
-        const Vertex a = AddVertex(actors[15]->vertices[i + 0], actors[15]->position);
-        const Vertex b = AddVertex(actors[15]->vertices[i + 1], actors[15]->position);
-        const Vertex c = AddVertex(actors[15]->vertices[i + 2], actors[15]->position);
-
-        D3DXVECTOR3 aV = (D3DXVECTOR3){a.x, a.y, a.z};
-        D3DXVECTOR3 bV = (D3DXVECTOR3){b.x, b.y, b.z};
-        D3DXVECTOR3 cV = (D3DXVECTOR3){c.x, c.y, c.z};
-
-        D3DXVECTOR3 aVd = Vec3_Div(&aV, &colPackage->eRadius);
-        D3DXVECTOR3 bVd = Vec3_Div(&bV, &colPackage->eRadius);
-        D3DXVECTOR3 cVd = Vec3_Div(&cV, &colPackage->eRadius);
-
-        Collision_CheckTriangle(colPackage, &aVd, &bVd, &cVd);
+            if (Collision_CheckTriangle(colPackage, &aVd, &bVd, &cVd))
+                colPackage->actorIndex = actorIndexes[i];
+        }
     }
 
     // If no collision we just move along the velocity

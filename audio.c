@@ -38,12 +38,12 @@ void LoadAudio(const char *name, IXAudio2SourceVoice **source,
     memmove(&uncompressedSize, resourceData, sizeof(int));
     memmove(resourceData, resourceData + sizeof(int), resourceSize - sizeof(int));
 
-    BYTE *decompressedData = HeapAlloc(GetProcessHeap(), 0, uncompressedSize);
+    BYTE *decompressedData = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, uncompressedSize);
     fastlz_decompress(resourceData, resourceSize - sizeof(int),
                       decompressedData, uncompressedSize);
 
     ADPCMWAVEFORMAT *adpcm = (ADPCMWAVEFORMAT *)HeapAlloc(
-        GetProcessHeap(), 0, sizeof(ADPCMWAVEFORMAT) + sizeof(ADPCMCOEFSET) * 7);
+        GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(ADPCMWAVEFORMAT) + sizeof(ADPCMCOEFSET) * 7);
     adpcm->wSamplesPerBlock = 512;
     adpcm->wNumCoef = 7;
     adpcm->aCoef[0].iCoef1 = 256;
@@ -80,7 +80,7 @@ void LoadAudio(const char *name, IXAudio2SourceVoice **source,
 
     CopyMemory(&dataSize, data + sizeof(DWORD), sizeof(DWORD));
 
-    BYTE *dataBuffer = HeapAlloc(GetProcessHeap(), 0, dataSize);
+    BYTE *dataBuffer = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, dataSize);
     CopyMemory(dataBuffer, data + sizeof(DWORD) * 2, dataSize);
 
     buffer->AudioBytes = dataSize;

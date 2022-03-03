@@ -166,6 +166,7 @@ void PlayerUpdate(Actor *self, float deltaTime)
 {
     static float lastX = -100;
     static float lastZ = -100;
+    static int walkingOnLid = 0;
 
     if (arriving)
         return;
@@ -176,7 +177,11 @@ void PlayerUpdate(Actor *self, float deltaTime)
 
     if (dist > 1.3f)
     {
-        PlayAudio(self->audioSource, self->audioBuffer);
+        if (walkingOnLid)
+            PlayAudio(actors[15]->audioSource, actors[15]->audioBuffer);
+        else
+            PlayAudio(self->audioSource, self->audioBuffer);
+
         lastX = cameraPos.x;
         lastZ = cameraPos.z;
     }
@@ -195,9 +200,11 @@ void PlayerUpdate(Actor *self, float deltaTime)
         D3DXVec3Subtract(&velocity, &newPos, &cameraPos);
 
         CollisionPacket packet;
-        packet.eRadius = (D3DXVECTOR3){ 0.5f, 1.6f, 0.5f };
-        D3DXVECTOR3 gravity = (D3DXVECTOR3){ 0, -0.1f, 0 };
+        packet.eRadius = (D3DXVECTOR3){0.5f, 1.6f, 0.5f};
+        D3DXVECTOR3 gravity = (D3DXVECTOR3){0, -0.1f, 0};
         cameraPos = Collision_CollideAndSlide(&packet, &cameraPos, &velocity, &gravity);
+
+        walkingOnLid = packet.actorIndex == 15 ? 1 : 0;
     }
 
     if (GetAsyncKeyState('A') || GetAsyncKeyState(VK_LEFT))
@@ -380,6 +387,7 @@ void InitScene()
         .enabled = 0,
         .bufferType = Triangle,
         .modelName = "IDR_LID",
+        .audioName = "IDR_FOOTSTEP_METAL",
         .position = (Vertex){.x = 0, .y = -6.5, .z = 0},
         .rotation = (Vertex){.x = 0, .y = 0, .z = 0},
         .scale = (Vertex){.x = 1, .y = 1, .z = 1}});

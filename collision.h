@@ -23,13 +23,14 @@ typedef struct CollisionPacket
     int foundCollision;
     double nearestDistance;
     D3DXVECTOR3 intersectionPoint;
+    int actorIndex;
 } CollisionPacket;
 
 int Collision_CheckPointInTriangle(const D3DXVECTOR3 *point,
                                    const D3DXVECTOR3 *a, const D3DXVECTOR3 *b, const D3DXVECTOR3 *c);
 int Collision_GetLowestRoot(float a, float b, float c, float maxR,
                             float *root);
-void Collision_CheckTriangle(CollisionPacket *colPackage,
+int Collision_CheckTriangle(CollisionPacket *colPackage,
                              const D3DXVECTOR3 *p1, const D3DXVECTOR3 *p2,
                              const D3DXVECTOR3 *p3);
 D3DXVECTOR3 Collision_CollideAndSlide(CollisionPacket *colPackage, const D3DXVECTOR3 *pos, const D3DXVECTOR3 *vel,
