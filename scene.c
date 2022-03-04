@@ -1,6 +1,7 @@
 #include "scene.h"
 #include "behaviors\bush.h"
 #include "behaviors\crow.h"
+#include "behaviors\crown.h"
 #include "behaviors\rings.h"
 #include "behaviors\sky.h"
 #include "srandom.h"
@@ -8,16 +9,6 @@
 extern __inline HRESULT XAudio2CreateVolumeMeter(_Outptr_ IUnknown **ppApo);
 
 static int arriving = 1;
-
-void CrownStart(Actor *self) {
-  self->effect->lpVtbl->SetBool(self->effect, "_IsFoliage", TRUE);
-  self->effect->lpVtbl->SetFloat(self->effect, "_BendScale", 0.08f);
-}
-
-void CrownUpdate(Actor *self) {
-  self->effect->lpVtbl->SetFloat(self->effect, "_WindSpeed",
-                                 currWindSpeed * 4.0f);
-}
 
 void ArrivalStart(Actor *self) {
   CameraPosition((D3DXVECTOR3){0, 50, -3.5f});
