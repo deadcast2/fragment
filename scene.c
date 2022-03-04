@@ -1,4 +1,5 @@
 #include "scene.h"
+#include "behaviors\bush.h"
 #include "behaviors\crow.h"
 #include "behaviors\rings.h"
 #include "behaviors\sky.h"
@@ -7,15 +8,6 @@
 extern __inline HRESULT XAudio2CreateVolumeMeter(_Outptr_ IUnknown **ppApo);
 
 static int arriving = 1;
-
-void BushStart(Actor *self) {
-  self->effect->lpVtbl->SetBool(self->effect, "_IsFoliage", TRUE);
-  self->effect->lpVtbl->SetFloat(self->effect, "_BendScale", 0.08f);
-}
-
-void BushUpdate(Actor *self) {
-  self->effect->lpVtbl->SetFloat(self->effect, "_WindSpeed", currWindSpeed);
-}
 
 void CrownStart(Actor *self) {
   self->effect->lpVtbl->SetBool(self->effect, "_IsFoliage", TRUE);
