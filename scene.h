@@ -1,16 +1,15 @@
 #ifndef _SCENE_H_
 #define _SCENE_H_
 
-#include <float.h>
-#include <math.h>
+#include "actor.h"
 #include "audio.h"
+#include "camera.h"
 #include "collision.h"
 #include "graphics.h"
-#include "camera.h"
 #include "model.h"
 #include "texture.h"
-#include "actor.h"
-#include "srandom.h"
+#include <float.h>
+#include <math.h>
 
 #define ACTOR_COUNT 17
 
