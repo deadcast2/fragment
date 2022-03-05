@@ -45,9 +45,9 @@ void PlayerUpdate(Actor *self, float deltaTime) {
     const float units = movementSign * 2.0f * deltaTime;
 
     D3DXVECTOR3 newPos;
-    newPos.x = cameraPos.x + cameraForward.x * units;
-    newPos.y = cameraPos.y + cameraForward.y * units;
-    newPos.z = cameraPos.z + cameraForward.z * units;
+    newPos.x = cameraPos.x + cameraForwardNoPitch.x * units;
+    newPos.y = cameraPos.y + cameraForwardNoPitch.y * units;
+    newPos.z = cameraPos.z + cameraForwardNoPitch.z * units;
 
     D3DXVECTOR3 velocity;
     D3DXVec3Subtract(&velocity, &newPos, &cameraPos);
