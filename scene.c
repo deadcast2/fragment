@@ -5,6 +5,7 @@
 #include "behaviors\crown.h"
 #include "behaviors\player.h"
 #include "behaviors\rings.h"
+#include "behaviors\sign.h"
 #include "behaviors\sky.h"
 #include "srandom.h"
 
@@ -186,6 +187,16 @@ void InitScene() {
 
   actors[16] = CreateActor(
       (ActorParams){.name = "fart", .enabled = 0, .audioName = "IDR_FART"});
+
+  actors[17] =
+      CreateActor((ActorParams){.name = "sign location",
+                                .enabled = 0,
+                                .bufferType = Triangle,
+                                .modelName = "IDR_SIGN_LOCATION",
+                                .position = (Vertex){.x = 0, .y = -6.5, .z = 0},
+                                .rotation = (Vertex){.x = 0, .y = 0, .z = 0},
+                                .scale = (Vertex){.x = 1, .y = 1, .z = 1},
+                                .Update = SignUpdate});
 }
 
 void RenderScene(float deltaTime) {
