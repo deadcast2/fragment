@@ -37,17 +37,32 @@ void PlayerUpdate(Actor *self, float deltaTime) {
     timeToFart -= deltaTime;
   }
 
-  // Handle forward and backward movement with collision
-  if (GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP) ||
-      GetAsyncKeyState('S') || GetAsyncKeyState(VK_DOWN)) {
-    const int movementSign =
-        GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP) ? 1 : -1;
-    const float units = movementSign * 2.0f * deltaTime;
+  const int isLongitudinal = GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP) ||
+                             GetAsyncKeyState('S') || GetAsyncKeyState(VK_DOWN);
+  const int isLateral = GetAsyncKeyState('A') || GetAsyncKeyState('D');
 
-    D3DXVECTOR3 newPos;
-    newPos.x = cameraPos.x + cameraForwardNoPitch.x * units;
-    newPos.y = cameraPos.y + cameraForwardNoPitch.y * units;
-    newPos.z = cameraPos.z + cameraForwardNoPitch.z * units;
+  // Handle forward and backward movement with collision
+  if (isLongitudinal || isLateral) {
+    D3DXVECTOR3 newPos = cameraPos;
+
+    if (isLongitudinal) {
+      const int movementSign =
+          GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP) ? 1 : -1;
+      const float units = movementSign * 2.0f * deltaTime;
+
+      newPos.x += cameraForwardNoPitch.x * units;
+      newPos.y += cameraForwardNoPitch.y * units;
+      newPos.z += cameraForwardNoPitch.z * units;
+    }
+
+    if (isLateral) {
+      const int movementSign = GetAsyncKeyState('D') ? 1 : -1;
+      const float units = movementSign * 2.0f * deltaTime;
+
+      newPos.x += cameraRight.x * units;
+      newPos.y += cameraRight.y * units;
+      newPos.z += cameraRight.z * units;
+    }
 
     D3DXVECTOR3 velocity;
     D3DXVec3Subtract(&velocity, &newPos, &cameraPos);
@@ -63,10 +78,10 @@ void PlayerUpdate(Actor *self, float deltaTime) {
   }
 
   // Handle turning
-  if (GetAsyncKeyState('A') || GetAsyncKeyState(VK_LEFT))
+  if (GetAsyncKeyState(VK_LEFT))
     CameraYaw(-2.0f * deltaTime);
 
-  if (GetAsyncKeyState('D') || GetAsyncKeyState(VK_RIGHT))
+  if (GetAsyncKeyState(VK_RIGHT))
     CameraYaw(2.0f * deltaTime);
 
   // Handle mouse movement
