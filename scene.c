@@ -188,7 +188,18 @@ void InitScene() {
   actors[16] = CreateActor(
       (ActorParams){.name = "fart", .enabled = 0, .audioName = "IDR_FART"});
 
-  actors[17] =
+  actors[17] = CreateActor(
+      (ActorParams){.name = "sign bg",
+                    .enabled = 0,
+                    .bufferType = Triangle,
+                    .modelName = "IDR_SIGN_BG",
+                    .effectName = "IDR_DIFFUSE_FX",
+                    .position = (Vertex){.x = 0, .y = 0.2f, .z = 0},
+                    .rotation = (Vertex){.x = 0, .y = D3DX_PI / 2, .z = 0},
+                    .scale = (Vertex){.x = 0.4f, .y = 0.8f, .z = 0.4f},
+                    .screenSpaceOnly = 1});
+
+  actors[18] =
       CreateActor((ActorParams){.name = "sign location",
                                 .enabled = 0,
                                 .bufferType = Triangle,
