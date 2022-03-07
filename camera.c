@@ -67,7 +67,7 @@ void CameraPitch(float angle, int limit) {
   D3DXVec3TransformCoord(&cameraForward, &cameraForward, &T);
 
   if (limit) {
-    // Limit how for the camera can look up or down.
+    // Limit how far the camera can look up or down.
     const float dot = Vec3_Dot(&cameraForwardNoPitch, &cameraForward);
     if (dot < 0.36f) {
       cameraForward = oldCameraForward;

@@ -26,7 +26,7 @@ void PlayerUpdate(Actor *self, float deltaTime) {
 
     lastX = cameraPos.x;
     lastZ = cameraPos.z;
-    timeToFart = 2000 * deltaTime;
+    timeToFart = 3000 * deltaTime;
   }
 
   if (shouldFart && timeToFart < 0) {
