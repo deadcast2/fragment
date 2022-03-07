@@ -97,7 +97,7 @@ void PlayerUpdate(Actor *self, float deltaTime) {
                               deltaTime * 50.0f);
 
   CameraYaw(mouseSmoothX * 0.05f * deltaTime);
-  CameraPitch(mouseSmoothY * 0.05f * deltaTime);
+  CameraPitch(mouseSmoothY * 0.05f * deltaTime, 1);
 
   SetCursorPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
   GetCursorPos(&lastMousePos);

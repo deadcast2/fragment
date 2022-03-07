@@ -5,7 +5,7 @@ int arriving = 1;
 void ArrivalStart(Actor *self) {
   CameraPosition((D3DXVECTOR3){0, 50, -3.5f});
   CameraYaw(D3DX_PI);
-  CameraPitch(D3DX_PI / 2.0f);
+  CameraPitch(D3DX_PI / 2.0f, 0);
   PlayAudio(self->audioSource, self->audioBuffer, 1.0f);
 }
 
@@ -17,7 +17,7 @@ void ArrivalUpdate(Actor *self, float deltaTime) {
   if (pitch < D3DX_PI / 2.0f) {
     const float angle = (D3DX_PI / 20.0f) * deltaTime;
     pitch += angle;
-    CameraPitch(-angle);
+    CameraPitch(-angle, 0);
   }
 
   if (yaw < D3DX_PI) {

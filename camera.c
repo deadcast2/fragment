@@ -1,5 +1,7 @@
 #include "camera.h"
 #include "graphics.h"
+#include "srandom.h"
+#include "vec3.h"
 
 void InitCamera() {
   cameraRight = (D3DXVECTOR3){1, 0, 0};
@@ -56,11 +58,21 @@ void CameraYaw(float angle) {
   D3DXVec3TransformCoord(&cameraForwardNoPitch, &cameraForwardNoPitch, &T);
 }
 
-void CameraPitch(float angle) {
+void CameraPitch(float angle, int limit) {
   D3DXMATRIX T;
   D3DXMatrixRotationAxis(&T, &cameraRight, angle);
   D3DXVec3TransformCoord(&cameraUp, &cameraUp, &T);
+
+  D3DXVECTOR3 oldCameraForward = cameraForward;
   D3DXVec3TransformCoord(&cameraForward, &cameraForward, &T);
+
+  if (limit) {
+    // Limit how for the camera can look up or down.
+    const float dot = Vec3_Dot(&cameraForwardNoPitch, &cameraForward);
+    if (dot < 0.36f) {
+      cameraForward = oldCameraForward;
+    }
+  }
 }
 
 void CameraFly(float units) { cameraPos.y += units; }
