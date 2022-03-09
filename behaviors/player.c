@@ -10,8 +10,12 @@ void PlayerUpdate(Actor *self, float deltaTime) {
   static float timeToFart = 0;
   static int shouldFart = 1;
 
-  if (arriving)
+  if (arriving) {
+    // Keep cursor locked in place until done in case player is moving the
+    // mouse.
+    SetCursorPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
     return;
+  }
 
   float xDiff = lastX - cameraPos.x;
   float zDiff = lastZ - cameraPos.z;
