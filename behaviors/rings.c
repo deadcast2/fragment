@@ -32,9 +32,9 @@ void Ring1Update(Actor *self, float deltaTime) {
   if (titleDelay < 0 && titleDelay > -5.0f) {
     static RECT textbox;
     SetRect(&textbox, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    d3dFont->lpVtbl->DrawTextA(d3dFont, NULL, "f r a g m e n t", 15, &textbox,
-                               DT_CENTER | DT_VCENTER,
-                               D3DCOLOR_ARGB(255, 255, 255, 255));
+    d3dFont1->lpVtbl->DrawTextA(d3dFont1, NULL, "f r a g m e n t", 15, &textbox,
+                                DT_CENTER | DT_VCENTER,
+                                D3DCOLOR_ARGB(255, 255, 255, 255));
   }
 
   titleDelay -= deltaTime;

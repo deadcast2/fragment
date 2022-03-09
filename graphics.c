@@ -33,13 +33,18 @@ void InitGraphics(HWND hWnd) {
 
   D3DXCreateFont(d3ddev, 30, 0, FW_NORMAL, 1, TRUE, DEFAULT_CHARSET,
                  OUT_DEFAULT_PRECIS, DEFAULT_QUALITY,
-                 DEFAULT_PITCH | FF_DONTCARE, "Arial", &d3dFont);
+                 DEFAULT_PITCH | FF_DONTCARE, "Arial", &d3dFont1);
+
+  D3DXCreateFont(d3ddev, 21, 0, FW_NORMAL, 1, TRUE, DEFAULT_CHARSET,
+                 OUT_DEFAULT_PRECIS, DEFAULT_QUALITY,
+                 DEFAULT_PITCH | FF_DONTCARE, "Arial", &d3dFont2);
 
   startupTime = (double)timeGetTime();
 }
 
 void CleanGraphics() {
-  d3dFont->lpVtbl->Release(d3dFont);
+  d3dFont1->lpVtbl->Release(d3dFont1);
+  d3dFont2->lpVtbl->Release(d3dFont2);
   vertDeclaration->lpVtbl->Release(vertDeclaration);
   d3ddev->lpVtbl->Release(d3ddev);
   d3d->lpVtbl->Release(d3d);

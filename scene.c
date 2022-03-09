@@ -194,9 +194,9 @@ void InitScene() {
       .bufferType = Triangle,
       .modelName = "IDR_SIGN_BG",
       .effectName = "IDR_COLOR_FX",
-      .position = (Vertex){.x = 0, .y = 0.2f, .z = 0},
+      .position = (Vertex){.x = 0, .y = 0.85f, .z = 0},
       .rotation = (Vertex){.x = 0, .y = D3DX_PI / 2, .z = 0},
-      .scale = (Vertex){.x = 0.4f, .y = 0.8f, .z = 0.4f},
+      .scale = (Vertex){.x = 0.45f, .y = 1, .z = 0.6f},
       .screenSpaceOnly = 1,
       .Start = SignStart,
   });

@@ -11,7 +11,8 @@
 LPDIRECT3D9 d3d;
 LPDIRECT3DDEVICE9 d3ddev;
 LPDIRECT3DVERTEXDECLARATION9 vertDeclaration;
-LPD3DXFONT d3dFont;
+LPD3DXFONT d3dFont1;
+LPD3DXFONT d3dFont2;
 double startupTime;
 
 typedef struct _RenderSettings {
