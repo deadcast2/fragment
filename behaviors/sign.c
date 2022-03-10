@@ -18,12 +18,12 @@ void SignUpdate(Actor *self) {
     actors[17]->enabled = 1;
 
     RECT textbox;
-    SetRect(&textbox, SCREEN_WIDTH / 2 - 200, 80, SCREEN_WIDTH / 2 + 200, 600);
+    SetRect(&textbox, SCREEN_WIDTH / 2 - 205, 170, SCREEN_WIDTH / 2 + 205, 610);
     const char *blurb =
         "You have arrived on fragment #13. It's function is to "
-        "carry the central communication lines to fragmet #7.Pumpkins often "
+        "carry the central communication lines to fragment #7. Pumpkins often "
         "appear due to sporadic voltage spikes in the R.S.U. or Reality "
-        "Stabalizer Unit. "
+        "Stabilization Unit. "
         "Every island is equipped with an R.S.U. to help with "
         "emergency load cycles distributed by the lemonium core. Don't attempt "
         "to open the hatch unless instructed by the Crow. Thank you.";
