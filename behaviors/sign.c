@@ -8,13 +8,15 @@ void SignStart(Actor *self) {
 }
 
 void SignUpdate(Actor *self) {
-  D3DXVECTOR3 activationPoint =
+  const D3DXVECTOR3 activationPoint =
       (D3DXVECTOR3){self->vertices[0].x, cameraPos.y, self->vertices[0].z};
-  D3DXVECTOR3 dir = Vec3_Sub(&cameraPos, &activationPoint);
-  float dist = Vec3_LenSq(&dir);
+  const D3DXVECTOR3 dir = Vec3_Sub(&cameraPos, &activationPoint);
+  const float dist = Vec3_LenSq(&dir);
+  const D3DXVECTOR3 dirNorm = Vec3_Norm(&dir);
+  const float dot = Vec3_Dot(&dirNorm, &cameraForwardNoPitch);
 
-  // We're close enough so show text.
-  if (dist < 3) {
+  // Player needs to be close and looking some what at the sign.
+  if (dist < 3 && dot < 0) {
     actors[17]->enabled = 1;
 
     RECT textbox;
