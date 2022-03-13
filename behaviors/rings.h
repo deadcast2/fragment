@@ -3,7 +3,8 @@
 
 #include "..\actor.h"
 
-#define CYCLE_COUNT 0
+#define CYCLE_COUNT 7
+#define RING_SCALE_FACTOR 0.002
 
 void RingStart(Actor *self);
 void Ring1Update(Actor *self, float deltaTime);

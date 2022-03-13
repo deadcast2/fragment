@@ -3,9 +3,9 @@
 
 void RingStart(Actor *self) {
   self->position.z = 2.5f;
-  self->scale.x *= 0.01f;
-  self->scale.y *= 0.007f;
-  self->scale.z *= 0.01f;
+  self->scale.x = 0.01f * RING_SCALE_FACTOR;
+  self->scale.y = 0.007f * RING_SCALE_FACTOR;
+  self->scale.z = 0.01f * RING_SCALE_FACTOR;
 
   if (strcmp(self->name, "ring 1") == 0) {
     self->effect->lpVtbl->SetVector(self->effect, "_Color",
@@ -101,6 +101,9 @@ BOOL RingDelayHelper(Actor *actor, float *delay, int *cycles, float deltaTime) {
     actor->position.x -= actor->position.x * deltaTime;
     actor->position.y -= actor->position.y * deltaTime;
     actor->position.z -= 0.5f * deltaTime;
+    actor->scale.x += 0.01f * RING_SCALE_FACTOR;
+    actor->scale.y += 0.007f * RING_SCALE_FACTOR;
+    actor->scale.z += 0.01f * RING_SCALE_FACTOR;
   }
 
   *delay -= 0.5f * deltaTime;
@@ -110,6 +113,9 @@ BOOL RingDelayHelper(Actor *actor, float *delay, int *cycles, float deltaTime) {
       actor->position.z = 2.5f;
       actor->position.x = -sin((double)sinX);
       actor->position.y = sin((double)sinX);
+      actor->scale.x = 0.01f * RING_SCALE_FACTOR;
+      actor->scale.y = 0.007f * RING_SCALE_FACTOR;
+      actor->scale.z = 0.01f * RING_SCALE_FACTOR;
       sinX += 1.0f * deltaTime;
     }
 
