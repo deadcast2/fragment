@@ -2,7 +2,6 @@
 #define _MODEL_H_
 
 #include "graphics.h"
-#include "log.h"
 #include "vendor/fastlz.h"
 #include "vendor/strtok_r.h"
 #include <stdio.h>

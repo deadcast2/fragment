@@ -3,13 +3,7 @@
 void LoadModel(const char *name, int *vertexCount, Vertex **vertices,
                IDirect3DVertexBuffer9 **vertexBuffer) {
   HANDLE resource = FindResource(NULL, name, "SOS");
-  if (resource == NULL)
-    return;
-
   HGLOBAL loadedResource = LoadResource(NULL, resource);
-  if (loadedResource == NULL)
-    return;
-
   LPVOID resourceData = LockResource(loadedResource);
   DWORD resourceSize = SizeofResource(NULL, resource);
 

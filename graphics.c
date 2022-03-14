@@ -2,6 +2,7 @@
 
 void InitGraphics(HWND hWnd) {
   d3d = Direct3DCreate9(D3D_SDK_VERSION);
+
   D3DPRESENT_PARAMETERS d3dpp = {.Windowed = FALSE,
                                  .SwapEffect = D3DSWAPEFFECT_DISCARD,
                                  .hDeviceWindow = hWnd,

@@ -1,7 +1,6 @@
 #include "audio.h"
 #include "camera.h"
 #include "graphics.h"
-#include "log.h"
 #include "scene.h"
 #include <windows.h>
 
@@ -34,10 +33,8 @@ HWND InitWin() {
 
   RegisterClass(&wndClass);
 
-  HWND hWnd = CreateWindow(className, "fragment", WS_EX_TOPMOST | WS_POPUP, 0,
-                           0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0, 0);
-
-  return hWnd;
+  return CreateWindow(className, "fragment", WS_EX_TOPMOST | WS_POPUP, 0, 0,
+                      SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0, 0);
 }
 
 int WINAPI WinMainCRTStartup() {

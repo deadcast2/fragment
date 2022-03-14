@@ -1,7 +1,6 @@
 #ifndef _AUDIO_H_
 #define _AUDIO_H_
 
-#include "log.h"
 #include "vendor/XAudio2_custom.h"
 #include "vendor/XAudio2fx_custom.h"
 #include "vendor/fastlz.h"

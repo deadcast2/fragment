@@ -9,14 +9,14 @@ void SkyStart(Actor *self) {
   PlayAudio(self->audioSource, self->audioBuffer, 1.0f);
   IUnknown *volumeMeter;
 
-  if (XAudio2CreateVolumeMeter(&volumeMeter) == S_OK) {
-    XAUDIO2_EFFECT_DESCRIPTOR effectDesc = {
-        .pEffect = volumeMeter, .InitialState = TRUE, .OutputChannels = 1};
-    XAUDIO2_EFFECT_CHAIN effectChain = {.EffectCount = 1,
-                                        .pEffectDescriptors = &effectDesc};
-    self->audioSource->lpVtbl->SetEffectChain(self->audioSource, &effectChain);
-    volumeMeter->lpVtbl->Release(volumeMeter);
-  }
+  XAudio2CreateVolumeMeter(&volumeMeter);
+
+  XAUDIO2_EFFECT_DESCRIPTOR effectDesc = {
+      .pEffect = volumeMeter, .InitialState = TRUE, .OutputChannels = 1};
+  XAUDIO2_EFFECT_CHAIN effectChain = {.EffectCount = 1,
+                                      .pEffectDescriptors = &effectDesc};
+  self->audioSource->lpVtbl->SetEffectChain(self->audioSource, &effectChain);
+  volumeMeter->lpVtbl->Release(volumeMeter);
 }
 
 void SkyUpdate(Actor *self, float deltaTime) {
@@ -46,13 +46,16 @@ void SkyUpdate(Actor *self, float deltaTime) {
       .pPeakLevels =
           HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(float)),
       .ChannelCount = 1};
+
   self->audioSource->lpVtbl->GetEffectParameters(
       self->audioSource, 0, &effectParams, sizeof(effectParams));
+
   if (_fabs(currWindSpeed - windEnd) <= FLT_EPSILON) {
     lastWindEnd = windEnd;
     windEnd = (float)(*effectParams.pPeakLevels) * 20;
     windTime = 0;
   }
+
   currWindSpeed =
       smooth_inter(lastWindEnd, windEnd, windTime += deltaTime * windEnd);
   HeapFree(GetProcessHeap(), 0, effectParams.pPeakLevels);

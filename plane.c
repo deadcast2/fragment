@@ -4,8 +4,6 @@
 Plane *Plane_New(const D3DXVECTOR3 *origin, const D3DXVECTOR3 *normal) {
   Plane *newPlane =
       HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(Plane));
-  if (newPlane == NULL)
-    return NULL;
 
   newPlane->normal = *normal;
   newPlane->origin = *origin;
@@ -22,8 +20,6 @@ Plane *Plane_NewFromTriangle(const D3DXVECTOR3 *p1, const D3DXVECTOR3 *p2,
                              const D3DXVECTOR3 *p3) {
   Plane *newPlane =
       HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(Plane));
-  if (newPlane == NULL)
-    return NULL;
 
   D3DXVECTOR3 p2p1 = Vec3_Sub(p2, p1);
   D3DXVECTOR3 p3p1 = Vec3_Sub(p3, p1);
@@ -42,7 +38,7 @@ Plane *Plane_NewFromTriangle(const D3DXVECTOR3 *p1, const D3DXVECTOR3 *p2,
 }
 
 int Plane_IsFrontFacingTo(const Plane *plane, const D3DXVECTOR3 *direction) {
-  double dot = Vec3_Dot(&plane->normal, direction);
+  const double dot = Vec3_Dot(&plane->normal, direction);
   return dot <= 0;
 }
 

@@ -3,8 +3,6 @@
 Actor *CreateActor(ActorParams params) {
   Actor *newActor =
       HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(Actor));
-  if (!newActor)
-    return newActor;
 
   newActor->bufferType = params.bufferType;
   newActor->vertexBuffer = 0;
@@ -48,9 +46,6 @@ Actor *CreateActor(ActorParams params) {
 }
 
 void DeleteActor(Actor *actor) {
-  if (!actor)
-    return;
-
   if (actor->vertices)
     HeapFree(GetProcessHeap(), 0, actor->vertices);
 
