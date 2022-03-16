@@ -26,7 +26,7 @@ void ArrivalUpdate(Actor *self, float deltaTime) {
     CameraYaw(angle);
   }
 
-  if (yAxis > -50.0f) {
+  if (yAxis > -49.8f) {
     const float units = 5.0f * deltaTime;
     yAxis -= units;
     CameraFly(-units);

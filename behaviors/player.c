@@ -74,7 +74,7 @@ void PlayerUpdate(Actor *self, float deltaTime) {
     D3DXVec3Subtract(&velocity, &newPos, &cameraPos);
 
     CollisionPacket packet;
-    packet.eRadius = (D3DXVECTOR3){0.5f, 1.6f, 0.5f};
+    packet.eRadius = (D3DXVECTOR3){0.5f, 1.8f, 0.5f};
     D3DXVECTOR3 gravity = (D3DXVECTOR3){0, -0.1f, 0};
     cameraPos =
         Collision_CollideAndSlide(&packet, &cameraPos, &velocity, &gravity);
