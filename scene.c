@@ -159,6 +159,7 @@ void InitScene() {
   actors[12] = CreateActor((ActorParams){.name = "player",
                                          .enabled = 0,
                                          .audioName = "IDR_FOOTSTEP",
+                                         .Start = PlayerStart,
                                          .Update = PlayerUpdate});
 
   actors[13] = CreateActor((ActorParams){.name = "ring gong",

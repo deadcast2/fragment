@@ -3,6 +3,8 @@
 #include "..\srandom.h"
 #include "arrival.h"
 
+void PlayerStart(Actor *self) { SetNearClip(0.1f); }
+
 void PlayerUpdate(Actor *self, float deltaTime) {
   static float lastX = -100;
   static float lastZ = -100;

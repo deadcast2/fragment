@@ -10,9 +10,14 @@ void InitCamera() {
   cameraForwardNoPitch = (D3DXVECTOR3){0, 0, 1};
   cameraPos = (D3DXVECTOR3){0, 0, 0};
 
+  // Default near clip is very close for the rings.
+  SetNearClip(0.001f);
+}
+
+void SetNearClip(float value) {
   const float aspect = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
   const float fov = D3DX_PI / 2;
-  D3DXMatrixPerspectiveFovLH(&viewMat, fov, aspect, 0.1f, 1000.0f);
+  D3DXMatrixPerspectiveFovLH(&viewMat, fov, aspect, value, 1000.0f);
 }
 
 D3DXMATRIX CameraViewMatrix() {
@@ -43,12 +48,6 @@ D3DXMATRIX CameraViewMatrix() {
 }
 
 void CameraPosition(D3DXVECTOR3 position) { cameraPos = position; }
-
-void CameraWalk(float units) {
-  cameraPos.x += cameraForward.x * units;
-  cameraPos.y += cameraForward.y * units;
-  cameraPos.z += cameraForward.z * units;
-}
 
 void CameraYaw(float angle) {
   D3DXMATRIX T;
