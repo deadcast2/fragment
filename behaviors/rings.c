@@ -7,21 +7,23 @@ void RingStart(Actor *self) {
   self->scale.y = 0.007f * RING_SCALE_FACTOR;
   self->scale.z = 0.01f * RING_SCALE_FACTOR;
 
+  const float shade = 0.25f;
+
   if (strcmp(self->name, "ring 1") == 0) {
     self->effect->lpVtbl->SetVector(self->effect, "_Color",
-                                    &(D3DXVECTOR4){1, 0, 0, 1});
+                                    &(D3DXVECTOR4){1, shade, shade, 1});
   } else if (strcmp(self->name, "ring 2") == 0) {
     self->effect->lpVtbl->SetVector(self->effect, "_Color",
-                                    &(D3DXVECTOR4){0, 1, 0, 1});
+                                    &(D3DXVECTOR4){shade, 1, shade, 1});
   } else if (strcmp(self->name, "ring 3") == 0) {
     self->effect->lpVtbl->SetVector(self->effect, "_Color",
-                                    &(D3DXVECTOR4){0, 0, 1, 1});
+                                    &(D3DXVECTOR4){shade, shade, 1, 1});
   } else if (strcmp(self->name, "ring 4") == 0) {
     self->effect->lpVtbl->SetVector(self->effect, "_Color",
-                                    &(D3DXVECTOR4){1, 1, 0, 1});
+                                    &(D3DXVECTOR4){1, 1, shade, 1});
   } else if (strcmp(self->name, "ring 5") == 0) {
     self->effect->lpVtbl->SetVector(self->effect, "_Color",
-                                    &(D3DXVECTOR4){1, 0, 1, 1});
+                                    &(D3DXVECTOR4){1, shade, 1, 1});
   }
 }
 
