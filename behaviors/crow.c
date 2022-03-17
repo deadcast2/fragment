@@ -20,6 +20,7 @@ void CrowUpdate(Actor *self, float deltaTime) {
   nextCaw -= deltaTime;
 
   const int sign = target < 0 ? -1 : 1;
+
   if ((sign * self->rotation.x) < (sign * target)) {
     const float origX = self->position.x;
     const float origY = self->position.y;

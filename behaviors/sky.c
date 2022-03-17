@@ -27,8 +27,9 @@ void SkyUpdate(Actor *self, float deltaTime) {
   self->rotation.x += 0.1f * deltaTime;
 
   if (_fabs(fogStep - randomFogEnd) <= FLT_EPSILON) {
-    int fogDistances[11] = {15, 15, 20, 20, 20, 20, 200, 200, 200, 200, 200};
-    float fogSpeeds[5] = {0.1, 0.1, 0.15, 0.15, 0.08};
+    const int fogDistances[11] = {15,  15,  20,  20,  20, 20,
+                                  200, 200, 200, 200, 200};
+    const float fogSpeeds[5] = {0.1, 0.1, 0.15, 0.15, 0.08};
     lastFogEnd = randomFogEnd;
     randomFogEnd = fogDistances[smooth_rand() % 11];
     fogSpeed = fogSpeeds[smooth_rand() % 5];
@@ -39,8 +40,7 @@ void SkyUpdate(Actor *self, float deltaTime) {
       smooth_inter(lastFogEnd, randomFogEnd, fogTime += deltaTime * fogSpeed);
   RenderSettings.fogEnd = fogStep;
 
-  static float windEnd = 0, lastWindEnd = 0;
-  static float windTime = 0;
+  static float windEnd = 0, lastWindEnd = 0, windTime = 0;
 
   XAUDIO2FX_VOLUMEMETER_LEVELS effectParams = {
       .pPeakLevels =

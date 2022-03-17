@@ -1,6 +1,6 @@
 #include "arrival.h"
 
-int arriving = 1;
+BOOL arriving = TRUE;
 
 void ArrivalStart(Actor *self) {
   CameraPosition((D3DXVECTOR3){0, 50, -3.5f});
@@ -31,7 +31,7 @@ void ArrivalUpdate(Actor *self, float deltaTime) {
     yAxis -= units;
     CameraFly(-units);
   } else {
-    arriving = 0;
-    self->enabled = 0;
+    arriving = FALSE;
+    self->enabled = FALSE;
   }
 }

@@ -16,12 +16,13 @@ void PlayerUpdate(Actor *self, float deltaTime) {
     // Keep cursor locked in place until done in case player is moving the
     // mouse.
     SetCursorPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+
     return;
   }
 
   D3DXVECTOR3 velocity = Vec3_Sub(&prevCameraPos, &cameraPos);
 
-  // Determine if a footstep sound should play
+  // Determine if a footstep sound should play.
   if (Vec3_LenSq(&velocity) > 1.2f) {
     if (walkingOnLid)
       PlayAudio(actors[15]->audioSource, actors[15]->audioBuffer, 0.2f);
@@ -47,7 +48,7 @@ void PlayerUpdate(Actor *self, float deltaTime) {
       GetAsyncKeyState('S') || GetAsyncKeyState(VK_DOWN);
   const BOOL isLateral = GetAsyncKeyState('A') || GetAsyncKeyState('D');
 
-  // Handle forward and backward movement with collision
+  // Handle forward and backward movement with collision.
   if (isLongitudinal || isLateral) {
     D3DXVECTOR3 newPos = cameraPos;
 
@@ -76,6 +77,7 @@ void PlayerUpdate(Actor *self, float deltaTime) {
     CollisionPacket packet;
     // The dimensions of the player.
     packet.eRadius = (D3DXVECTOR3){0.5f, 1.8f, 0.5f};
+
     D3DXVECTOR3 gravity = (D3DXVECTOR3){0, -0.1f, 0};
     cameraPos =
         Collision_CollideAndSlide(&packet, &cameraPos, &newVelocity, &gravity);

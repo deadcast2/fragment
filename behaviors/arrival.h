@@ -3,7 +3,7 @@
 
 #include "..\actor.h"
 
-extern int arriving;
+extern BOOL arriving;
 
 void ArrivalStart(Actor *self);
 void ArrivalUpdate(Actor *self, float deltaTime);
