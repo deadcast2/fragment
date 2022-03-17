@@ -1,16 +1,16 @@
 #include "player.h"
 #include "..\scene.h"
 #include "..\srandom.h"
+#include "..\vec3.h"
 #include "arrival.h"
 
 void PlayerStart(Actor *self) { SetNearClip(0.1f); }
 
 void PlayerUpdate(Actor *self, float deltaTime) {
-  static float lastX = -100;
-  static float lastZ = -100;
-  static int walkingOnLid = 0;
+  static D3DXVECTOR3 prevCameraPos;
+  static BOOL walkingOnLid = FALSE;
+  static BOOL shouldFart = TRUE;
   static float timeToFart = 0;
-  static int shouldFart = 1;
 
   if (arriving) {
     // Keep cursor locked in place until done in case player is moving the
@@ -19,33 +19,33 @@ void PlayerUpdate(Actor *self, float deltaTime) {
     return;
   }
 
-  float xDiff = lastX - cameraPos.x;
-  float zDiff = lastZ - cameraPos.z;
-  float dist = sqrt((xDiff * xDiff) + (zDiff * zDiff));
+  D3DXVECTOR3 velocity = Vec3_Sub(&prevCameraPos, &cameraPos);
 
   // Determine if a footstep sound should play
-  if (dist > 1.15f) {
+  if (Vec3_LenSq(&velocity) > 1.2f) {
     if (walkingOnLid)
       PlayAudio(actors[15]->audioSource, actors[15]->audioBuffer, 0.2f);
     else
       PlayAudio(self->audioSource, self->audioBuffer, 0.5f);
 
-    lastX = cameraPos.x;
-    lastZ = cameraPos.z;
+    prevCameraPos = cameraPos;
+
+    // Keep resetting fart countdown when player moves.
     timeToFart = 3000 * deltaTime;
   }
 
   if (shouldFart && timeToFart < 0) {
     // Give the player a little gas...
     PlayAudio(actors[16]->audioSource, actors[16]->audioBuffer, 0.8f);
-    shouldFart = 0;
+    shouldFart = FALSE;
   } else if (shouldFart) {
     timeToFart -= deltaTime;
   }
 
-  const int isLongitudinal = GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP) ||
-                             GetAsyncKeyState('S') || GetAsyncKeyState(VK_DOWN);
-  const int isLateral = GetAsyncKeyState('A') || GetAsyncKeyState('D');
+  const BOOL isLongitudinal =
+      GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP) ||
+      GetAsyncKeyState('S') || GetAsyncKeyState(VK_DOWN);
+  const BOOL isLateral = GetAsyncKeyState('A') || GetAsyncKeyState('D');
 
   // Handle forward and backward movement with collision
   if (isLongitudinal || isLateral) {
@@ -70,17 +70,18 @@ void PlayerUpdate(Actor *self, float deltaTime) {
       newPos.z += cameraRight.z * units;
     }
 
-    D3DXVECTOR3 velocity;
-    D3DXVec3Subtract(&velocity, &newPos, &cameraPos);
+    D3DXVECTOR3 newVelocity;
+    D3DXVec3Subtract(&newVelocity, &newPos, &cameraPos);
 
     CollisionPacket packet;
+    // The dimensions of the player.
     packet.eRadius = (D3DXVECTOR3){0.5f, 1.8f, 0.5f};
     D3DXVECTOR3 gravity = (D3DXVECTOR3){0, -0.1f, 0};
     cameraPos =
-        Collision_CollideAndSlide(&packet, &cameraPos, &velocity, &gravity);
+        Collision_CollideAndSlide(&packet, &cameraPos, &newVelocity, &gravity);
 
     // Activate the walking on lid sfx.
-    walkingOnLid = packet.actorIndex == 15 ? 1 : 0;
+    walkingOnLid = packet.actorIndex == 15 ? TRUE : FALSE;
   }
 
   // Handle turning
