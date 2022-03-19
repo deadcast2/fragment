@@ -29,7 +29,7 @@ void RingStart(Actor *self) {
 
 void Ring1Update(Actor *self, float deltaTime) {
   // Show the title for a little bit.
-  static float titleDelay = 5.8f;
+  static float titleDelay = 5.0f;
 
   if (titleDelay < 0 && titleDelay > -5.0f) {
     static RECT textbox;
@@ -75,7 +75,8 @@ void Ring5Update(Actor *self, float deltaTime) {
   if (RingDelayHelper(self, &delay, &cycles, deltaTime)) {
     // Intro finished so activate all other actors.
     for (int i = 0; i < ACTOR_COUNT; i++) {
-      actors[i]->enabled = strstr(actors[i]->name, "ring") == NULL;
+      actors[i]->enabled = strstr(actors[i]->name, "ring") == NULL &&
+                           strstr(actors[i]->name, "loading") == NULL;
 
       if (actors[i]->Start && actors[i]->enabled) {
         actors[i]->Start(actors[i]);

@@ -3,6 +3,7 @@
 #include "behaviors\bush.h"
 #include "behaviors\crow.h"
 #include "behaviors\crown.h"
+#include "behaviors\loading.h"
 #include "behaviors\player.h"
 #include "behaviors\rings.h"
 #include "behaviors\sign.h"
@@ -98,7 +99,7 @@ void InitScene() {
 
   actors[7] =
       CreateActor((ActorParams){.name = "ring 1",
-                                .enabled = 1,
+                                .enabled = 0,
                                 .bufferType = Line,
                                 .modelName = "IDR_RING",
                                 .effectName = "IDR_COLOR_FX",
@@ -110,7 +111,7 @@ void InitScene() {
 
   actors[8] =
       CreateActor((ActorParams){.name = "ring 2",
-                                .enabled = 1,
+                                .enabled = 0,
                                 .bufferType = Line,
                                 .modelName = "IDR_RING",
                                 .effectName = "IDR_COLOR_FX",
@@ -122,7 +123,7 @@ void InitScene() {
 
   actors[9] =
       CreateActor((ActorParams){.name = "ring 3",
-                                .enabled = 1,
+                                .enabled = 0,
                                 .bufferType = Line,
                                 .modelName = "IDR_RING",
                                 .effectName = "IDR_COLOR_FX",
@@ -134,7 +135,7 @@ void InitScene() {
 
   actors[10] =
       CreateActor((ActorParams){.name = "ring 4",
-                                .enabled = 1,
+                                .enabled = 0,
                                 .bufferType = Line,
                                 .modelName = "IDR_RING",
                                 .effectName = "IDR_COLOR_FX",
@@ -146,7 +147,7 @@ void InitScene() {
 
   actors[11] =
       CreateActor((ActorParams){.name = "ring 5",
-                                .enabled = 1,
+                                .enabled = 0,
                                 .bufferType = Line,
                                 .modelName = "IDR_RING",
                                 .effectName = "IDR_COLOR_FX",
@@ -163,7 +164,7 @@ void InitScene() {
                                          .Update = PlayerUpdate});
 
   actors[13] = CreateActor((ActorParams){.name = "ring gong",
-                                         .enabled = 1,
+                                         .enabled = 0,
                                          .audioName = "IDR_RING_GONG",
                                          .Update = RingGongUpdate});
 
@@ -211,6 +212,9 @@ void InitScene() {
                                 .rotation = (Vertex){.x = 0, .y = 0, .z = 0},
                                 .scale = (Vertex){.x = 1, .y = 1, .z = 1},
                                 .Update = SignUpdate});
+
+  actors[19] = CreateActor(
+      (ActorParams){.name = "loading", .enabled = 1, .Update = LoadingUpdate});
 }
 
 void RenderScene(float deltaTime) {

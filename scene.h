@@ -11,7 +11,7 @@
 #include <float.h>
 #include <math.h>
 
-#define ACTOR_COUNT 19
+#define ACTOR_COUNT 20
 
 Actor *actors[ACTOR_COUNT];
 
