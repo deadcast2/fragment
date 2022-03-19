@@ -198,7 +198,7 @@ void InitScene() {
       .effectName = "IDR_COLOR_FX",
       .position = (Vertex){.x = 0, .y = 0.65f, .z = 0},
       .rotation = (Vertex){.x = 0, .y = D3DX_PI / 2, .z = 0},
-      .scale = (Vertex){.x = 0.45f, .y = 1, .z = 0.7f},
+      .scale = (Vertex){.x = 0.42f, .y = 1, .z = 0.65f},
       .screenSpaceOnly = 1,
       .Start = SignStart,
   });
