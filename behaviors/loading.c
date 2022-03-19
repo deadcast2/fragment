@@ -3,7 +3,7 @@
 #include "..\vec3.h"
 
 void LoadingUpdate(Actor *self, float deltaTime) {
-  static float delay = 4.0f;
+  static float delay = 6.0f;
 
   if (delay > 0) {
     delay -= deltaTime;
