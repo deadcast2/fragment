@@ -4,7 +4,7 @@
 void RingStart(Actor *self) {
   self->position.z = 2.5f;
   self->scale.x = 0.01f * RING_SCALE_FACTOR;
-  self->scale.y = 0.007f * RING_SCALE_FACTOR;
+  self->scale.y = RING_HSCALE_FACTOR * RING_SCALE_FACTOR;
   self->scale.z = 0.01f * RING_SCALE_FACTOR;
 
   const float shade = 0.25f;
@@ -105,7 +105,7 @@ BOOL RingDelayHelper(Actor *actor, float *delay, int *cycles, float deltaTime) {
     actor->position.y -= actor->position.y * deltaTime;
     actor->position.z -= 0.5f * deltaTime;
     actor->scale.x += 0.01f * RING_SCALE_FACTOR;
-    actor->scale.y += 0.007f * RING_SCALE_FACTOR;
+    actor->scale.y += RING_HSCALE_FACTOR * RING_SCALE_FACTOR;
     actor->scale.z += 0.01f * RING_SCALE_FACTOR;
   }
 
@@ -117,7 +117,7 @@ BOOL RingDelayHelper(Actor *actor, float *delay, int *cycles, float deltaTime) {
       actor->position.x = -sin((double)sinX);
       actor->position.y = sin((double)sinX);
       actor->scale.x = 0.01f * RING_SCALE_FACTOR;
-      actor->scale.y = 0.007f * RING_SCALE_FACTOR;
+      actor->scale.y = RING_HSCALE_FACTOR * RING_SCALE_FACTOR;
       actor->scale.z = 0.01f * RING_SCALE_FACTOR;
       sinX += 1.0f * deltaTime;
     }

@@ -5,6 +5,7 @@
 
 #define CYCLE_COUNT 4
 #define RING_SCALE_FACTOR 0.002
+#define RING_HSCALE_FACTOR 0.005
 
 void RingStart(Actor *self);
 void Ring1Update(Actor *self, float deltaTime);
