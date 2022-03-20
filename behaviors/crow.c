@@ -3,7 +3,7 @@
 
 void CrowUpdate(Actor *self, float deltaTime) {
   static float target = 0;
-  static float nextCaw = 7.5f;
+  static float nextCaw = 8.0f;
 
   if (nextCaw < 0) {
     PlayAudio(self->audioSource, self->audioBuffer, 0.7f);
