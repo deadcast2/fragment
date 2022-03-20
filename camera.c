@@ -16,7 +16,7 @@ void InitCamera() {
 
 void SetNearClip(float value) {
   const float aspect = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
-  const float fov = D3DX_PI / 2;
+  const float fov = D3DX_PI / 2.57f; // 70 FOV
   D3DXMatrixPerspectiveFovLH(&viewMat, fov, aspect, value, 1000.0f);
 }
 
