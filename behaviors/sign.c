@@ -16,7 +16,7 @@ void SignUpdate(Actor *self) {
   const float dot = Vec3_Dot(&dirNorm, &cameraForwardNoPitch);
 
   // Player needs to be close and looking some what at the sign.
-  if (dist < 3 && dot < 0) {
+  if (dist < 3 && dot < -0.5f) {
     actors[17]->enabled = 1;
 
     RECT textbox;
